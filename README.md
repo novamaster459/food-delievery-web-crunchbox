@@ -43,7 +43,7 @@ file/object storage before relying on this for real orders.
 
 - Five seeded menu categories and products, including combo sets.
 - Guest and member checkout, combo savings, and expiring coupon codes.
-- Members earn 100 loyalty points per successful order; the demo member starts with 1,250 points.
+- Members earn 100 loyalty points per item unit in each successful order; the demo member starts with 1,250 points.
 - Yangon city → township → ward → street → house/room address collection.
 - Admin product/category/coupon management and shop name/logo settings.
 - Admin-editable storefront accent/background colors, hero copy/photo, and featured/deal card copy/photos.

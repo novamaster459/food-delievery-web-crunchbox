@@ -282,11 +282,11 @@ def checkout():
     points_earned = 0
     points_balance = None
 
-    # Award 100 loyalty points per order for logged-in members
+    # Award 100 loyalty points for each item unit in a member's order
     if user_id:
         user = next((u for u in db["users"] if u.id == user_id), None)
         if user:
-            points_earned = 100
+            points_earned = sum(item["quantity"] for item in line_items) * 100
             user.points += points_earned
             points_balance = user.points
 
