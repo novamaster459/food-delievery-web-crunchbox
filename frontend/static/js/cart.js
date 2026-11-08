@@ -186,9 +186,16 @@ const Cart = {
         coupon_code: Cart.appliedCoupon?.code || '',
         address,
       });
+      if (App.currentUser && Number.isFinite(result.loyalty?.points_balance)) {
+        App.currentUser.points = result.loyalty.points_balance;
+        App.updateRewardsUI();
+      }
       Cart.clear();
       Cart.close();
       App.openOrderModal(result);
+      if (result.loyalty?.points_earned > 0) {
+        Cart.showToast(`You earned ${result.loyalty.points_earned} loyalty points!`, 'success');
+      }
     } catch (error) {
       Cart.showToast(error.message || 'Checkout failed.', 'error');
     } finally {

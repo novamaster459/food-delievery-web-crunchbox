@@ -251,7 +251,33 @@ const App = {
     if (profile) profile.setAttribute('aria-label', App.currentUser ? `Profile: ${App.currentUser.username}` : 'Login or register');
     const adminLink = document.getElementById('admin-dashboard-link');
     if (adminLink) adminLink.classList.toggle('hidden', !App.currentUser?.is_admin);
+    App.updateRewardsUI();
     Cart.render();
+  },
+
+  updateRewardsUI: function () {
+    const points = Math.max(0, Number(App.currentUser?.points) || 0);
+    const milestone = (Math.floor(points / 2000) + 1) * 2000;
+    const progress = (points % 2000) / 2000 * 100;
+    const pointsElement = document.getElementById('rewards-points');
+    const currentLabel = document.getElementById('rewards-current-label');
+    const nextLabel = document.getElementById('rewards-next-label');
+    const fill = document.getElementById('rewards-fill');
+    const rewardsLink = document.getElementById('view-rewards-link');
+
+    if (pointsElement) pointsElement.textContent = points.toLocaleString('en-US');
+    if (currentLabel) currentLabel.textContent = `${points.toLocaleString('en-US')} pts`;
+    if (nextLabel) nextLabel.textContent = `Next Reward: ${milestone.toLocaleString('en-US')} pts`;
+    if (fill) fill.style.width = `${progress}%`;
+    if (rewardsLink) {
+      rewardsLink.textContent = App.currentUser ? 'View Rewards →' : 'Sign in to earn →';
+      rewardsLink.onclick = App.currentUser
+        ? (event) => event.preventDefault()
+        : (event) => {
+            event.preventDefault();
+            App.openAuthModal('login');
+          };
+    }
   },
 
   openAuthModal: function (tab) {

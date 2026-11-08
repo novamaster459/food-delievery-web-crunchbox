@@ -279,11 +279,16 @@ def checkout():
     )
     db["orders"].append(new_order)
 
+    points_earned = 0
+    points_balance = None
+
     # Award 100 loyalty points per order for logged-in members
     if user_id:
         user = next((u for u in db["users"] if u.id == user_id), None)
         if user:
-            user.points += 100
+            points_earned = 100
+            user.points += points_earned
+            points_balance = user.points
 
     # ------------------------------------------------------------------
     # Return full summary
@@ -291,6 +296,10 @@ def checkout():
     return jsonify({
         "success": True,
         "order": new_order.to_dict(),
+        "loyalty": {
+            "points_earned": points_earned,
+            "points_balance": points_balance,
+        },
         "breakdown": {
             "subtotal":          subtotal,
             "member_discount":   member_discount,
