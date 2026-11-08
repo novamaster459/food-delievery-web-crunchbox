@@ -125,6 +125,8 @@ class Coupon:
     discount_pct: float = 0.0          # Percentage discount (0–100)
     expires_at: datetime = field(default_factory=datetime.utcnow)
     is_active: bool = True
+    user_id: str = ""                  # Set for single-use, member-only reward coupons
+    reward_product_id: str = ""        # Restricts a reward coupon to one product unit
 
     def to_dict(self) -> dict:
         return {

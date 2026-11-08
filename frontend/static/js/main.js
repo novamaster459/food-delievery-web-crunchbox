@@ -237,10 +237,16 @@ const App = {
     });
     document.getElementById('auth-modal-close-x')?.addEventListener('click', App.closeAuthModal);
     document.getElementById('auth-modal-backdrop')?.addEventListener('click', App.closeAuthModal);
+    document.getElementById('rewards-modal-close')?.addEventListener('click', App.closeRewardsModal);
+    document.getElementById('rewards-modal-backdrop')?.addEventListener('click', App.closeRewardsModal);
     document.getElementById('login-form')?.addEventListener('submit', App.handleLogin);
     document.getElementById('register-form')?.addEventListener('submit', App.handleRegister);
     document.getElementById('order-modal-close')?.addEventListener('click', App.closeOrderModal);
     document.getElementById('order-modal-backdrop')?.addEventListener('click', App.closeOrderModal);
+    window.addEventListener('beforeunload', App.confirmExit);
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') App.closeRewardsModal();
+    });
   },
 
   updateMemberUI: function () {
@@ -272,12 +278,161 @@ const App = {
     if (rewardsLink) {
       rewardsLink.textContent = App.currentUser ? 'View Rewards →' : 'Sign in to earn →';
       rewardsLink.onclick = App.currentUser
-        ? (event) => event.preventDefault()
+        ? (event) => {
+            event.preventDefault();
+            App.openRewardsModal();
+          }
         : (event) => {
             event.preventDefault();
             App.openAuthModal('login');
           };
     }
+  },
+
+  confirmExit: function (event) {
+    event.preventDefault();
+    event.returnValue = '';
+  },
+
+  openRewardsModal: async function () {
+    const modal = document.getElementById('rewards-modal');
+    const status = document.getElementById('rewards-modal-status');
+    modal?.classList.remove('hidden');
+    modal?.classList.add('open');
+    if (status) {
+      status.textContent = 'Loading rewards…';
+      status.classList.remove('error');
+    }
+
+    try {
+      const data = await API.getRewards();
+      if (App.currentUser) {
+        App.currentUser.points = data.points;
+        App.updateRewardsUI();
+      }
+      App.renderRewards(data);
+      if (status) status.textContent = '';
+    } catch (error) {
+      if (status) {
+        status.textContent = error.message;
+        status.classList.add('error');
+      }
+    }
+  },
+
+  renderRewards: function (data) {
+    const points = document.getElementById('rewards-modal-points');
+    const catalog = document.getElementById('rewards-catalog');
+    const activeList = document.getElementById('rewards-active-list');
+    const status = document.getElementById('rewards-modal-status');
+    if (!catalog || !activeList) return;
+    catalog.replaceChildren();
+    activeList.replaceChildren();
+    if (points) points.textContent = `You have ${Number(data.points).toLocaleString('en-US')} points · Earn 100 points per item purchased.`;
+
+    (data.active_rewards || []).forEach((reward) => {
+      const card = document.createElement('article');
+      card.className = 'reward-voucher';
+      const copy = document.createElement('div');
+      const title = document.createElement('h4');
+      title.textContent = reward.product.name;
+      const code = document.createElement('p');
+      code.className = 'reward-voucher-code';
+      code.textContent = reward.code;
+      const expiry = document.createElement('p');
+      expiry.textContent = `Use before ${new Date(reward.expires_at).toLocaleDateString()}`;
+      copy.append(title, code, expiry);
+      const use = document.createElement('button');
+      use.type = 'button';
+      use.className = 'btn-secondary';
+      use.textContent = 'Use reward';
+      use.addEventListener('click', () => App.applyRewardVoucher(reward));
+      card.append(copy, use);
+      activeList.appendChild(card);
+    });
+    if (!data.active_rewards?.length) {
+      const empty = document.createElement('p');
+      empty.className = 'rewards-modal-status';
+      empty.textContent = 'No unused reward vouchers yet.';
+      activeList.appendChild(empty);
+    }
+
+    (data.catalog || []).forEach((reward) => {
+      const card = document.createElement('article');
+      card.className = 'reward-card';
+      const copy = document.createElement('div');
+      copy.className = 'reward-card-copy';
+      const title = document.createElement('h4');
+      title.textContent = reward.product.name;
+      const description = document.createElement('p');
+      description.textContent = `${Cart.formatPrice(reward.product.price)} · ${Number(reward.points_cost).toLocaleString('en-US')} points`;
+      description.className = 'reward-card-cost';
+      copy.append(title, description);
+      const redeem = document.createElement('button');
+      redeem.type = 'button';
+      redeem.className = 'btn-primary';
+      redeem.textContent = 'Redeem';
+      redeem.disabled = Number(data.points) < Number(reward.points_cost);
+      redeem.addEventListener('click', () => App.redeemReward(reward.id, redeem));
+      card.append(copy, redeem);
+      catalog.appendChild(card);
+    });
+    if (!data.catalog?.length && status) {
+      status.textContent = 'There are no rewards available right now.';
+    }
+  },
+
+  redeemReward: async function (rewardId, button) {
+    const status = document.getElementById('rewards-modal-status');
+    button.disabled = true;
+    try {
+      const result = await API.redeemReward(rewardId);
+      if (App.currentUser) {
+        App.currentUser.points = result.points;
+        App.updateRewardsUI();
+      }
+      Cart.showToast(`Reward redeemed! ${result.reward.code} is ready to use.`, 'success');
+      await App.openRewardsModal();
+    } catch (error) {
+      if (status) {
+        status.textContent = error.message;
+        status.classList.add('error');
+      }
+      button.disabled = false;
+    }
+  },
+
+  applyRewardVoucher: async function (reward) {
+    const status = document.getElementById('rewards-modal-status');
+    try {
+      const result = await API.validateCoupon(reward.code);
+      if (!result.valid) throw new Error(result.reason || 'This reward voucher is not valid.');
+      if (!Cart.items.some((item) => item.product_id === String(reward.product.id))) {
+        Cart.addItem(reward.product);
+      }
+      Cart.appliedCoupon = {
+        code: result.code,
+        discount_pct: Number(result.discount_pct),
+        reward_product_id: result.reward_product_id || '',
+      };
+      Cart.render();
+      const couponInput = document.getElementById('coupon-input');
+      if (couponInput) couponInput.value = result.code;
+      App.closeRewardsModal();
+      Cart.open();
+      Cart.showToast(`Added ${reward.product.name} and applied your reward voucher.`, 'success');
+    } catch (error) {
+      if (status) {
+        status.textContent = error.message;
+        status.classList.add('error');
+      }
+    }
+  },
+
+  closeRewardsModal: function () {
+    const modal = document.getElementById('rewards-modal');
+    modal?.classList.add('hidden');
+    modal?.classList.remove('open');
   },
 
   openAuthModal: function (tab) {

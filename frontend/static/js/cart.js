@@ -45,9 +45,23 @@ const Cart = {
       return sum + Math.floor(discountedBase * item.combo_discount_pct / 100);
     }, 0);
     const couponBase = Math.max(0, subtotal - comboSavings - memberDiscount);
-    const couponSavings = Cart.appliedCoupon
-      ? Math.floor(couponBase * Cart.appliedCoupon.discount_pct / 100)
-      : 0;
+    let couponSavings = 0;
+    if (Cart.appliedCoupon?.reward_product_id) {
+      const rewardItem = Cart.items.find(
+        (item) => item.product_id === String(Cart.appliedCoupon.reward_product_id)
+      );
+      if (rewardItem) {
+        const memberPerUnit = Cart.currentUser
+          ? Math.floor(rewardItem.unit_price * Cart.memberDiscountPct / 100)
+          : 0;
+        const comboPerUnit = rewardItem.is_combo
+          ? Math.floor((rewardItem.unit_price - memberPerUnit) * rewardItem.combo_discount_pct / 100)
+          : 0;
+        couponSavings = Math.max(0, rewardItem.unit_price - memberPerUnit - comboPerUnit);
+      }
+    } else if (Cart.appliedCoupon) {
+      couponSavings = Math.floor(couponBase * Cart.appliedCoupon.discount_pct / 100);
+    }
     return {
       subtotal,
       comboSavings,
@@ -157,8 +171,16 @@ const Cart = {
     try {
       const result = await API.validateCoupon(code);
       if (!result.valid) throw new Error(result.reason || 'This coupon is not valid.');
-      Cart.appliedCoupon = { code: result.code, discount_pct: Number(result.discount_pct) };
-      if (status) status.textContent = `${result.code} applied (${result.discount_pct}% off).`;
+      Cart.appliedCoupon = {
+        code: result.code,
+        discount_pct: Number(result.discount_pct),
+        reward_product_id: result.reward_product_id || '',
+      };
+      if (status) {
+        status.textContent = result.reward_product_name
+          ? `${result.code} applied to one ${result.reward_product_name}.`
+          : `${result.code} applied (${result.discount_pct}% off).`;
+      }
       Cart.render();
     } catch (error) {
       Cart.appliedCoupon = null;

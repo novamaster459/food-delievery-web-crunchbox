@@ -742,6 +742,42 @@ ul, ol { list-style: none; }
 }
 .rewards-current { color: var(--orange); font-weight: 600; }
 
+.rewards-modal-box {
+  max-width: 560px;
+  max-height: min(82vh, 760px);
+  overflow-y: auto;
+  padding: 28px 24px 24px;
+}
+.rewards-modal-header { text-align: center; padding: 4px 24px 20px; }
+.rewards-modal-header h2 { font-size: 24px; margin: 4px 0; }
+.rewards-modal-header p,
+.reward-card-copy p,
+.reward-voucher p { color: var(--text-muted); font-size: 13px; }
+.rewards-section-title { margin: 8px 0 12px; font-size: 16px; }
+.rewards-list { display: grid; gap: 10px; margin-bottom: 20px; }
+.reward-card,
+.reward-voucher {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+}
+.reward-card-copy { min-width: 0; }
+.reward-card-copy h4,
+.reward-voucher h4 { margin: 0 0 4px; font-size: 14px; }
+.reward-card-copy p,
+.reward-voucher p { margin: 0; }
+.reward-card-cost { color: var(--orange) !important; font-weight: 700; }
+.reward-card .btn-primary,
+.reward-voucher .btn-secondary { flex-shrink: 0; padding: 9px 12px; }
+.reward-voucher-code { color: var(--orange); font-weight: 700; letter-spacing: .5px; }
+.rewards-modal-status { min-height: 18px; color: var(--text-muted); font-size: 13px; }
+.rewards-modal-status.error { color: var(--danger); }
+
 /* ══════════════════════════════════════════════════════════════
    CART SIDEBAR / DRAWER
 ══════════════════════════════════════════════════════════════ */

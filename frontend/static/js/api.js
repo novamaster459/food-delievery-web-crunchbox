@@ -92,6 +92,14 @@ const API = {
     return API._get('/api/auth/me');
   },
 
+  getRewards: async function () {
+    return API._get('/api/auth/rewards');
+  },
+
+  redeemReward: async function (rewardId) {
+    return API._json('/api/auth/rewards/redeem', 'POST', { reward_id: rewardId });
+  },
+
   // ── Menu ─────────────────────────────────────────────────────────────────
 
   /**

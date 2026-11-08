@@ -44,6 +44,8 @@ file/object storage before relying on this for real orders.
 - Five seeded menu categories and products, including combo sets.
 - Guest and member checkout, combo savings, and expiring coupon codes.
 - Members earn 100 loyalty points per item unit in each successful order; the demo member starts with 1,250 points.
+- Members can redeem 2,000 points for an Iced Cola, 8,000 for a Spicy Crunch Burger, or 20,000 for a Crispy Chicken Bucket. Reward vouchers are member-specific and can be used once for one matching item.
+- Leaving or closing the storefront asks for confirmation using the browser's built-in prompt.
 - Yangon city → township → ward → street → house/room address collection.
 - Admin product/category/coupon management and shop name/logo settings.
 - Admin-editable storefront accent/background colors, hero copy/photo, and featured/deal card copy/photos.

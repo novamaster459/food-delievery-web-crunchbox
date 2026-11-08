@@ -272,7 +272,15 @@ def edit_product(prod_id: str):
             return jsonify({"error": "Combo discount must be between 0 and 100"}), 400
         product.combo_discount_pct = discount
     if "is_available" in form:
-        product.is_available = form["is_available"].lower() == "true"
+        is_available = form["is_available"].lower() == "true"
+        if not is_available and any(
+            coupon.is_active
+            and coupon.reward_product_id == prod_id
+            and coupon.expires_at >= datetime.utcnow()
+            for coupon in db["coupons"]
+        ):
+            return jsonify({"error": "This product has an unexpired member reward voucher and cannot be disabled yet"}), 409
+        product.is_available = is_available
 
     # Replace image if a new one is uploaded
     image_file = request.files.get("image")
@@ -291,6 +299,12 @@ def delete_product(prod_id: str):
     product = next((p for p in db["products"] if p.id == prod_id), None)
     if product is None:
         return jsonify({"error": "Product not found"}), 404
+
+    if any(
+        coupon.is_active and coupon.reward_product_id == prod_id
+        for coupon in db["coupons"]
+    ):
+        return jsonify({"error": "This product has an unexpired member reward voucher and cannot be deleted yet"}), 409
 
     db["products"].remove(product)
     return jsonify({"success": True})

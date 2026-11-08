@@ -9,17 +9,26 @@ The shared `db` dict is imported from app.py and mutated in place so that
 changes are immediately visible across all blueprints.
 """
 
+import secrets
+from datetime import datetime, timedelta
+
 from flask import Blueprint, jsonify, request, session
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from app import db
-from models import User
+from models import Coupon, User
 
 # ---------------------------------------------------------------------------
 # Blueprint
 # ---------------------------------------------------------------------------
 
 auth_bp = Blueprint("auth", __name__)
+
+REWARD_CATALOG = (
+    {"id": "iced-cola", "product_name": "Iced Cola", "points_cost": 2000},
+    {"id": "spicy-crunch-burger", "product_name": "Spicy Crunch Burger", "points_cost": 8000},
+    {"id": "crispy-chicken-bucket", "product_name": "Crispy Chicken Bucket", "points_cost": 20000},
+)
 
 
 # ---------------------------------------------------------------------------
@@ -143,6 +152,106 @@ def me():
     if user is None:
         return jsonify({"logged_in": False})
     return jsonify({"logged_in": True, "user": user.to_dict()})
+
+
+@auth_bp.route("/rewards", methods=["GET"])
+def rewards():
+    """Return the reward catalog and the signed-in member's unspent vouchers."""
+    user = current_user()
+    if user is None:
+        return jsonify({"error": "Log in to view and redeem rewards"}), 401
+
+    products_by_name = {
+        product.name: product
+        for product in db["products"]
+        if product.is_available
+    }
+    catalog = []
+    for reward in REWARD_CATALOG:
+        product = products_by_name.get(reward["product_name"])
+        if product is not None:
+            catalog.append({
+                **reward,
+                "product": product.to_dict(),
+            })
+
+    active_rewards = []
+    for coupon in db["coupons"]:
+        if (
+            coupon.user_id == user.id
+            and coupon.reward_product_id
+            and coupon.is_active
+            and coupon.expires_at >= datetime.utcnow()
+        ):
+            product = next(
+                (item for item in db["products"] if item.id == coupon.reward_product_id),
+                None,
+            )
+            if product is not None:
+                active_rewards.append({
+                    "code": coupon.code,
+                    "product": product.to_dict(),
+                    "expires_at": coupon.expires_at.isoformat(),
+                })
+
+    return jsonify({
+        "points": user.points,
+        "catalog": catalog,
+        "active_rewards": active_rewards,
+    })
+
+
+@auth_bp.route("/rewards/redeem", methods=["POST"])
+def redeem_reward():
+    """Exchange loyalty points for a one-time voucher for one menu item."""
+    user = current_user()
+    if user is None:
+        return jsonify({"error": "Log in to redeem rewards"}), 401
+
+    data = request.get_json(silent=True) or {}
+    if not isinstance(data, dict):
+        return jsonify({"error": "Request body must be a JSON object"}), 400
+
+    reward = next(
+        (item for item in REWARD_CATALOG if item["id"] == data.get("reward_id")),
+        None,
+    )
+    if reward is None:
+        return jsonify({"error": "Reward not found"}), 404
+
+    product = next(
+        (
+            item for item in db["products"]
+            if item.name == reward["product_name"] and item.is_available and not item.is_combo
+        ),
+        None,
+    )
+    if product is None:
+        return jsonify({"error": "This reward is currently unavailable"}), 409
+    if user.points < reward["points_cost"]:
+        return jsonify({"error": "You do not have enough points for this reward"}), 400
+
+    code = f"REWARD-{secrets.token_hex(4).upper()}"
+    coupon = Coupon(
+        code=code,
+        discount_pct=100.0,
+        expires_at=datetime.utcnow() + timedelta(days=365),
+        user_id=user.id,
+        reward_product_id=product.id,
+    )
+    db["coupons"].append(coupon)
+    user.points -= reward["points_cost"]
+
+    return jsonify({
+        "success": True,
+        "points_spent": reward["points_cost"],
+        "points": user.points,
+        "reward": {
+            "code": coupon.code,
+            "product": product.to_dict(),
+            "expires_at": coupon.expires_at.isoformat(),
+        },
+    }), 201
 
 
 @auth_bp.route("/profile", methods=["PUT"])

@@ -104,7 +104,20 @@ def validate_coupon():
     if coupon.expires_at < datetime.utcnow():
         return jsonify({"valid": False, "reason": "This coupon has expired"})
 
-    return jsonify({"valid": True, "code": coupon.code, "discount_pct": coupon.discount_pct})
+    if coupon.user_id and coupon.user_id != session.get("user_id"):
+        return jsonify({"valid": False, "reason": "This reward voucher belongs to another member"})
+
+    reward_product = next(
+        (product for product in db["products"] if product.id == coupon.reward_product_id),
+        None,
+    ) if coupon.reward_product_id else None
+    return jsonify({
+        "valid": True,
+        "code": coupon.code,
+        "discount_pct": coupon.discount_pct,
+        "reward_product_id": coupon.reward_product_id,
+        "reward_product_name": reward_product.name if reward_product else "",
+    })
 
 
 @orders_bp.route("/checkout", methods=["POST"])
@@ -252,9 +265,31 @@ def checkout():
         if coupon.expires_at < datetime.utcnow():
             return jsonify({"error": "Coupon has expired"}), 400
 
-        # Apply coupon on subtotal net of member discount
-        post_member_subtotal = max(0, subtotal - member_discount - combo_savings)
-        coupon_savings       = int(post_member_subtotal * (coupon.discount_pct / 100))
+        if coupon.user_id and coupon.user_id != user_id:
+            return jsonify({"error": "This reward voucher belongs to another member"}), 403
+
+        if coupon.reward_product_id:
+            reward_line = next(
+                (item for item in line_items if item["product_id"] == coupon.reward_product_id),
+                None,
+            )
+            if reward_line is None:
+                reward_name = next(
+                    (product.name for product in db["products"] if product.id == coupon.reward_product_id),
+                    "reward item",
+                )
+                return jsonify({"error": f"Add one {reward_name} to your cart to use this voucher"}), 400
+            reward_product = product_lookup[coupon.reward_product_id]
+            member_per_unit = int(
+                reward_product.price * (db["settings"].get("member_discount_pct", 0.0) / 100)
+            ) if user_id else 0
+            coupon_savings = max(0, reward_product.price - member_per_unit)
+            coupon_savings = min(coupon_savings, reward_line["subtotal"])
+        else:
+            # Apply regular coupons on the subtotal net of other discounts.
+            post_member_subtotal = max(0, subtotal - member_discount - combo_savings)
+            coupon_savings = int(post_member_subtotal * (coupon.discount_pct / 100))
+
         coupon_applied       = coupon.code
         coupon_pct           = coupon.discount_pct
 
@@ -278,6 +313,8 @@ def checkout():
         status="pending",
     )
     db["orders"].append(new_order)
+    if coupon_code and coupon.reward_product_id:
+        coupon.is_active = False
 
     points_earned = 0
     points_balance = None
@@ -286,7 +323,10 @@ def checkout():
     if user_id:
         user = next((u for u in db["users"] if u.id == user_id), None)
         if user:
-            points_earned = sum(item["quantity"] for item in line_items) * 100
+            purchased_units = sum(item["quantity"] for item in line_items)
+            if coupon_code and coupon.reward_product_id:
+                purchased_units -= 1
+            points_earned = max(0, purchased_units) * 100
             user.points += points_earned
             points_balance = user.points
 
