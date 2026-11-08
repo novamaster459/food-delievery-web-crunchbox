@@ -17,10 +17,22 @@ Change these before sharing a deployed demo with others.
 
 ## Railway deployment
 
-Deploy the repository root. `Procfile` and `railway.json` start Gunicorn from
-the `backend` directory and bind to Railway's `PORT`. Set `SECRET_KEY` to a
-long random value and optionally set `ADMIN_EMAIL` and `ADMIN_PASSWORD` in
-Railway's service variables.
+The root `requirements.txt` lets Railway detect this Python project and installs
+the dependencies listed in `backend/requirements.txt`. To deploy:
+
+1. In Railway, create a project and choose **Deploy from GitHub repo**.
+2. Select `novamaster459/food-delievery-web-crunchbox`. Leave the service root
+   directory set to `/`.
+3. In the service's **Variables** settings, set `SECRET_KEY` to a long random
+   value, `ADMIN_EMAIL` to your chosen admin email, and `ADMIN_PASSWORD` to a
+   strong password. Do not rely on the public demo credentials for a deployed
+   app.
+4. Deploy the service, then use **Settings → Networking → Generate Domain** to
+   get its public URL.
+
+`Procfile` and `railway.json` start Gunicorn from the `backend` directory and
+bind to Railway's `PORT`. The app serves its frontend and API from the same
+domain, so no separate frontend service or API URL configuration is required.
 
 The current data store and uploaded images are intentionally in memory/local
 files for a simple school-project setup. They reset when the service restarts
