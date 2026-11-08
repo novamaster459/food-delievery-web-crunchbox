@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CrunchBox Admin Dashboard</title>
+  <link rel="stylesheet" href="/static/css/main.css" />
+  <link rel="stylesheet" href="/static/css/components.css" />
+  <link rel="stylesheet" href="/static/css/storefront-customization.css" />
+  <style>
+    /* Admin layout override */
+    body { display: flex; min-height: 100vh; overflow-x: hidden; padding-bottom: 0; }
+    .admin-layout { display: flex; width: 100%; }
+  </style>
+</head>
+<body>
+<div class="admin-layout">
+
+  <!-- ═══════════════════════════════════════════════════
+       SIDEBAR
+  ═══════════════════════════════════════════════════ -->
+  <aside class="admin-sidebar" id="admin-sidebar">
+    <div class="admin-sidebar-header">
+      <span class="admin-logo-text">CrunchBox</span>
+      <span class="admin-logo-sub">Admin Panel</span>
+    </div>
+
+    <nav class="admin-nav">
+      <button class="admin-nav-item active" data-tab="dashboard">
+        <span class="admin-nav-icon">📊</span>
+        <span class="admin-nav-label">Dashboard</span>
+      </button>
+      <button class="admin-nav-item" data-tab="products">
+        <span class="admin-nav-icon">🍗</span>
+        <span class="admin-nav-label">Products</span>
+      </button>
+      <button class="admin-nav-item" data-tab="categories">
+        <span class="admin-nav-icon">🗂️</span>
+        <span class="admin-nav-label">Categories</span>
+      </button>
+      <button class="admin-nav-item" data-tab="coupons">
+        <span class="admin-nav-icon">🏷️</span>
+        <span class="admin-nav-label">Coupons</span>
+      </button>
+      <button class="admin-nav-item" data-tab="orders">
+        <span class="admin-nav-icon">📦</span>
+        <span class="admin-nav-label">Orders</span>
+      </button>
+      <button class="admin-nav-item" data-tab="settings">
+        <span class="admin-nav-icon">⚙️</span>
+        <span class="admin-nav-label">Settings</span>
+      </button>
+    </nav>
+
+    <div class="admin-sidebar-footer">
+      <a href="/" class="admin-nav-item admin-nav-item--link">
+        <span class="admin-nav-icon">🏠</span>
+        <span class="admin-nav-label">View Store</span>
+      </a>
+      <button type="button" class="admin-nav-item admin-logout-btn" id="admin-logout-btn">
+        <span class="admin-nav-icon">↪</span>
+        <span class="admin-nav-label">Log Out</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ═══════════════════════════════════════════════════
+       MAIN CONTENT
+  ═══════════════════════════════════════════════════ -->
+  <main class="admin-main" id="admin-main">
+
+    <!-- Top bar -->
+    <div class="admin-topbar">
+      <button class="sidebar-toggle-btn" id="sidebar-toggle">☰</button>
+      <h1 class="admin-page-title" id="admin-page-title">Dashboard</h1>
+      <div class="admin-topbar-right">
+        <span class="admin-user-badge">👤 Admin</span>
+      </div>
+    </div>
+
+    <!-- ─── TAB: DASHBOARD ─── -->
+    <div class="admin-tab-content active" id="tab-dashboard">
+      <div class="admin-stats-grid">
+        <div class="stat-card" id="stat-products">
+          <div class="stat-icon">🍗</div>
+          <div class="stat-info">
+            <span class="stat-value" id="stat-total-products">—</span>
+            <span class="stat-label">Total Products</span>
+          </div>
+        </div>
+        <div class="stat-card" id="stat-orders-card">
+          <div class="stat-icon">📦</div>
+          <div class="stat-info">
+            <span class="stat-value" id="stat-total-orders">—</span>
+            <span class="stat-label">Total Orders</span>
+          </div>
+        </div>
+        <div class="stat-card" id="stat-categories-card">
+          <div class="stat-icon">🗂️</div>
+          <div class="stat-info">
+            <span class="stat-value" id="stat-total-categories">—</span>
+            <span class="stat-label">Categories</span>
+          </div>
+        </div>
+        <div class="stat-card" id="stat-coupons-card">
+          <div class="stat-icon">🏷️</div>
+          <div class="stat-info">
+            <span class="stat-value" id="stat-active-coupons">—</span>
+            <span class="stat-label">Active Coupons</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Orders mini-preview -->
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <h3 class="admin-card-title">Recent Orders</h3>
+          <button class="btn-secondary btn--sm" onclick="document.querySelector('[data-tab=orders]').click()">View All</button>
+        </div>
+        <table class="admin-table" id="dashboard-recent-orders">
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>User</th>
+              <th>Total (MMK)</th>
+              <th>Status</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody id="dashboard-orders-body">
+            <tr><td colspan="5" class="table-empty">Loading recent orders…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ─── TAB: PRODUCTS ─── -->
+    <div class="admin-tab-content hidden" id="tab-products">
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <h3 class="admin-card-title">All Products</h3>
+          <button class="btn-primary btn--sm" id="add-product-btn">+ Add Product</button>
+        </div>
+
+        <!-- Add/Edit Product Form -->
+        <div class="admin-form-wrap hidden" id="product-form-wrap">
+          <form class="admin-form" id="product-form" enctype="multipart/form-data">
+            <input type="hidden" id="product-id" value="" />
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="product-name">Product Name *</label>
+                <input class="form-input" id="product-name" type="text" placeholder="e.g. Crispy Chicken Burger" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="product-category">Category *</label>
+                <select class="form-input" id="product-category" required>
+                  <option value="">Select Category</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="product-desc">Description</label>
+              <textarea class="form-input form-textarea" id="product-desc" rows="3" placeholder="Short description of the product…"></textarea>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="product-price">Price (MMK) *</label>
+                <input class="form-input" id="product-price" type="number" min="0" placeholder="e.g. 5000" required />
+              </div>
+              <div class="form-group form-group--checkbox">
+                <label class="form-label">Is Combo?</label>
+                <label class="checkbox-label">
+                  <input type="checkbox" id="product-is-combo" />
+                  <span class="checkbox-custom"></span>
+                  <span>Yes, this is a combo</span>
+                </label>
+              </div>
+            </div>
+            <div class="form-group combo-discount-group hidden" id="combo-discount-group">
+              <label class="form-label" for="product-combo-discount">Combo Discount (%)</label>
+              <input class="form-input" id="product-combo-discount" type="number" min="0" max="100" placeholder="e.g. 15" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="product-image">Product Image</label>
+              <input class="form-input form-file" id="product-image" type="file" accept="image/*" />
+              <div class="image-preview-wrap" id="product-image-preview"></div>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn-primary" id="product-submit-btn">Save Product</button>
+              <button type="button" class="btn-secondary" id="product-cancel-btn">Cancel</button>
+            </div>
+          </form>
+        </div>
+
+        <table class="admin-table" id="products-table">
+          <thead>
+            <tr>
+              <th>Image</th>
+              <th>Name</th>
+              <th>Category</th>
+              <th>Price (MMK)</th>
+              <th>Combo?</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="products-tbody">
+            <tr><td colspan="6" class="table-empty">Loading products…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ─── TAB: CATEGORIES ─── -->
+    <div class="admin-tab-content hidden" id="tab-categories">
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <h3 class="admin-card-title">Categories</h3>
+          <button class="btn-primary btn--sm" id="add-category-btn">+ Add Category</button>
+        </div>
+
+        <div class="admin-form-wrap hidden" id="category-form-wrap">
+          <form class="admin-form" id="category-form">
+            <input type="hidden" id="category-id" value="" />
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="category-icon">Icon (Emoji) *</label>
+                <input class="form-input" id="category-icon" type="text" placeholder="e.g. 🍗" maxlength="10" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="category-name">Category Name *</label>
+                <input class="form-input" id="category-name" type="text" placeholder="e.g. Fried Chicken" required />
+              </div>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn-primary">Save Category</button>
+              <button type="button" class="btn-secondary" id="category-cancel-btn">Cancel</button>
+            </div>
+          </form>
+        </div>
+
+        <table class="admin-table" id="categories-table">
+          <thead>
+            <tr>
+              <th>Icon</th>
+              <th>Name</th>
+              <th>Products</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="categories-tbody">
+            <tr><td colspan="4" class="table-empty">Loading categories…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ─── TAB: COUPONS ─── -->
+    <div class="admin-tab-content hidden" id="tab-coupons">
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <h3 class="admin-card-title">Coupons</h3>
+          <button class="btn-primary btn--sm" id="add-coupon-btn">+ Add Coupon</button>
+        </div>
+
+        <div class="admin-form-wrap hidden" id="coupon-form-wrap">
+          <form class="admin-form" id="coupon-form">
+            <input type="hidden" id="coupon-id" value="" />
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="coupon-code">Coupon Code *</label>
+                <input class="form-input" id="coupon-code" type="text" placeholder="e.g. CRUNCH25" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="coupon-discount">Discount (%) *</label>
+                <input class="form-input" id="coupon-discount" type="number" min="1" max="100" placeholder="e.g. 25" required />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="coupon-expiry">Expiry Date *</label>
+                <input class="form-input" id="coupon-expiry" type="date" required />
+              </div>
+              <div class="form-group form-group--checkbox">
+                <label class="form-label">Active?</label>
+                <label class="checkbox-label">
+                  <input type="checkbox" id="coupon-active" checked />
+                  <span class="checkbox-custom"></span>
+                  <span>Yes, coupon is active</span>
+                </label>
+              </div>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn-primary">Save Coupon</button>
+              <button type="button" class="btn-secondary" id="coupon-cancel-btn">Cancel</button>
+            </div>
+          </form>
+        </div>
+
+        <table class="admin-table" id="coupons-table">
+          <thead>
+            <tr>
+              <th>Code</th>
+              <th>Discount (%)</th>
+              <th>Expires</th>
+              <th>Active</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="coupons-tbody">
+            <tr><td colspan="5" class="table-empty">Loading coupons…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ─── TAB: ORDERS ─── -->
+    <div class="admin-tab-content hidden" id="tab-orders">
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <h3 class="admin-card-title">All Orders</h3>
+          <button class="btn-secondary btn--sm" id="refresh-orders-btn">🔄 Refresh</button>
+        </div>
+        <table class="admin-table" id="orders-table">
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>User</th>
+              <th>Total (MMK)</th>
+              <th>Status</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody id="orders-tbody">
+            <tr><td colspan="5" class="table-empty">Loading orders…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ─── TAB: SETTINGS ─── -->
+    <div class="admin-tab-content hidden" id="tab-settings">
+      <div class="admin-card settings-card">
+        <div class="admin-card-header">
+          <h3 class="admin-card-title">Shop Settings</h3>
+        </div>
+        <form class="admin-form" id="settings-form" enctype="multipart/form-data">
+          <div class="form-group">
+            <label class="form-label" for="settings-shop-name">Shop Name</label>
+            <input class="form-input" id="settings-shop-name" type="text" placeholder="CrunchBox" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="settings-logo">Shop Logo</label>
+            <input class="form-input form-file" id="settings-logo" type="file" accept="image/*" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="settings-member-discount">Member Discount (%)</label>
+            <input class="form-input" id="settings-member-discount" type="number" min="0" max="100" placeholder="10" />
+          </div>
+          <hr class="settings-divider" />
+          <h4 class="admin-card-title">Storefront Style</h4>
+          <p class="settings-help">Customize the visible theme, hero and promotion cards. Upload your own food photography for the best match to the store preview.</p>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="settings-accent-color">Accent color</label>
+              <input class="form-input settings-color" id="settings-accent-color" type="color" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="settings-background-color">Page background</label>
+              <input class="form-input settings-color" id="settings-background-color" type="color" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="settings-hero-heading">Hero headline</label>
+            <textarea class="form-input form-textarea" id="settings-hero-heading" rows="2" maxlength="100"></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="settings-hero-subtext">Hero subtitle</label>
+            <input class="form-input" id="settings-hero-subtext" type="text" maxlength="180" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="settings-hero-image">Hero background image</label>
+            <input class="form-input form-file" id="settings-hero-image" type="file" accept="image/png,image/jpeg,image/gif,image/webp" />
+            <img id="settings-hero-preview" class="settings-decoration-preview hidden" alt="Hero image preview" />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="settings-featured-title">Featured card title</label>
+              <input class="form-input" id="settings-featured-title" type="text" maxlength="60" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="settings-featured-image">Featured card photo</label>
+              <input class="form-input form-file" id="settings-featured-image" type="file" accept="image/png,image/jpeg,image/gif,image/webp" />
+              <img id="settings-featured-preview" class="settings-decoration-preview hidden" alt="Featured card preview" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="settings-featured-text">Featured card description</label>
+            <textarea class="form-input form-textarea" id="settings-featured-text" rows="2" maxlength="240"></textarea>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="settings-deal-title">Deal card title</label>
+              <input class="form-input" id="settings-deal-title" type="text" maxlength="60" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="settings-deal-image">Deal card photo</label>
+              <input class="form-input form-file" id="settings-deal-image" type="file" accept="image/png,image/jpeg,image/gif,image/webp" />
+              <img id="settings-deal-preview" class="settings-decoration-preview hidden" alt="Deal card preview" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="settings-deal-text">Deal description</label>
+              <textarea class="form-input form-textarea" id="settings-deal-text" rows="2" maxlength="180"></textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="settings-deal-button">Deal button label</label>
+              <input class="form-input" id="settings-deal-button" type="text" maxlength="30" />
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn-primary">💾 Save Settings</button>
+          </div>
+        </form>
+
+        <!-- Settings Preview -->
+        <div class="settings-preview-area">
+          <h4 class="settings-preview-title">Live Preview</h4>
+          <div class="settings-preview-box">
+            <img id="settings-logo-preview" alt="Shop logo" style="display:none" />
+            <span id="settings-name-preview" class="settings-preview-name">CrunchBox</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main><!-- end admin-main -->
+</div><!-- end admin-layout -->
+
+<!-- Toast Container -->
+<div id="toast-container" class="toast-container"></div>
+
+<!-- Delete Confirm Modal -->
+<div id="confirm-modal" class="modal hidden">
+  <div class="modal-backdrop" id="confirm-backdrop"></div>
+  <div class="modal-box confirm-modal-box">
+    <h3 class="confirm-title">⚠️ Confirm Delete</h3>
+    <p class="confirm-message" id="confirm-message">Are you sure you want to delete this item?</p>
+    <div class="confirm-actions">
+      <button class="btn-danger" id="confirm-yes-btn">Yes, Delete</button>
+      <button class="btn-secondary" id="confirm-no-btn">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script src="/static/js/api.js"></script>
+<script src="/static/js/admin.js"></script>
+</body>
+</html>
