@@ -207,6 +207,24 @@ def add_product():
         return jsonify({"error": "Combo discount must be between 0 and 100"}), 400
 
     is_combo = form.get("is_combo", "false").lower() == "true"
+    try:
+        loyalty_points = int(form.get("loyalty_points", 100))
+    except ValueError:
+        return jsonify({"error": "Points per item must be a whole number"}), 400
+    if not 0 <= loyalty_points <= 1_000_000:
+        return jsonify({"error": "Points per item must be between 0 and 1,000,000"}), 400
+
+    is_reward = form.get("is_reward", "false").lower() == "true"
+    try:
+        reward_points = int(form.get("reward_points", 0) or 0)
+    except ValueError:
+        return jsonify({"error": "Reward points must be a whole number"}), 400
+    if not 0 <= reward_points <= 1_000_000:
+        return jsonify({"error": "Reward points must be between 0 and 1,000,000"}), 400
+    if is_reward and reward_points < 1:
+        return jsonify({"error": "Set how many points this reward costs"}), 400
+    if is_reward and is_combo:
+        return jsonify({"error": "Combo sets cannot be point rewards"}), 400
 
     # Handle optional image upload
     image_filename = ""
@@ -224,6 +242,9 @@ def add_product():
         image_filename=image_filename,
         is_combo=is_combo,
         combo_discount_pct=combo_discount_pct,
+        loyalty_points=loyalty_points,
+        is_reward=is_reward,
+        reward_points=reward_points,
     )
     db["products"].append(new_product)
 
@@ -263,6 +284,28 @@ def edit_product(prod_id: str):
         product.price = price
     if "is_combo" in form:
         product.is_combo = form["is_combo"].lower() == "true"
+    if "loyalty_points" in form:
+        try:
+            loyalty_points = int(form["loyalty_points"])
+        except ValueError:
+            return jsonify({"error": "Points per item must be a whole number"}), 400
+        if not 0 <= loyalty_points <= 1_000_000:
+            return jsonify({"error": "Points per item must be between 0 and 1,000,000"}), 400
+        product.loyalty_points = loyalty_points
+    if "is_reward" in form:
+        product.is_reward = form["is_reward"].lower() == "true"
+    if "reward_points" in form:
+        try:
+            reward_points = int(form["reward_points"] or 0)
+        except ValueError:
+            return jsonify({"error": "Reward points must be a whole number"}), 400
+        if not 0 <= reward_points <= 1_000_000:
+            return jsonify({"error": "Reward points must be between 0 and 1,000,000"}), 400
+        product.reward_points = reward_points
+    if product.is_reward and product.reward_points < 1:
+        return jsonify({"error": "Set how many points this reward costs"}), 400
+    if product.is_reward and product.is_combo:
+        return jsonify({"error": "Combo sets cannot be point rewards"}), 400
     if "combo_discount_pct" in form:
         try:
             discount = float(form["combo_discount_pct"])

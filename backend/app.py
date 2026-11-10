@@ -63,6 +63,9 @@ db: dict = {
         "logo_filename": "",
         "member_discount_pct": 10.0,   # % discount for logged-in members
         "combo_discount_pct": 15.0,    # Default % discount for combo products
+        "reward_iced_cola_points": 2000,
+        "reward_spicy_crunch_burger_points": 8000,
+        "reward_crispy_chicken_bucket_points": 20000,
         "accent_color": "#ff6b00",
         "background_color": "#121212",
         "hero_heading": "Crispy Flavor,\nDelivered Fast.",
@@ -82,6 +85,24 @@ db: dict = {
 # ---------------------------------------------------------------------------
 # Seed Data
 # ---------------------------------------------------------------------------
+
+# The three built-in reward items keep their point costs in `settings` so the
+# admin Settings tab and the per-product reward option stay in sync.
+REWARD_PRODUCT_SETTINGS = {
+    "Iced Cola": "reward_iced_cola_points",
+    "Spicy Crunch Burger": "reward_spicy_crunch_burger_points",
+    "Crispy Chicken Bucket": "reward_crispy_chicken_bucket_points",
+}
+
+
+def sync_reward_product_points(keys=None) -> None:
+    """Mirror reward point settings onto the matching seeded products."""
+    for product in db["products"]:
+        setting_key = REWARD_PRODUCT_SETTINGS.get(product.name)
+        if not setting_key or (keys is not None and setting_key not in keys):
+            continue
+        product.is_reward = True
+        product.reward_points = int(db["settings"].get(setting_key, 0))
 
 def seed_data() -> None:
     """
@@ -226,6 +247,9 @@ def seed_data() -> None:
         ),
     ])
 
+    # Mark the built-in reward items so members can redeem them with points.
+    sync_reward_product_points()
+
 
 # Run seed on startup (safe to call multiple times in a dev-reload scenario
 # because we only call it once here at module level).
@@ -305,6 +329,26 @@ def update_settings():
             if not value or len(value) > limit:
                 return jsonify({"error": f"{key} must be between 1 and {limit} characters"}), 400
             db["settings"][key] = value
+
+    point_settings = (
+        "reward_iced_cola_points",
+        "reward_spicy_crunch_burger_points",
+        "reward_crispy_chicken_bucket_points",
+    )
+    changed_reward_settings = set()
+    for key in point_settings:
+        if key in data:
+            try:
+                points = int(data[key])
+            except (TypeError, ValueError):
+                return jsonify({"error": f"{key} must be a whole number"}), 400
+            if points < 1 or points > 1_000_000:
+                return jsonify({"error": f"{key} must be between 1 and 1,000,000"}), 400
+            db["settings"][key] = points
+            changed_reward_settings.add(key)
+
+    if changed_reward_settings:
+        sync_reward_product_points(changed_reward_settings)
 
     for key in ("accent_color", "background_color"):
         if key in data:

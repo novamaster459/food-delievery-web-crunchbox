@@ -39,14 +39,21 @@ files for a simple school-project setup. They reset when the service restarts
 and are not shared across multiple instances. Use a database and persistent
 file/object storage before relying on this for real orders.
 
+The browser stores the current cart, address, and latest order/tracker in
+`localStorage`, so they survive reloads in that same browser. This is a
+convenience for the customer and is not server-side or cross-device order
+storage.
+
 ## Included flows
 
 - Five seeded menu categories and products, including combo sets.
 - Guest and member checkout, combo savings, and expiring coupon codes.
-- Members earn 100 loyalty points per item unit in each successful order; the demo member starts with 1,250 points.
-- Members can redeem 2,000 points for an Iced Cola, 8,000 for a Spicy Crunch Burger, or 20,000 for a Crispy Chicken Bucket. Reward vouchers are member-specific and can be used once for one matching item.
+- Members earn loyalty points per item unit in each successful order; the demo member starts with 1,250 points.
+- The admin marks any product as a points reward and sets both the points it earns and the points needed to redeem it. Reward vouchers are member-specific and can be used once for one matching item.
 - Leaving or closing the storefront asks for confirmation using the browser's built-in prompt.
-- Yangon city → township → ward → street → house/room address collection.
+- Customers can add per-item preparation requests; the admin sees each request, the delivery address and the price breakdown in the Orders tab.
+- The cart, delivery address, and latest order/tracker are saved in the same browser so they survive a refresh or accidental tab close. A saved cart is refreshed against the current menu when the page reopens.
+- City and township are chosen from dropdowns (Yangon, Mandalay, Naypyidaw, Bago, Mawlamyine); ward, street and house/room number are typed by the customer.
 - Admin product/category/coupon management and shop name/logo settings.
 - Admin-editable storefront accent/background colors, hero copy/photo, and featured/deal card copy/photos.
 - A simulated five-stage, 15-second delivery tracker.

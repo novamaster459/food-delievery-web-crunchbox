@@ -4,12 +4,16 @@ const App = {
   currentCategory: '',
   currentUser: null,
   settings: {},
+  lastOrderKey: 'crunchbox-last-order-v1',
+  lastOrder: null,
 
   init: async function () {
     await Promise.all([App.loadSettings(), App.loadUser()]);
     await App.loadMenu();
+    Cart.reconcileWithMenu(App.menuData);
     await LocationManager.wireDropdowns();
     App.setupEvents();
+    App.restoreLastOrder();
     Cart.render();
     Cart.updateBadge();
   },
@@ -188,6 +192,8 @@ const App = {
 
   setupEvents: function () {
     document.getElementById('cart-btn')?.addEventListener('click', () => Cart.open());
+    document.getElementById('see-order-btn')?.addEventListener('click', () => App.showLastOrder());
+    document.getElementById('track-order-fab')?.addEventListener('click', () => App.showLastOrder());
     document.getElementById('nav-order')?.addEventListener('click', () => Cart.open());
     document.getElementById('cart-close-btn')?.addEventListener('click', () => Cart.close());
     document.getElementById('cart-overlay')?.addEventListener('click', () => Cart.close());
@@ -263,8 +269,14 @@ const App = {
 
   updateRewardsUI: function () {
     const points = Math.max(0, Number(App.currentUser?.points) || 0);
-    const milestone = (Math.floor(points / 2000) + 1) * 2000;
-    const progress = (points % 2000) / 2000 * 100;
+    const rewardCosts = [
+      Number(App.settings.reward_iced_cola_points),
+      Number(App.settings.reward_spicy_crunch_burger_points),
+      Number(App.settings.reward_crispy_chicken_bucket_points),
+    ].filter((cost) => Number.isFinite(cost) && cost > 0);
+    const nextRewardCost = rewardCosts.length ? Math.min(...rewardCosts) : 2000;
+    const milestone = (Math.floor(points / nextRewardCost) + 1) * nextRewardCost;
+    const progress = (points % nextRewardCost) / nextRewardCost * 100;
     const pointsElement = document.getElementById('rewards-points');
     const currentLabel = document.getElementById('rewards-current-label');
     const nextLabel = document.getElementById('rewards-next-label');
@@ -290,8 +302,58 @@ const App = {
   },
 
   confirmExit: function (event) {
+    if (!Cart.items.length && !App.lastOrder) return;
     event.preventDefault();
     event.returnValue = '';
+  },
+
+  saveLastOrder: function (result, address) {
+    App.lastOrder = {
+      order: result.order,
+      placedAt: Date.now(),
+      address,
+    };
+    try {
+      localStorage.setItem(App.lastOrderKey, JSON.stringify(App.lastOrder));
+    } catch (error) {
+      console.error('[App] Could not save recent order:', error);
+    }
+    App.updateSeeOrderButton();
+  },
+
+  restoreLastOrder: function () {
+    try {
+      const saved = JSON.parse(localStorage.getItem(App.lastOrderKey) || 'null');
+      if (
+        saved && saved.order && typeof saved.order.id === 'string' &&
+        Number.isFinite(Number(saved.placedAt))
+      ) {
+        App.lastOrder = saved;
+      }
+    } catch (error) {
+      console.error('[App] Could not restore recent order:', error);
+    }
+    App.updateSeeOrderButton();
+  },
+
+  updateSeeOrderButton: function () {
+    const button = document.getElementById('see-order-btn');
+    const fab = document.getElementById('track-order-fab');
+    const fabText = fab?.querySelector('.track-order-fab-text');
+    if (button) {
+      button.classList.toggle('hidden', !App.lastOrder);
+      if (App.lastOrder) button.textContent = `See Order #${App.lastOrder.order.id.slice(0, 6)}`;
+    }
+    if (fab) {
+      fab.classList.toggle('hidden', !App.lastOrder);
+      if (fabText && App.lastOrder) {
+        fabText.textContent = `Track order #${App.lastOrder.order.id.slice(0, 6)}`;
+      }
+    }
+  },
+
+  showLastOrder: function () {
+    if (App.lastOrder) App.openOrderModal(App.lastOrder.order, App.lastOrder);
   },
 
   openRewardsModal: async function () {
@@ -328,7 +390,7 @@ const App = {
     if (!catalog || !activeList) return;
     catalog.replaceChildren();
     activeList.replaceChildren();
-    if (points) points.textContent = `You have ${Number(data.points).toLocaleString('en-US')} points · Earn 100 points per item purchased.`;
+    if (points) points.textContent = `You have ${Number(data.points).toLocaleString('en-US')} points · Earn points with every item.`;
 
     (data.active_rewards || []).forEach((reward) => {
       const card = document.createElement('article');
@@ -418,6 +480,7 @@ const App = {
       Cart.render();
       const couponInput = document.getElementById('coupon-input');
       if (couponInput) couponInput.value = result.code;
+      Cart.saveState();
       App.closeRewardsModal();
       Cart.open();
       Cart.showToast(`Added ${reward.product.name} and applied your reward voucher.`, 'success');
@@ -511,20 +574,46 @@ const App = {
     }
   },
 
-  openOrderModal: function (result) {
+  openOrderModal: function (order, savedOrder = App.lastOrder) {
     const modal = document.getElementById('order-modal');
     modal?.classList.remove('hidden');
     modal?.classList.add('open');
     const id = document.getElementById('order-modal-id');
-    if (id && result.order) id.textContent = `#${result.order.id}`;
-    Tracker.startStages({ stagePrefix: 'stage-', supportId: 'order-support-box', totalStages: 5 });
+    if (id && order) id.textContent = `#${order.id}`;
+    const receipt = document.getElementById('order-receipt-items');
+    if (receipt) {
+      receipt.replaceChildren();
+      (order?.items || []).forEach((item) => {
+        const row = document.createElement('p');
+        row.textContent = `${item.quantity} × ${item.name}`;
+        receipt.appendChild(row);
+        if (item.special_request) {
+          const request = document.createElement('small');
+          request.textContent = `Request: ${item.special_request}`;
+          receipt.appendChild(request);
+        }
+      });
+    }
+    const requestSummary = document.getElementById('order-special-request');
+    if (requestSummary) {
+      const address = savedOrder?.address;
+      requestSummary.textContent = address
+        ? `Delivering to: ${[address.house, address.street, address.ward, address.township, address.city].filter(Boolean).join(', ')}`
+        : '';
+      requestSummary.classList.toggle('hidden', !address);
+    }
+    Tracker.startStages({
+      stagePrefix: 'stage-',
+      supportId: 'order-support-box',
+      totalStages: 5,
+      startedAt: savedOrder?.placedAt || Date.now(),
+    });
   },
 
   closeOrderModal: function () {
     const modal = document.getElementById('order-modal');
     modal?.classList.add('hidden');
     modal?.classList.remove('open');
-    Tracker.reset();
   },
 
   escapeHTML: function (value) {

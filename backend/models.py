@@ -96,6 +96,9 @@ class Product:
     is_available: bool = True
     is_combo: bool = False              # True for bundled combo products
     combo_discount_pct: float = 0.0    # Extra % off applied to combo items
+    loyalty_points: int = 100           # Points earned per purchased unit
+    is_reward: bool = False             # True when redeemable with loyalty points
+    reward_points: int = 0              # Points required to redeem one unit
 
     def to_dict(self) -> dict:
         return {
@@ -109,6 +112,9 @@ class Product:
             "is_available": self.is_available,
             "is_combo": self.is_combo,
             "combo_discount_pct": self.combo_discount_pct,
+            "loyalty_points": self.loyalty_points,
+            "is_reward": self.is_reward,
+            "reward_points": self.reward_points,
         }
 
 

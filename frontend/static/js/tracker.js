@@ -7,18 +7,37 @@ const Tracker = {
   startStages: function (options) {
     Tracker.reset();
     Tracker.options = { intervalMs: 3000, ...options };
-    Tracker.activeIndex = 0;
+    Tracker.startedAt = Number(options.startedAt) || Date.now();
+    const totalMs = Tracker.options.intervalMs * Tracker.options.totalStages;
+    const elapsed = Date.now() - Tracker.startedAt;
+    // Resume at the right stage immediately when reopening a saved order.
+    Tracker.activeIndex = Math.min(
+      Tracker.options.totalStages - 1,
+      Math.max(0, Math.floor(elapsed / Tracker.options.intervalMs))
+    );
     Tracker.render();
+    if (elapsed >= totalMs) {
+      Tracker.activeIndex = Tracker.options.totalStages - 1;
+      Tracker.render();
+      Tracker.finish();
+      return;
+    }
     Tracker.timer = setInterval(() => {
-      if (Tracker.activeIndex < Tracker.options.totalStages - 1) {
-        Tracker.activeIndex += 1;
-        Tracker.render();
-      } else {
+      const elapsedNow = Date.now() - Tracker.startedAt;
+      if (elapsedNow >= totalMs) {
         clearInterval(Tracker.timer);
         Tracker.timer = null;
+        Tracker.activeIndex = Tracker.options.totalStages - 1;
+        Tracker.render();
         Tracker.finish();
+      } else {
+        Tracker.activeIndex = Math.min(
+          Tracker.options.totalStages - 1,
+          Math.floor(elapsedNow / Tracker.options.intervalMs)
+        );
+        Tracker.render();
       }
-    }, Tracker.options.intervalMs);
+    }, Math.min(1000, Tracker.options.intervalMs));
   },
 
   render: function () {
@@ -74,6 +93,7 @@ const Tracker = {
     }
     Tracker.options = null;
     Tracker.activeIndex = 0;
+    Tracker.startedAt = null;
   },
 };
 

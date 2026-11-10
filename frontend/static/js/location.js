@@ -2,6 +2,7 @@
 const LocationManager = {
   locationData: null,
   loadError: null,
+  storageKey: 'crunchbox-address-v1',
 
   init: async function () {
     if (LocationManager.locationData || LocationManager.loadError) return;
@@ -51,28 +52,19 @@ const LocationManager = {
       townships,
       city ? 'Select Township' : 'Select City first'
     );
-    LocationManager._resetSelect(document.getElementById('addr-ward'), 'Select Ward');
-    LocationManager._resetSelect(document.getElementById('addr-street'), 'Select Street');
+    ['addr-ward', 'addr-street', 'addr-house'].forEach((id) => {
+      const field = document.getElementById(id);
+      if (field) field.value = '';
+    });
+    LocationManager.saveAddress();
   },
 
   onTownshipChange: function () {
-    const wards = Object.keys(LocationManager._townshipData()?.wards || {});
-    LocationManager._fillSelect(
-      document.getElementById('addr-ward'),
-      wards,
-      'Select Ward'
-    );
-    LocationManager._resetSelect(document.getElementById('addr-street'), 'Select Street');
-  },
-
-  onWardChange: function () {
-    const ward = document.getElementById('addr-ward')?.value;
-    const streets = LocationManager._townshipData()?.wards?.[ward]?.streets || [];
-    LocationManager._fillSelect(
-      document.getElementById('addr-street'),
-      streets,
-      'Select Street'
-    );
+    ['addr-ward', 'addr-street', 'addr-house'].forEach((id) => {
+      const field = document.getElementById(id);
+      if (field) field.value = '';
+    });
+    LocationManager.saveAddress();
   },
 
   getAddress: function () {
@@ -87,12 +79,20 @@ const LocationManager = {
 
   validateAddress: function () {
     const address = LocationManager.getAddress();
-    const streets =
-      LocationManager._townshipData()?.wards?.[address.ward]?.streets || [];
     const valid =
-      Boolean(address.city && address.township && address.ward && address.house) &&
-      streets.includes(address.street);
+      Boolean(
+        address.city && address.township &&
+        address.ward && address.street && address.house
+      );
     return { valid, address: valid ? address : null };
+  },
+
+  saveAddress: function () {
+    try {
+      localStorage.setItem(LocationManager.storageKey, JSON.stringify(LocationManager.getAddress()));
+    } catch (error) {
+      console.error('[LocationManager] Could not save address:', error);
+    }
   },
 
   wireDropdowns: async function () {
@@ -105,10 +105,33 @@ const LocationManager = {
 
     LocationManager.renderCityDropdown(city);
     LocationManager._resetSelect(township, 'Select Township');
-    LocationManager._resetSelect(ward, 'Select Ward');
-    LocationManager._resetSelect(street, 'Select Street');
+    const saved = LocationManager.loadAddress();
     city.onchange = LocationManager.onCityChange;
     township.onchange = LocationManager.onTownshipChange;
-    ward.onchange = LocationManager.onWardChange;
+    [ward, street, document.getElementById('addr-house')].forEach((input) => {
+      input?.addEventListener('input', LocationManager.saveAddress);
+      input?.addEventListener('change', LocationManager.saveAddress);
+    });
+    if (saved?.city && LocationManager.locationData?.[saved.city]) {
+      city.value = saved.city;
+      LocationManager.onCityChange();
+      if (saved.township && LocationManager._cityData()?.townships?.[saved.township]) {
+        township.value = saved.township;
+      }
+      ward.value = saved.ward || '';
+      street.value = saved.street || '';
+      document.getElementById('addr-house').value = saved.house || '';
+      LocationManager.saveAddress();
+    }
+  },
+
+  loadAddress: function () {
+    try {
+      const saved = JSON.parse(localStorage.getItem(LocationManager.storageKey) || 'null');
+      return saved && typeof saved === 'object' ? saved : null;
+    } catch (error) {
+      console.error('[LocationManager] Could not restore saved address:', error);
+      return null;
+    }
   },
 };

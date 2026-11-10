@@ -38,6 +38,7 @@
         <span class="notif-dot"></span>
       </button>
       <a id="admin-dashboard-link" class="admin-shortcut hidden" href="/admin">Admin</a>
+      <button id="see-order-btn" class="see-order-btn hidden" type="button">See Order</button>
       <button id="cart-btn" class="cart-btn" aria-label="Open cart">
         <span>🛒</span>
         <span class="cart-badge" id="cart-count">0</span>
@@ -176,25 +177,23 @@
       <button class="cart-close-btn" id="cart-close-btn" aria-label="Close cart">✕</button>
     </div>
 
-    <!-- Member discount note -->
-    <div class="member-discount-note hidden" id="member-discount-note">
-      🏷️ 10% member discount applied!
-    </div>
-
-    <!-- Cart Items -->
-    <div id="cart-items" class="cart-items-list">
+    <div class="cart-scroll-area" id="cart-scroll-area">
+      <div class="member-discount-note hidden" id="member-discount-note">
+        🏷️ 10% member discount applied!
+      </div>
+      <div id="cart-items" class="cart-items-list">
       <div class="cart-empty" id="cart-empty">
         <span class="cart-empty-icon">🛒</span>
         <p>Your cart is empty.<br/>Add some delicious items!</p>
+        </div>
       </div>
-    </div>
 
     <!-- Price Breakdown -->
     <div class="cart-summary" id="cart-summary">
       <div class="cart-summary-row">
         <span>Subtotal</span>
         <span id="cart-subtotal">0 MMK</span>
-      </div>
+        </div>
       <div class="cart-summary-row discount-row hidden" id="member-discount-row">
         <span>Member Discount (10%)</span>
         <span id="member-discount-amt" class="text-success">-0 MMK</span>
@@ -237,13 +236,10 @@
         <select id="addr-township" class="addr-select">
           <option value="">Select Township</option>
         </select>
-        <select id="addr-ward" class="addr-select">
-          <option value="">Select Ward</option>
-        </select>
-        <select id="addr-street" class="addr-select">
-          <option value="">Select Street</option>
-        </select>
+        <input id="addr-ward" type="text" class="addr-input" placeholder="Ward" maxlength="100" />
+        <input id="addr-street" type="text" class="addr-input" placeholder="Street" maxlength="160" />
         <input id="addr-house" type="text" class="addr-input" placeholder="House / Room No." />
+      </div>
       </div>
     </div>
 
@@ -262,7 +258,7 @@
       <div class="order-confirm-header">
         <span class="order-confirm-icon">🎉</span>
         <h2 class="order-confirm-title">Order Placed!</h2>
-        <p class="order-confirm-sub">Sit tight — your crunch is on its way.</p>
+        <p class="order-confirm-sub">Order <span id="order-modal-id"></span> · Sit tight — your crunch is on its way.</p>
       </div>
       <div class="order-track-stages" id="order-track-stages">
         <div class="stage-card" id="stage-1">
@@ -301,6 +297,8 @@
           </div>
         </div>
       </div>
+      <div class="order-special-request hidden" id="order-special-request"></div>
+      <div class="order-receipt-items" id="order-receipt-items"></div>
       <div class="order-support-box hidden" id="order-support-box">
         <p>Need help with your order? If your driver hasn't arrived, please call our support line at <a class="support-phone" href="tel:+959970020705">+959970020705</a>.</p>
       </div>
@@ -378,6 +376,14 @@
        TOAST CONTAINER
   ═══════════════════════════════════════════════════ -->
   <div id="toast-container" class="toast-container"></div>
+
+  <!-- ═══════════════════════════════════════════════════
+       FLOATING TRACK-ORDER SHORTCUT (saved orders only)
+  ═══════════════════════════════════════════════════ -->
+  <button id="track-order-fab" class="track-order-fab hidden" type="button">
+    <span class="track-order-fab-icon">🛵</span>
+    <span class="track-order-fab-text">Track your order</span>
+  </button>
 
   <!-- ═══════════════════════════════════════════════════
        FIXED BOTTOM NAVIGATION

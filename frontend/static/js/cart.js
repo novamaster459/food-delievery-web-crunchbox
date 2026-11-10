@@ -1,9 +1,37 @@
 // Shopping cart and checkout interactions.
 const Cart = {
+  storageKey: 'crunchbox-cart-v1',
   items: [],
   currentUser: null,
   appliedCoupon: null,
   memberDiscountPct: 10,
+  openRequests: new Set(),
+
+  loadItems: function () {
+    try {
+      const saved = JSON.parse(localStorage.getItem(Cart.storageKey) || '{}');
+      const items = Array.isArray(saved) ? saved : saved.items;
+      Cart.appliedCoupon = Array.isArray(saved) ? null : (saved.appliedCoupon || null);
+      return Array.isArray(items) ? items.filter((item) =>
+        item && typeof item.product_id === 'string' &&
+        Number.isInteger(item.quantity) && item.quantity > 0
+      ) : [];
+    } catch (error) {
+      console.error('[Cart] Could not restore saved cart:', error);
+      return [];
+    }
+  },
+
+  saveState: function () {
+    try {
+      localStorage.setItem(Cart.storageKey, JSON.stringify({
+        items: Cart.items,
+        appliedCoupon: Cart.appliedCoupon,
+      }));
+    } catch (error) {
+      console.error('[Cart] Could not save cart:', error);
+    }
+  },
 
   addItem: function (product) {
     const item = Cart.items.find((entry) => entry.product_id === String(product.id));
@@ -16,8 +44,11 @@ const Cart = {
         quantity: 1,
         is_combo: Boolean(product.is_combo),
         combo_discount_pct: Number(product.combo_discount_pct || 0),
+        loyalty_points: Number(product.loyalty_points || 0),
+        special_request: '',
       });
     }
+    Cart.saveState();
     Cart.render();
     Cart.updateBadge();
   },
@@ -27,8 +58,47 @@ const Cart = {
     if (!item) return;
     if (quantity < 1) Cart.items = Cart.items.filter((entry) => entry !== item);
     else item.quantity = Math.min(99, quantity);
+    Cart.saveState();
     Cart.render();
     Cart.updateBadge();
+  },
+
+  reconcileWithMenu: function (menuData) {
+    const products = (menuData || []).flatMap((category) => category.products || []);
+    if (!products.length || !Cart.items.length) return;
+    const byName = new Map(products.map((product) => [product.name, product]));
+    let changed = false;
+    let dropped = 0;
+    Cart.items = Cart.items.filter((item) => {
+      const product = products.find((entry) => String(entry.id) === item.product_id)
+        || byName.get(item.name);
+      if (!product) {
+        dropped += 1;
+        changed = true;
+        return false;
+      }
+      const next = {
+        product_id: String(product.id),
+        unit_price: Number(product.price),
+        is_combo: Boolean(product.is_combo),
+        combo_discount_pct: Number(product.combo_discount_pct || 0),
+        loyalty_points: Number(product.loyalty_points || 0),
+      };
+      for (const [key, value] of Object.entries(next)) {
+        if (item[key] !== value) {
+          item[key] = value;
+          changed = true;
+        }
+      }
+      return true;
+    });
+    if (!changed) return;
+    Cart.saveState();
+    Cart.render();
+    Cart.updateBadge();
+    if (dropped) {
+      Cart.showToast('Some saved items are no longer on the menu and were removed.', 'info');
+    }
   },
 
   calculateTotals: function () {
@@ -100,7 +170,41 @@ const Cart = {
         const lineTotal = document.createElement('span');
         lineTotal.className = 'cart-item-line-total';
         lineTotal.textContent = Cart.formatPrice(item.unit_price * item.quantity);
-        row.append(info, controls, lineTotal);
+        const requestToggle = document.createElement('button');
+        requestToggle.type = 'button';
+        requestToggle.className = 'cart-request-toggle';
+        requestToggle.setAttribute('aria-expanded', 'false');
+        const request = document.createElement('textarea');
+        request.className = 'cart-special-request';
+        request.maxLength = 500;
+        request.rows = 2;
+        request.placeholder = 'Special request (optional) — e.g. extra spicy, no onions';
+        request.setAttribute('aria-label', `Special request for ${item.name}`);
+        request.value = item.special_request || '';
+        const syncRequestUI = () => {
+          const hasRequest = Boolean(item.special_request?.trim());
+          requestToggle.textContent = hasRequest ? '✎ Edit special request' : '＋ Add special request';
+          requestToggle.classList.toggle('has-request', hasRequest);
+        };
+        const setRequestOpen = (open) => {
+          request.classList.toggle('is-open', open);
+          requestToggle.setAttribute('aria-expanded', String(open));
+          if (open) Cart.openRequests.add(item.product_id);
+          else Cart.openRequests.delete(item.product_id);
+        };
+        setRequestOpen(Cart.openRequests.has(item.product_id) || Boolean(item.special_request));
+        syncRequestUI();
+        requestToggle.addEventListener('click', () => {
+          const open = !request.classList.contains('is-open');
+          setRequestOpen(open);
+          if (open) request.focus();
+        });
+        request.addEventListener('input', () => {
+          item.special_request = request.value;
+          Cart.saveState();
+          syncRequestUI();
+        });
+        row.append(info, controls, lineTotal, requestToggle, request);
         minus.addEventListener('click', () => Cart.updateQuantity(item.product_id, item.quantity - 1));
         plus.addEventListener('click', () => Cart.updateQuantity(item.product_id, item.quantity + 1));
         remove.addEventListener('click', () => Cart.updateQuantity(item.product_id, 0));
@@ -176,6 +280,7 @@ const Cart = {
         discount_pct: Number(result.discount_pct),
         reward_product_id: result.reward_product_id || '',
       };
+      Cart.saveState();
       if (status) {
         status.textContent = result.reward_product_name
           ? `${result.code} applied to one ${result.reward_product_name}.`
@@ -184,6 +289,7 @@ const Cart = {
       Cart.render();
     } catch (error) {
       Cart.appliedCoupon = null;
+      Cart.saveState();
       Cart.render();
       if (status) status.textContent = error.message;
     }
@@ -204,22 +310,31 @@ const Cart = {
     }
     try {
       const result = await API.checkout({
-        items: Cart.items.map(({ product_id, quantity }) => ({ product_id, quantity })),
+        items: Cart.items.map(({ product_id, quantity, special_request }) => ({
+          product_id, quantity, special_request: special_request || '',
+        })),
         coupon_code: Cart.appliedCoupon?.code || '',
         address,
       });
+      App.saveLastOrder(result, address);
       if (App.currentUser && Number.isFinite(result.loyalty?.points_balance)) {
         App.currentUser.points = result.loyalty.points_balance;
         App.updateRewardsUI();
       }
       Cart.clear();
       Cart.close();
-      App.openOrderModal(result);
+      App.openOrderModal(result.order, App.lastOrder);
       if (result.loyalty?.points_earned > 0) {
         Cart.showToast(`You earned ${result.loyalty.points_earned} loyalty points!`, 'success');
       }
     } catch (error) {
-      Cart.showToast(error.message || 'Checkout failed.', 'error');
+      if (/not found/i.test(error.message || '')) {
+        await App.loadMenu();
+        Cart.reconcileWithMenu(App.menuData);
+        Cart.showToast('Your saved order was refreshed with the current menu. Please review it and try again.', 'info');
+      } else {
+        Cart.showToast(error.message || 'Checkout failed.', 'error');
+      }
     } finally {
       if (button) {
         button.textContent = 'Place Order 🍗';
@@ -231,6 +346,8 @@ const Cart = {
   clear: function () {
     Cart.items = [];
     Cart.appliedCoupon = null;
+    Cart.openRequests.clear();
+    Cart.saveState();
     Cart.render();
     Cart.updateBadge();
   },
@@ -248,3 +365,5 @@ const Cart = {
     setTimeout(() => toast.remove(), 3500);
   },
 };
+
+Cart.items = Cart.loadItems();

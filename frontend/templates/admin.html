@@ -167,6 +167,10 @@
                 <label class="form-label" for="product-price">Price (MMK) *</label>
                 <input class="form-input" id="product-price" type="number" min="0" placeholder="e.g. 5000" required />
               </div>
+              <div class="form-group">
+                <label class="form-label" for="product-loyalty-points">Points per item</label>
+                <input class="form-input" id="product-loyalty-points" type="number" min="0" max="1000000" value="100" required />
+              </div>
               <div class="form-group form-group--checkbox">
                 <label class="form-label">Is Combo?</label>
                 <label class="checkbox-label">
@@ -179,6 +183,20 @@
             <div class="form-group combo-discount-group hidden" id="combo-discount-group">
               <label class="form-label" for="product-combo-discount">Combo Discount (%)</label>
               <input class="form-input" id="product-combo-discount" type="number" min="0" max="100" placeholder="e.g. 15" />
+            </div>
+            <div class="form-row">
+              <div class="form-group form-group--checkbox">
+                <label class="form-label">Points reward option?</label>
+                <label class="checkbox-label">
+                  <input type="checkbox" id="product-is-reward" />
+                  <span class="checkbox-custom"></span>
+                  <span>Members can redeem this item with points</span>
+                </label>
+              </div>
+              <div class="form-group hidden" id="reward-points-group">
+                <label class="form-label" for="product-reward-points">Points needed to redeem</label>
+                <input class="form-input" id="product-reward-points" type="number" min="1" max="1000000" placeholder="e.g. 2000" />
+              </div>
             </div>
             <div class="form-group">
               <label class="form-label" for="product-image">Product Image</label>
@@ -199,12 +217,14 @@
               <th>Name</th>
               <th>Category</th>
               <th>Price (MMK)</th>
+              <th>Points / item</th>
+              <th>Reward option</th>
               <th>Combo?</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody id="products-tbody">
-            <tr><td colspan="6" class="table-empty">Loading products…</td></tr>
+            <tr><td colspan="8" class="table-empty">Loading products…</td></tr>
           </tbody>
         </table>
       </div>
@@ -328,10 +348,11 @@
               <th>Total (MMK)</th>
               <th>Status</th>
               <th>Date</th>
+              <th>Details</th>
             </tr>
           </thead>
           <tbody id="orders-tbody">
-            <tr><td colspan="5" class="table-empty">Loading orders…</td></tr>
+            <tr><td colspan="6" class="table-empty">Loading orders…</td></tr>
           </tbody>
         </table>
       </div>
@@ -355,6 +376,22 @@
           <div class="form-group">
             <label class="form-label" for="settings-member-discount">Member Discount (%)</label>
             <input class="form-input" id="settings-member-discount" type="number" min="0" max="100" placeholder="10" />
+          </div>
+          <h4 class="admin-card-title">Loyalty Rewards</h4>
+          <p class="settings-help">Points earned per product are set when editing that product, and any product can be marked as a points reward in the Products tab. Set the points required for the three built-in rewards below.</p>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="settings-reward-iced-cola">Iced Cola points</label>
+              <input class="form-input" id="settings-reward-iced-cola" type="number" min="1" max="1000000" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="settings-reward-burger">Spicy Crunch Burger points</label>
+              <input class="form-input" id="settings-reward-burger" type="number" min="1" max="1000000" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="settings-reward-bucket">Crispy Chicken Bucket points</label>
+              <input class="form-input" id="settings-reward-bucket" type="number" min="1" max="1000000" />
+            </div>
           </div>
           <hr class="settings-divider" />
           <h4 class="admin-card-title">Storefront Style</h4>

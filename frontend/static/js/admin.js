@@ -28,6 +28,9 @@ const Admin = {
     document.getElementById('product-is-combo')?.addEventListener('change', (event) => {
       document.getElementById('combo-discount-group')?.classList.toggle('hidden', !event.target.checked);
     });
+    document.getElementById('product-is-reward')?.addEventListener('change', (event) => {
+      document.getElementById('reward-points-group')?.classList.toggle('hidden', !event.target.checked);
+    });
     document.getElementById('add-category-btn')?.addEventListener('click', () => Admin.showCategoryForm());
     document.getElementById('category-cancel-btn')?.addEventListener('click', () => Admin.hideCategoryForm());
     document.getElementById('category-form')?.addEventListener('submit', Admin.saveCategory);
@@ -118,7 +121,7 @@ const Admin = {
       const tbody = document.getElementById('products-tbody');
       if (!tbody) return;
       if (!Admin.products.length) {
-        tbody.innerHTML = '<tr><td colspan="6" class="table-empty">No products yet.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="8" class="table-empty">No products yet.</td></tr>';
         return;
       }
       tbody.innerHTML = Admin.products.map((product) => `
@@ -129,6 +132,10 @@ const Admin = {
           <td>${Admin.escape(product.name)}</td>
           <td>${Admin.escape(product.category_name)}</td>
           <td>${Admin.price(product.price)}</td>
+          <td>${Number(product.loyalty_points || 0)}</td>
+          <td>${product.is_reward
+            ? `Yes · ${Number(product.reward_points || 0).toLocaleString('en-US')} pts`
+            : '—'}</td>
           <td>${product.is_combo ? `Yes (${Number(product.combo_discount_pct)}% off)` : 'No'}</td>
           <td class="actions-cell">
             <button type="button" class="btn-edit" data-edit-product="${Admin.escape(product.id)}">Edit</button>
@@ -152,6 +159,9 @@ const Admin = {
     document.getElementById('product-id').value = '';
     document.getElementById('product-submit-btn').textContent = 'Save Product';
     document.getElementById('combo-discount-group')?.classList.add('hidden');
+    document.getElementById('reward-points-group')?.classList.add('hidden');
+    document.getElementById('product-is-reward').checked = false;
+    document.getElementById('product-reward-points').value = '';
     document.getElementById('product-form-wrap')?.classList.remove('hidden');
   },
 
@@ -164,9 +174,13 @@ const Admin = {
     document.getElementById('product-category').value = product.category_id;
     document.getElementById('product-desc').value = product.description;
     document.getElementById('product-price').value = product.price;
+    document.getElementById('product-loyalty-points').value = product.loyalty_points ?? 100;
     document.getElementById('product-is-combo').checked = product.is_combo;
     document.getElementById('product-combo-discount').value = product.combo_discount_pct;
     document.getElementById('combo-discount-group')?.classList.toggle('hidden', !product.is_combo);
+    document.getElementById('product-is-reward').checked = Boolean(product.is_reward);
+    document.getElementById('product-reward-points').value = product.reward_points || '';
+    document.getElementById('reward-points-group')?.classList.toggle('hidden', !product.is_reward);
     document.getElementById('product-submit-btn').textContent = 'Update Product';
     document.getElementById('product-form-wrap')?.classList.remove('hidden');
   },
@@ -182,8 +196,11 @@ const Admin = {
       body.append('name', document.getElementById('product-name').value.trim());
       body.append('description', document.getElementById('product-desc').value.trim());
       body.append('price', document.getElementById('product-price').value);
+      body.append('loyalty_points', document.getElementById('product-loyalty-points').value);
       body.append('is_combo', String(document.getElementById('product-is-combo').checked));
       body.append('combo_discount_pct', document.getElementById('product-combo-discount').value || '0');
+      body.append('is_reward', String(document.getElementById('product-is-reward').checked));
+      body.append('reward_points', document.getElementById('product-reward-points').value || '0');
       const image = document.getElementById('product-image').files[0];
       if (image) body.append('image', image);
       if (Admin.editingProductId) await API.admin.updateProduct(Admin.editingProductId, body);
@@ -346,21 +363,80 @@ const Admin = {
     try {
       Admin.orders = await API.admin.getOrders();
       const tbody = document.getElementById('orders-tbody');
-      if (tbody) tbody.innerHTML = Admin.orderRows(Admin.orders);
+      if (tbody) {
+        tbody.innerHTML = Admin.orderRows(Admin.orders, true);
+        Admin.bindOrderDetails(tbody);
+      }
     } catch (error) {
       Admin.toast(`Could not load orders: ${error.message}`, 'error');
     }
   },
 
-  orderRows: function (orders) {
-    return orders.map((order) => `
+  orderRows: function (orders, showDetails = false) {
+    if (!orders.length) {
+      return `<tr><td colspan="${showDetails ? 6 : 5}" class="table-empty">No orders yet.</td></tr>`;
+    }
+    return orders.map((order) => {
+      const id = Admin.escape(order.id);
+      const main = `
       <tr>
-        <td>#${Admin.escape(order.id)}</td>
+        <td>#${Admin.escape(order.id.slice(0, 8))}</td>
         <td>${Admin.escape(order.username || 'Guest')}</td>
         <td>${Admin.price(order.total)}</td>
         <td>${Admin.escape(order.status)}</td>
         <td>${Admin.date(order.created_at)}</td>
-      </tr>`).join('') || '<tr><td colspan="5" class="table-empty">No orders yet.</td></tr>';
+        ${showDetails ? `<td><button type="button" class="btn-secondary btn--sm" data-order-details="${id}">View</button></td>` : ''}
+      </tr>`;
+      if (!showDetails) return main;
+
+      const address = order.address
+        ? [
+            order.address.house,
+            order.address.street,
+            order.address.ward,
+            order.address.township,
+            order.address.city,
+          ].filter(Boolean).join(', ')
+        : '—';
+      const items = (order.items || []).map((item) => `
+        <li>${Number(item.quantity)} × ${Admin.escape(item.name)}${item.special_request
+          ? `<span class="order-detail-request">Request: ${Admin.escape(item.special_request)}</span>`
+          : ''}</li>`).join('') || '<li>No items recorded</li>';
+
+      return `${main}
+      <tr class="order-detail-row hidden" data-order-row="${id}">
+        <td colspan="6">
+          <div class="order-detail-grid">
+            <div>
+              <h4>Deliver to</h4>
+              <p>${Admin.escape(address)}</p>
+              ${order.coupon_code ? `<p>Coupon: ${Admin.escape(order.coupon_code)}</p>` : ''}
+            </div>
+            <div>
+              <h4>Items &amp; special requests</h4>
+              <ul class="order-detail-items">${items}</ul>
+            </div>
+            <div>
+              <h4>Totals</h4>
+              <p>Subtotal ${Admin.price(order.subtotal)}</p>
+              <p>Discount ${Admin.price(order.discount_amount)}</p>
+              <p>Total ${Admin.price(order.total)}</p>
+            </div>
+          </div>
+        </td>
+      </tr>`;
+    }).join('');
+  },
+
+  bindOrderDetails: function (tbody) {
+    tbody.querySelectorAll('[data-order-details]').forEach((button) => {
+      button.addEventListener('click', () => {
+        const row = tbody.querySelector(`[data-order-row="${button.dataset.orderDetails}"]`);
+        if (!row) return;
+        row.classList.toggle('hidden');
+        button.textContent = row.classList.contains('hidden') ? 'View' : 'Hide';
+      });
+    });
   },
 
   loadSettings: async function () {
@@ -368,6 +444,9 @@ const Admin = {
       const settings = await API.getSettings();
       document.getElementById('settings-shop-name').value = settings.shop_name || '';
       document.getElementById('settings-member-discount').value = settings.member_discount_pct;
+      document.getElementById('settings-reward-iced-cola').value = settings.reward_iced_cola_points;
+      document.getElementById('settings-reward-burger').value = settings.reward_spicy_crunch_burger_points;
+      document.getElementById('settings-reward-bucket').value = settings.reward_crispy_chicken_bucket_points;
       document.getElementById('settings-accent-color').value = settings.accent_color || '#ff6b00';
       document.getElementById('settings-background-color').value = settings.background_color || '#121212';
       document.getElementById('settings-hero-heading').value = settings.hero_heading || '';
@@ -409,6 +488,9 @@ const Admin = {
       const settings = await API.updateSettings({
         shop_name: document.getElementById('settings-shop-name').value.trim(),
         member_discount_pct: Number(document.getElementById('settings-member-discount').value),
+        reward_iced_cola_points: Number(document.getElementById('settings-reward-iced-cola').value),
+        reward_spicy_crunch_burger_points: Number(document.getElementById('settings-reward-burger').value),
+        reward_crispy_chicken_bucket_points: Number(document.getElementById('settings-reward-bucket').value),
         accent_color: document.getElementById('settings-accent-color').value,
         background_color: document.getElementById('settings-background-color').value,
         hero_heading: document.getElementById('settings-hero-heading').value.trim(),

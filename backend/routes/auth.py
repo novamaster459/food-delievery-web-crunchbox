@@ -25,9 +25,9 @@ from models import Coupon, User
 auth_bp = Blueprint("auth", __name__)
 
 REWARD_CATALOG = (
-    {"id": "iced-cola", "product_name": "Iced Cola", "points_cost": 2000},
-    {"id": "spicy-crunch-burger", "product_name": "Spicy Crunch Burger", "points_cost": 8000},
-    {"id": "crispy-chicken-bucket", "product_name": "Crispy Chicken Bucket", "points_cost": 20000},
+    {"id": "iced-cola", "product_name": "Iced Cola", "settings_key": "reward_iced_cola_points"},
+    {"id": "spicy-crunch-burger", "product_name": "Spicy Crunch Burger", "settings_key": "reward_spicy_crunch_burger_points"},
+    {"id": "crispy-chicken-bucket", "product_name": "Crispy Chicken Bucket", "settings_key": "reward_crispy_chicken_bucket_points"},
 )
 
 
@@ -47,6 +47,40 @@ def current_user() -> User | None:
     if not user_id:
         return None
     return next((u for u in db["users"] if u.id == user_id), None)
+
+
+def reward_options() -> list[dict]:
+    """
+    Build the redeemable reward catalog from products the admin marked as
+    rewards.  Falls back to the original three rewards when no product has
+    been configured yet (e.g. an older in-memory data set).
+    """
+    options = [
+        {
+            "id": product.id,
+            "points_cost": int(product.reward_points),
+            "product": product.to_dict(),
+        }
+        for product in db["products"]
+        if product.is_reward and product.is_available and not product.is_combo
+    ]
+    if options:
+        return options
+
+    products_by_name = {
+        product.name: product
+        for product in db["products"]
+        if product.is_available
+    }
+    for reward in REWARD_CATALOG:
+        product = products_by_name.get(reward["product_name"])
+        if product is not None:
+            options.append({
+                "id": reward["id"],
+                "points_cost": db["settings"][reward["settings_key"]],
+                "product": product.to_dict(),
+            })
+    return options
 
 
 # ---------------------------------------------------------------------------
@@ -161,19 +195,7 @@ def rewards():
     if user is None:
         return jsonify({"error": "Log in to view and redeem rewards"}), 401
 
-    products_by_name = {
-        product.name: product
-        for product in db["products"]
-        if product.is_available
-    }
-    catalog = []
-    for reward in REWARD_CATALOG:
-        product = products_by_name.get(reward["product_name"])
-        if product is not None:
-            catalog.append({
-                **reward,
-                "product": product.to_dict(),
-            })
+    catalog = reward_options()
 
     active_rewards = []
     for coupon in db["coupons"]:
@@ -213,7 +235,7 @@ def redeem_reward():
         return jsonify({"error": "Request body must be a JSON object"}), 400
 
     reward = next(
-        (item for item in REWARD_CATALOG if item["id"] == data.get("reward_id")),
+        (item for item in reward_options() if item["id"] == data.get("reward_id")),
         None,
     )
     if reward is None:
@@ -222,13 +244,14 @@ def redeem_reward():
     product = next(
         (
             item for item in db["products"]
-            if item.name == reward["product_name"] and item.is_available and not item.is_combo
+            if item.id == reward["product"]["id"] and item.is_available and not item.is_combo
         ),
         None,
     )
     if product is None:
         return jsonify({"error": "This reward is currently unavailable"}), 409
-    if user.points < reward["points_cost"]:
+    points_cost = int(reward["points_cost"])
+    if user.points < points_cost:
         return jsonify({"error": "You do not have enough points for this reward"}), 400
 
     code = f"REWARD-{secrets.token_hex(4).upper()}"
@@ -240,11 +263,11 @@ def redeem_reward():
         reward_product_id=product.id,
     )
     db["coupons"].append(coupon)
-    user.points -= reward["points_cost"]
+    user.points -= points_cost
 
     return jsonify({
         "success": True,
-        "points_spent": reward["points_cost"],
+        "points_spent": points_cost,
         "points": user.points,
         "reward": {
             "code": coupon.code,

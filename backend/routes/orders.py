@@ -59,6 +59,20 @@ YANGON_LOCATIONS = {
     }
 }
 
+# Other cities offered by the storefront.  Only city and township are fixed
+# choices; ward, street and house/room number are entered by the customer.
+_OTHER_CITY_TOWNSHIPS = {
+    "Mandalay": ["Chanayethazan", "Mahaaungmyay", "Chanmyathazi", "Pyigyitagon", "Amarapura"],
+    "Naypyidaw": ["Zabuthiri", "Dekkhinathiri", "Pobbathiri", "Ottarathiri", "Pyinmana"],
+    "Bago": ["Bago", "Thanatpin", "Waw", "Nyaunglebin", "Shwegyin"],
+    "Mawlamyine": ["Mawlamyine", "Kyaikmaraw", "Chaungzon", "Thanbyuzayat", "Mudon"],
+}
+
+for _city, _townships in _OTHER_CITY_TOWNSHIPS.items():
+    YANGON_LOCATIONS[_city] = {
+        "townships": {township: {"wards": {}} for township in _townships}
+    }
+
 
 # ---------------------------------------------------------------------------
 # Routes
@@ -170,13 +184,17 @@ def checkout():
     if not isinstance(address.get("house"), str):
         return jsonify({"error": "House or room number must be text"}), 400
     city_data = YANGON_LOCATIONS.get(city, {})
-    township_data = city_data.get("townships", {}).get(township, {})
-    ward_data = township_data.get("wards", {}).get(ward, {})
     if (
-        not city or not township or not ward or not street or not house
-        or street not in ward_data.get("streets", [])
+        not city_data
+        or township not in city_data.get("townships", {})
+        or not ward.strip()
+        or not street.strip()
+        or not house
+        or len(ward) > 100
+        or len(street) > 160
+        or len(house) > 80
     ):
-        return jsonify({"error": "Select a valid city, township, ward and street, and enter a house or room number"}), 400
+        return jsonify({"error": "Choose a valid city and township, and enter your ward, street and house or room number"}), 400
 
     # ------------------------------------------------------------------
     # Step 1 — Resolve products and build line items
@@ -203,6 +221,10 @@ def checkout():
         if quantity > 99:
             return jsonify({"error": "Quantity cannot exceed 99 per product"}), 400
 
+        special_request = entry.get("special_request", "")
+        if not isinstance(special_request, str) or len(special_request.strip()) > 500:
+            return jsonify({"error": "Special requests must be 500 characters or fewer"}), 400
+
         item_subtotal = product.price * quantity
         line_items.append({
             "product_id":        product.id,
@@ -213,6 +235,8 @@ def checkout():
             "is_combo":          product.is_combo,
             "combo_discount_pct": product.combo_discount_pct,
             "combo_savings":     0,  # filled in below
+            "special_request":   special_request.strip(),
+            "loyalty_points":    product.loyalty_points,
         })
 
     # ------------------------------------------------------------------
@@ -323,10 +347,19 @@ def checkout():
     if user_id:
         user = next((u for u in db["users"] if u.id == user_id), None)
         if user:
-            purchased_units = sum(item["quantity"] for item in line_items)
+            points_earned = sum(
+                item["quantity"] * item["loyalty_points"]
+                for item in line_items
+            )
             if coupon_code and coupon.reward_product_id:
-                purchased_units -= 1
-            points_earned = max(0, purchased_units) * 100
+                reward_line = next(
+                    item for item in line_items
+                    if item["product_id"] == coupon.reward_product_id
+                )
+                points_earned = max(
+                    0,
+                    points_earned - reward_line["loyalty_points"],
+                )
             user.points += points_earned
             points_balance = user.points
 
