@@ -14,7 +14,7 @@ The app listens on http://0.0.0.0:5000 in debug mode.
 import os
 import re
 import sys
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from flask import Flask, jsonify, request, send_from_directory, session
 from flask_cors import CORS
@@ -230,6 +230,12 @@ def seed_data() -> None:
         ),
     ])
 
+    # Seeded products pre-date the app so they do not all carry the
+    # "New on CrunchBox" badge on every fresh start.
+    seeded_at = datetime.utcnow() - timedelta(days=30)
+    for product in db["products"]:
+        product.created_at = seeded_at
+
     # ------------------------------------------------------------------
     # Coupons
     # ------------------------------------------------------------------
@@ -377,11 +383,26 @@ def get_menu():
     Return all categories with their available products nested inside.
     Categories are sorted by sort_order ascending.
     """
+    # Rank bestsellers by total units ordered; the top three with at least
+    # two units sold earn the badge.
+    sales_totals: dict = {}
+    for order in db["orders"]:
+        for item in order.items:
+            pid = item.get("product_id")
+            sales_totals[pid] = sales_totals.get(pid, 0) + int(item.get("quantity", 0))
+    top_sellers = sorted(sales_totals.items(), key=lambda kv: kv[1], reverse=True)[:3]
+    bestseller_ids = {pid for pid, qty in top_sellers if qty >= 2}
+
+    new_cutoff = datetime.utcnow() - timedelta(days=14)
+
     # Build a lookup: category_id → list of available product dicts
     products_by_cat: dict = {}
     for product in db["products"]:
         if product.is_available:
-            products_by_cat.setdefault(product.category_id, []).append(product.to_dict())
+            d = product.to_dict()
+            d["is_bestseller"] = product.id in bestseller_ids
+            d["is_new"] = product.created_at >= new_cutoff
+            products_by_cat.setdefault(product.category_id, []).append(d)
 
     # Assemble the response
     menu = []
@@ -443,6 +464,12 @@ def serve_admin():
 def serve_track():
     """Serve the order-tracking page."""
     return send_from_directory(FRONTEND_TEMPLATES, "track.html")
+
+
+@app.route("/locations")
+def serve_branch_locations():
+    """Serve the branch locations page."""
+    return send_from_directory(FRONTEND_TEMPLATES, "locations.html")
 
 
 @app.route("/", defaults={"path": ""})

@@ -373,7 +373,7 @@
         <p class="settings-help">Customers can order while at least one branch is within its opening hours. When every branch is closed, the menu and rewards stay visible but ordering is turned off.</p>
 
         <div class="admin-form-wrap hidden" id="location-form-wrap">
-          <form class="admin-form" id="location-form">
+          <form class="admin-form" id="location-form" enctype="multipart/form-data">
             <input type="hidden" id="location-id" value="" />
             <div class="form-row">
               <div class="form-group">
@@ -395,6 +395,11 @@
                 <input class="form-input" id="location-close-time" type="time" required />
               </div>
             </div>
+            <div class="form-group">
+              <label class="form-label" for="location-image">Branch Photo</label>
+              <input class="form-input form-file" id="location-image" type="file" accept="image/*" />
+              <div class="image-preview-wrap" id="location-image-preview"></div>
+            </div>
             <div class="form-actions">
               <button type="submit" class="btn-primary" id="location-submit-btn">Save Location</button>
               <button type="button" class="btn-secondary" id="location-cancel-btn">Cancel</button>
@@ -405,6 +410,7 @@
         <table class="admin-table" id="locations-table">
           <thead>
             <tr>
+              <th>Photo</th>
               <th>Name</th>
               <th>Branch No.</th>
               <th>Opening Hours</th>
@@ -413,7 +419,7 @@
             </tr>
           </thead>
           <tbody id="locations-tbody">
-            <tr><td colspan="5" class="table-empty">Loading locations…</td></tr>
+            <tr><td colspan="6" class="table-empty">Loading locations…</td></tr>
           </tbody>
         </table>
       </div>

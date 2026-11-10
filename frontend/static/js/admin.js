@@ -372,6 +372,9 @@ const Admin = {
       if (!tbody) return;
       tbody.innerHTML = Admin.locations.map((location) => `
         <tr>
+          <td>${location.image_url
+            ? `<img class="table-thumb" src="${Admin.escape(location.image_url)}" alt="${Admin.escape(location.name)}">`
+            : '<span aria-label="No branch photo">📍</span>'}</td>
           <td>${Admin.escape(location.name)}</td>
           <td>${Admin.escape(location.branch_no)}</td>
           <td>${Admin.escape(location.open_time)} – ${Admin.escape(location.close_time)}</td>
@@ -380,7 +383,7 @@ const Admin = {
             <button type="button" class="btn-edit" data-edit-location="${Admin.escape(location.id)}">Edit</button>
             <button type="button" class="btn-delete" data-delete-location="${Admin.escape(location.id)}">Delete</button>
           </td>
-        </tr>`).join('') || '<tr><td colspan="5" class="table-empty">No locations yet.</td></tr>';
+        </tr>`).join('') || '<tr><td colspan="6" class="table-empty">No locations yet.</td></tr>';
       tbody.querySelectorAll('[data-edit-location]').forEach((button) => {
         button.addEventListener('click', () => Admin.editLocation(button.dataset.editLocation));
       });
@@ -395,6 +398,8 @@ const Admin = {
   showLocationForm: function () {
     document.getElementById('location-form')?.reset();
     document.getElementById('location-id').value = '';
+    const preview = document.getElementById('location-image-preview');
+    if (preview) preview.replaceChildren();
     document.getElementById('location-submit-btn').textContent = 'Save Location';
     document.getElementById('location-form-wrap')?.classList.remove('hidden');
   },
@@ -407,6 +412,12 @@ const Admin = {
     document.getElementById('location-branch-no').value = location.branch_no;
     document.getElementById('location-open-time').value = location.open_time;
     document.getElementById('location-close-time').value = location.close_time;
+    const preview = document.getElementById('location-image-preview');
+    if (preview) {
+      preview.innerHTML = location.image_url
+        ? `<img class="table-thumb" src="${Admin.escape(location.image_url)}" alt="${Admin.escape(location.name)}">`
+        : '';
+    }
     document.getElementById('location-submit-btn').textContent = 'Update Location';
     document.getElementById('location-form-wrap')?.classList.remove('hidden');
   },
@@ -416,15 +427,16 @@ const Admin = {
     const button = document.getElementById('location-submit-btn');
     button.disabled = true;
     const id = document.getElementById('location-id').value;
-    const data = {
-      name: document.getElementById('location-name').value.trim(),
-      branch_no: document.getElementById('location-branch-no').value.trim(),
-      open_time: document.getElementById('location-open-time').value,
-      close_time: document.getElementById('location-close-time').value,
-    };
+    const body = new FormData();
+    body.append('name', document.getElementById('location-name').value.trim());
+    body.append('branch_no', document.getElementById('location-branch-no').value.trim());
+    body.append('open_time', document.getElementById('location-open-time').value);
+    body.append('close_time', document.getElementById('location-close-time').value);
+    const image = document.getElementById('location-image').files[0];
+    if (image) body.append('image', image);
     try {
-      if (id) await API.admin.updateLocation(id, data);
-      else await API.admin.addLocation(data);
+      if (id) await API.admin.updateLocation(id, body);
+      else await API.admin.addLocation(body);
       Admin.hideLocationForm();
       await Admin.loadLocations();
       Admin.toast('Location saved.', 'success');
@@ -438,6 +450,8 @@ const Admin = {
   hideLocationForm: function () {
     document.getElementById('location-form-wrap')?.classList.add('hidden');
     document.getElementById('location-form')?.reset();
+    const preview = document.getElementById('location-image-preview');
+    if (preview) preview.replaceChildren();
   },
 
   deleteLocation: async function (id) {

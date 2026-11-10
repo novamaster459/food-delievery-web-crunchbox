@@ -487,15 +487,18 @@ def list_locations():
 @require_admin
 def add_location():
     """
-    Create a new branch location.
+    Create a new branch location.  Accepts multipart/form-data.
 
-    Expected JSON body:
-        { "name": "Bahan Branch", "branch_no": "01",
-          "open_time": "09:00", "close_time": "22:00" }
+    Form fields:
+        name        (str, required)
+        branch_no   (str, required)
+        open_time   (str "HH:MM", required)
+        close_time  (str "HH:MM", required)
+        image       (file, optional)
     """
-    data = request.get_json(silent=True) or {}
+    form = request.form
 
-    error, fields = _parse_location_payload(data)
+    error, fields = _parse_location_payload(form)
     if error:
         return jsonify({"error": error}), 400
     if fields["open_time"] == fields["close_time"]:
@@ -503,6 +506,12 @@ def add_location():
 
     if any(loc.branch_no == fields["branch_no"] for loc in db["locations"]):
         return jsonify({"error": f"Branch number {fields['branch_no']} is already in use"}), 400
+
+    image_file = request.files.get("image")
+    if image_file and image_file.filename:
+        if not _allowed_file(image_file.filename):
+            return jsonify({"error": "Invalid image type. Allowed: png, jpg, jpeg, gif, webp"}), 400
+        fields["image_filename"] = _save_image(image_file)
 
     new_location = BranchLocation(**fields)
     db["locations"].append(new_location)
@@ -517,33 +526,40 @@ def edit_location(loc_id: str):
     if location is None:
         return jsonify({"error": "Location not found"}), 404
 
-    data = request.get_json(silent=True) or {}
+    form = request.form
 
-    if "name" in data:
-        name = str(data["name"]).strip()
+    if "name" in form:
+        name = form["name"].strip()
         if not name or len(name) > 80:
             return jsonify({"error": "Location name must be between 1 and 80 characters"}), 400
         location.name = name
-    if "branch_no" in data:
-        branch_no = str(data["branch_no"]).strip()
+    if "branch_no" in form:
+        branch_no = form["branch_no"].strip()
         if not branch_no or len(branch_no) > 20:
             return jsonify({"error": "Branch number must be between 1 and 20 characters"}), 400
         if any(loc.branch_no == branch_no and loc.id != loc_id for loc in db["locations"]):
             return jsonify({"error": f"Branch number {branch_no} is already in use"}), 400
         location.branch_no = branch_no
-    if "open_time" in data:
-        open_time = str(data["open_time"]).strip()
+    if "open_time" in form:
+        open_time = form["open_time"].strip()
         if not _HHMM_RE.match(open_time):
             return jsonify({"error": "Opening time must be in HH:MM (24-hour) format"}), 400
         location.open_time = open_time
-    if "close_time" in data:
-        close_time = str(data["close_time"]).strip()
+    if "close_time" in form:
+        close_time = form["close_time"].strip()
         if not _HHMM_RE.match(close_time):
             return jsonify({"error": "Closing time must be in HH:MM (24-hour) format"}), 400
         location.close_time = close_time
 
     if location.open_time == location.close_time:
         return jsonify({"error": "Opening and closing times must differ"}), 400
+
+    # Replace photo if a new one is uploaded
+    image_file = request.files.get("image")
+    if image_file and image_file.filename and _allowed_file(image_file.filename):
+        location.image_filename = _save_image(image_file)
+    elif image_file and image_file.filename:
+        return jsonify({"error": "Invalid image type. Allowed: png, jpg, jpeg, gif, webp"}), 400
 
     return jsonify({"success": True, "location": location.to_dict()})
 

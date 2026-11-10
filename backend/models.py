@@ -99,6 +99,7 @@ class Product:
     loyalty_points: int = 100           # Points earned per purchased unit
     is_reward: bool = False             # True when redeemable with loyalty points
     reward_points: int = 0              # Points required to redeem one unit
+    created_at: datetime = field(default_factory=datetime.utcnow)  # Drives the "New on CrunchBox" badge
 
     def to_dict(self) -> dict:
         return {
@@ -115,6 +116,7 @@ class Product:
             "loyalty_points": self.loyalty_points,
             "is_reward": self.is_reward,
             "reward_points": self.reward_points,
+            "created_at": self.created_at.isoformat(),
         }
 
 
@@ -163,6 +165,7 @@ class BranchLocation:
     branch_no: str = ""
     open_time: str = "09:00"
     close_time: str = "22:00"
+    image_filename: str = ""            # Filename inside /static/uploads/
 
     def is_open_now(self, moment: datetime = None) -> bool:
         """Return True if the branch is open at the given time (default: now)."""
@@ -188,6 +191,8 @@ class BranchLocation:
             "branch_no": self.branch_no,
             "open_time": self.open_time,
             "close_time": self.close_time,
+            "image_filename": self.image_filename,
+            "image_url": f"/static/uploads/{self.image_filename}" if self.image_filename else "",
             "is_open": self.is_open_now(),
         }
 

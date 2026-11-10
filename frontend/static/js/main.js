@@ -231,6 +231,10 @@ const App = {
         ${product.is_combo ? `<span class="menu-card-combo-label">🎁 Combo −${Number(product.combo_discount_pct)}%</span>` : ''}
       </div>
       <div class="menu-card-body">
+        <div class="menu-card-badges">
+          ${product.is_bestseller ? '<span class="menu-badge menu-badge--bestseller">🔥 Bestseller</span>' : ''}
+          ${product.is_new ? '<span class="menu-badge menu-badge--new">✨ New on CrunchBox</span>' : ''}
+        </div>
         <h3 class="menu-card-name">${App.escapeHTML(product.name)}</h3>
         <p class="menu-card-desc">${App.escapeHTML(product.description || '')}</p>
         <div class="menu-card-footer">
@@ -275,9 +279,8 @@ const App = {
     document.getElementById('nav-home')?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
     document.getElementById('nav-menu')?.addEventListener('click', () => document.getElementById('menu-section')?.scrollIntoView({ behavior: 'smooth' }));
     document.getElementById('nav-deals')?.addEventListener('click', () => document.querySelector('.promo-section')?.scrollIntoView({ behavior: 'smooth' }));
-    document.getElementById('nav-locations')?.addEventListener('click', async () => {
-      await App.loadBranchLocations();
-      document.getElementById('store-locations-section')?.scrollIntoView({ behavior: 'smooth' });
+    document.getElementById('nav-locations')?.addEventListener('click', () => {
+      window.location.href = '/locations';
     });
     document.getElementById('order-now-btn')?.addEventListener('click', () => document.getElementById('menu-section')?.scrollIntoView({ behavior: 'smooth' }));
     document.getElementById('deal-promo-button')?.addEventListener('click', () => {

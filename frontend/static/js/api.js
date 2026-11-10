@@ -264,14 +264,14 @@ const API = {
       return API._get('/api/admin/locations');
     },
 
-    /** POST /api/admin/locations */
-    addLocation: async function (data) {
-      return API._json('/api/admin/locations', 'POST', data);
+    /** POST /api/admin/locations (multipart) */
+    addLocation: async function (formData) {
+      return API._multipart('/api/admin/locations', 'POST', formData);
     },
 
-    /** PUT /api/admin/locations/:id */
-    updateLocation: async function (id, data) {
-      return API._json(`/api/admin/locations/${id}`, 'PUT', data);
+    /** PUT /api/admin/locations/:id (multipart) */
+    updateLocation: async function (id, formData) {
+      return API._multipart(`/api/admin/locations/${id}`, 'PUT', formData);
     },
 
     /** DELETE /api/admin/locations/:id */
