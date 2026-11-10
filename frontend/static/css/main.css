@@ -1464,7 +1464,7 @@ body.track-page {
 ══════════════════════════════════════════════════════════════ */
 .toast-container {
   position: fixed;
-  bottom: calc(var(--bottom-nav-h) + 12px);
+  top: 12px;
   right: 16px;
   z-index: 3000;
   display: flex;

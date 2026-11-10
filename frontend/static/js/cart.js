@@ -369,10 +369,10 @@ const Cart = {
 
   showToast: function (message, type = 'success') {
     const toast = document.createElement('div');
-    toast.className = `toast toast--${type}`;
+    toast.className = `toast ${type}`;
     toast.textContent = message;
-    document.body.appendChild(toast);
-    requestAnimationFrame(() => toast.classList.add('toast--visible'));
+    const container = document.getElementById('toast-container') || document.body;
+    container.appendChild(toast);
     setTimeout(() => toast.remove(), 3500);
   },
 };
