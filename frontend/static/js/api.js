@@ -92,6 +92,14 @@ const API = {
     return API._get('/api/auth/me');
   },
 
+  /** PUT /api/auth/password */
+  changePassword: async function (currentPassword, newPassword) {
+    return API._json('/api/auth/password', 'PUT', {
+      current_password: currentPassword,
+      new_password: newPassword,
+    });
+  },
+
   getRewards: async function () {
     return API._get('/api/auth/rewards');
   },

@@ -220,6 +220,8 @@ const Cart = {
     Cart.setDiscountRow('coupon-discount-row', 'coupon-discount-amt', totals.couponSavings);
     const checkout = document.getElementById('checkout-btn');
     if (checkout) checkout.disabled = !Cart.items.length;
+    const clearButton = document.getElementById('cart-clear-btn');
+    if (clearButton) clearButton.disabled = !Cart.items.length;
     const couponInput = document.getElementById('coupon-input');
     if (couponInput && Cart.appliedCoupon) couponInput.value = Cart.appliedCoupon.code;
   },

@@ -469,6 +469,32 @@
           </div>
         </div>
       </div>
+
+      <div class="admin-card settings-card">
+        <div class="admin-card-header">
+          <h3 class="admin-card-title">Change Admin Password</h3>
+        </div>
+        <form class="admin-form" id="password-form">
+          <div class="form-group">
+            <label class="form-label" for="password-current">Current password</label>
+            <input class="form-input" id="password-current" type="password" autocomplete="current-password" required />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="password-new">New password</label>
+              <input class="form-input" id="password-new" type="password" minlength="6" autocomplete="new-password" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="password-confirm">Confirm new password</label>
+              <input class="form-input" id="password-confirm" type="password" minlength="6" autocomplete="new-password" required />
+            </div>
+          </div>
+          <p class="settings-help">Use at least 6 characters. You stay signed in after changing it.</p>
+          <div class="form-actions">
+            <button type="submit" class="btn-primary" id="password-submit-btn">Update Password</button>
+          </div>
+        </form>
+      </div>
     </div>
 
   </main><!-- end admin-main -->

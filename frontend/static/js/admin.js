@@ -42,6 +42,7 @@ const Admin = {
     });
     document.getElementById('coupon-form')?.addEventListener('submit', Admin.saveCoupon);
     document.getElementById('settings-form')?.addEventListener('submit', Admin.saveSettings);
+    document.getElementById('password-form')?.addEventListener('submit', Admin.changePassword);
     document.getElementById('settings-logo')?.addEventListener('change', Admin.uploadLogo);
     document.getElementById('settings-hero-image')?.addEventListener('change', (event) => Admin.uploadDecoration(event, 'hero'));
     document.getElementById('settings-featured-image')?.addEventListener('change', (event) => Admin.uploadDecoration(event, 'featured'));
@@ -506,6 +507,36 @@ const Admin = {
       Admin.toast('Shop settings saved.', 'success');
     } catch (error) {
       Admin.toast(`Could not save settings: ${error.message}`, 'error');
+    }
+  },
+
+  changePassword: async function (event) {
+    event.preventDefault();
+    const current = document.getElementById('password-current').value;
+    const next = document.getElementById('password-new').value;
+    const confirm = document.getElementById('password-confirm').value;
+    const button = document.getElementById('password-submit-btn');
+    if (!current || !next || !confirm) {
+      Admin.toast('Please fill in every password field.', 'error');
+      return;
+    }
+    if (next.length < 6) {
+      Admin.toast('New password must be at least 6 characters.', 'error');
+      return;
+    }
+    if (next !== confirm) {
+      Admin.toast('New password and confirmation do not match.', 'error');
+      return;
+    }
+    if (button) button.disabled = true;
+    try {
+      await API.changePassword(current, next);
+      document.getElementById('password-form').reset();
+      Admin.toast('Admin password updated.', 'success');
+    } catch (error) {
+      Admin.toast(`Could not change password: ${error.message}`, 'error');
+    } finally {
+      if (button) button.disabled = false;
     }
   },
 

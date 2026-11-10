@@ -53,7 +53,9 @@ storage.
 - Leaving or closing the storefront asks for confirmation using the browser's built-in prompt.
 - Customers can add per-item preparation requests; the admin sees each request, the delivery address and the price breakdown in the Orders tab.
 - The cart, delivery address, and latest order/tracker are saved in the same browser so they survive a refresh or accidental tab close. A saved cart is refreshed against the current menu when the page reopens.
+- A Clear all button in the cart removes every item at once after confirmation.
 - City and township are chosen from dropdowns (Yangon, Mandalay, Naypyidaw, Bago, Mawlamyine); ward, street and house/room number are typed by the customer.
 - Admin product/category/coupon management and shop name/logo settings.
+- The signed-in admin can change their own password from the Settings tab.
 - Admin-editable storefront accent/background colors, hero copy/photo, and featured/deal card copy/photos.
 - A simulated five-stage, 15-second delivery tracker.

@@ -196,6 +196,13 @@ const App = {
     document.getElementById('track-order-fab')?.addEventListener('click', () => App.showLastOrder());
     document.getElementById('nav-order')?.addEventListener('click', () => Cart.open());
     document.getElementById('cart-close-btn')?.addEventListener('click', () => Cart.close());
+    document.getElementById('cart-clear-btn')?.addEventListener('click', () => {
+      if (!Cart.items.length) return;
+      if (window.confirm('Remove all items from your order?')) {
+        Cart.clear();
+        Cart.showToast('Order cleared.', 'info');
+      }
+    });
     document.getElementById('cart-overlay')?.addEventListener('click', () => Cart.close());
     document.getElementById('checkout-btn')?.addEventListener('click', () => Cart.handleCheckout());
     document.getElementById('coupon-apply-btn')?.addEventListener('click', () => Cart.handleCouponApply());

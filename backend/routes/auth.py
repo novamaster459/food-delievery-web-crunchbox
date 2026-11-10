@@ -277,6 +277,43 @@ def redeem_reward():
     }), 201
 
 
+@auth_bp.route("/password", methods=["PUT"])
+def change_password():
+    """
+    Change the signed-in user's password after verifying the current one.
+
+    Expected JSON body:
+        { "current_password": "...", "new_password": "..." }
+
+    Returns:
+        200 — { "success": true }
+        400 — validation error or incorrect current password
+        401 — not logged in
+    """
+    user = current_user()
+    if user is None:
+        return jsonify({"error": "Not logged in"}), 401
+
+    data = request.get_json(silent=True) or {}
+    if not isinstance(data, dict):
+        return jsonify({"error": "Request body must be a JSON object"}), 400
+
+    current_password = str(data.get("current_password", "")).strip()
+    new_password = str(data.get("new_password", "")).strip()
+
+    if not current_password or not new_password:
+        return jsonify({"error": "Current and new passwords are required"}), 400
+    if not check_password_hash(user.password_hash, current_password):
+        return jsonify({"error": "Current password is incorrect"}), 400
+    if len(new_password) < 6:
+        return jsonify({"error": "New password must be at least 6 characters"}), 400
+    if new_password == current_password:
+        return jsonify({"error": "New password must be different from the current password"}), 400
+
+    user.password_hash = generate_password_hash(new_password)
+    return jsonify({"success": True})
+
+
 @auth_bp.route("/profile", methods=["PUT"])
 def update_profile():
     """
