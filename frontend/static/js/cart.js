@@ -219,7 +219,11 @@ const Cart = {
     Cart.setDiscountRow('combo-discount-row', 'combo-discount-amt', totals.comboSavings);
     Cart.setDiscountRow('coupon-discount-row', 'coupon-discount-amt', totals.couponSavings);
     const checkout = document.getElementById('checkout-btn');
-    if (checkout) checkout.disabled = !Cart.items.length;
+    if (checkout) {
+      const closed = typeof App !== 'undefined' && App.storeOpen === false;
+      checkout.disabled = !Cart.items.length || closed;
+      checkout.textContent = closed ? '🔒 Closed — opens during opening hours' : 'Place Order 🍗';
+    }
     const clearButton = document.getElementById('cart-clear-btn');
     if (clearButton) clearButton.disabled = !Cart.items.length;
     const couponInput = document.getElementById('coupon-input');
@@ -298,6 +302,10 @@ const Cart = {
   },
 
   handleCheckout: async function () {
+    if (typeof App !== 'undefined' && App.storeOpen === false) {
+      Cart.showToast('All branches are closed right now. Ordering opens during opening hours.', 'error');
+      return;
+    }
     const { valid, address } = LocationManager.validateAddress();
     if (!valid) {
       Cart.showToast('Choose a city, township, ward and street, then enter your house or room number.', 'error');
@@ -339,8 +347,9 @@ const Cart = {
       }
     } finally {
       if (button) {
-        button.textContent = 'Place Order 🍗';
-        button.disabled = Cart.items.length === 0;
+        const closed = typeof App !== 'undefined' && App.storeOpen === false;
+        button.textContent = closed ? '🔒 Closed — opens during opening hours' : 'Place Order 🍗';
+        button.disabled = closed || Cart.items.length === 0;
       }
     }
   },

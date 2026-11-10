@@ -168,6 +168,23 @@
   </div>
 
   <!-- ═══════════════════════════════════════════════════
+       STORE LOCATIONS
+  ═══════════════════════════════════════════════════ -->
+  <section class="store-locations-section" id="store-locations-section">
+    <div class="section-header">
+      <h2 class="section-title">📍 Our Locations</h2>
+      <span class="section-subtitle" id="locations-count-label"></span>
+    </div>
+    <div class="store-locations-grid" id="store-locations-grid">
+      <!-- JS-rendered branch cards -->
+    </div>
+    <p class="store-locations-empty hidden" id="store-locations-empty">No branch locations have been added yet.</p>
+    <p class="store-locations-closed-note hidden" id="closed-ordering-note">
+      🔒 All branches are closed right now. You can browse the menu and rewards, but ordering opens at <span id="closed-opens-at"></span>.
+    </p>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════
        CART SIDEBAR / DRAWER
   ═══════════════════════════════════════════════════ -->
   <div class="cart-overlay hidden" id="cart-overlay"></div>
@@ -407,6 +424,10 @@
     <button class="bottom-nav-item" id="nav-deals" data-page="deals">
       <span class="nav-icon">🏷️</span>
       <span class="nav-label">Deals</span>
+    </button>
+    <button class="bottom-nav-item" id="nav-locations" data-page="locations">
+      <span class="nav-icon">📍</span>
+      <span class="nav-label">Location</span>
     </button>
     <button class="bottom-nav-item" id="nav-profile" data-page="profile">
       <span class="nav-icon">👤</span>

@@ -145,6 +145,54 @@ class Coupon:
 
 
 # ---------------------------------------------------------------------------
+# BranchLocation
+# ---------------------------------------------------------------------------
+
+@dataclass
+class BranchLocation:
+    """
+    A physical store branch with its opening hours.
+
+    Hours are stored as 24-hour "HH:MM" strings.  Overnight ranges where the
+    closing time falls before the opening time (e.g. 18:00–02:00) are
+    supported: the branch counts as open past midnight.
+    """
+
+    id: str = field(default_factory=_new_id)
+    name: str = ""
+    branch_no: str = ""
+    open_time: str = "09:00"
+    close_time: str = "22:00"
+
+    def is_open_now(self, moment: datetime = None) -> bool:
+        """Return True if the branch is open at the given time (default: now)."""
+        moment = moment or datetime.now()
+        now_minutes = moment.hour * 60 + moment.minute
+        open_minutes = self._to_minutes(self.open_time)
+        close_minutes = self._to_minutes(self.close_time)
+        if open_minutes == close_minutes:
+            return True
+        if open_minutes < close_minutes:
+            return open_minutes <= now_minutes < close_minutes
+        return now_minutes >= open_minutes or now_minutes < close_minutes
+
+    @staticmethod
+    def _to_minutes(hhmm: str) -> int:
+        hours, minutes = str(hhmm).split(":", 1)
+        return int(hours) * 60 + int(minutes)
+
+    def to_dict(self) -> dict:
+        return {
+            "id": self.id,
+            "name": self.name,
+            "branch_no": self.branch_no,
+            "open_time": self.open_time,
+            "close_time": self.close_time,
+            "is_open": self.is_open_now(),
+        }
+
+
+# ---------------------------------------------------------------------------
 # Order
 # ---------------------------------------------------------------------------
 

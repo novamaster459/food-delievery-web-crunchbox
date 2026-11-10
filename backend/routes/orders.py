@@ -174,6 +174,17 @@ def checkout():
     if not isinstance(address, dict):
         return jsonify({"error": "A complete delivery address is required"}), 400
 
+    # Refuse orders while every branch is outside its opening hours.
+    # When no locations have been configured at all, ordering stays allowed.
+    locations = db.get("locations", [])
+    if locations and not any(loc.is_open_now() for loc in locations):
+        next_open = min(
+            (loc.open_time for loc in locations if loc.open_time != loc.close_time),
+            default="",
+        )
+        suffix = f" Ordering opens at {next_open}." if next_open else ""
+        return jsonify({"error": f"All branches are closed right now.{suffix}"}), 403
+
     city = address.get("city")
     township = address.get("township")
     ward = address.get("ward")

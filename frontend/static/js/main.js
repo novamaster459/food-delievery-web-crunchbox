@@ -6,9 +6,11 @@ const App = {
   settings: {},
   lastOrderKey: 'crunchbox-last-order-v1',
   lastOrder: null,
+  branchLocations: [],
+  storeOpen: true,
 
   init: async function () {
-    await Promise.all([App.loadSettings(), App.loadUser()]);
+    await Promise.all([App.loadSettings(), App.loadUser(), App.loadBranchLocations()]);
     await App.loadMenu();
     Cart.reconcileWithMenu(App.menuData);
     await LocationManager.wireDropdowns();
@@ -16,6 +18,66 @@ const App = {
     App.restoreLastOrder();
     Cart.render();
     Cart.updateBadge();
+  },
+
+  loadBranchLocations: async function () {
+    try {
+      App.branchLocations = await API.getBranchLocations();
+    } catch (error) {
+      console.error('[App] Failed to load branch locations:', error);
+      App.branchLocations = [];
+    }
+    App.renderBranchLocations();
+  },
+
+  renderBranchLocations: function () {
+    const grid = document.getElementById('store-locations-grid');
+    const empty = document.getElementById('store-locations-empty');
+    const count = document.getElementById('locations-count-label');
+    const locations = App.branchLocations;
+
+    const anyOpen = locations.some((loc) => loc.is_open);
+    App.storeOpen = !locations.length || anyOpen;
+
+    if (count) count.textContent = locations.length ? `${locations.length} branch${locations.length > 1 ? 'es' : ''}` : '';
+    if (empty) empty.classList.toggle('hidden', locations.length > 0);
+    if (!grid) {
+      App.applyStoreOpenState();
+      return;
+    }
+    grid.replaceChildren();
+    locations.forEach((location) => {
+      const card = document.createElement('article');
+      card.className = 'branch-card';
+      const status = location.is_open
+        ? '<span class="branch-status branch-status--open">Open now</span>'
+        : '<span class="branch-status branch-status--closed">Closed</span>';
+      card.innerHTML = `
+        <div class="branch-card-head">
+          <span class="branch-card-icon">📍</span>
+          <h3 class="branch-card-name">${App.escapeHTML(location.name)}</h3>
+          ${status}
+        </div>
+        <p class="branch-card-meta">Branch No. ${App.escapeHTML(location.branch_no)}</p>
+        <p class="branch-card-hours">🕒 ${App.escapeHTML(location.open_time)} – ${App.escapeHTML(location.close_time)}</p>`;
+      grid.appendChild(card);
+    });
+    App.applyStoreOpenState();
+  },
+
+  applyStoreOpenState: function () {
+    const note = document.getElementById('closed-ordering-note');
+    const opensAt = document.getElementById('closed-opens-at');
+    const closed = App.branchLocations.length > 0 && !App.storeOpen;
+    if (note) {
+      note.classList.toggle('hidden', !closed);
+      if (closed && opensAt) {
+        opensAt.textContent = [...new Set(App.branchLocations.map((loc) => loc.open_time))]
+          .sort()
+          .join(' / ');
+      }
+    }
+    Cart.render();
   },
 
   loadSettings: async function () {
@@ -177,6 +239,10 @@ const App = {
         </div>
       </div>`;
     card.querySelector('.add-to-cart-btn').addEventListener('click', () => {
+      if (!App.storeOpen) {
+        Cart.showToast('All branches are closed right now. Ordering opens during opening hours.', 'error');
+        return;
+      }
       Cart.addItem(product);
       Cart.showToast('Added to your order.', 'success');
     });
@@ -209,6 +275,10 @@ const App = {
     document.getElementById('nav-home')?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
     document.getElementById('nav-menu')?.addEventListener('click', () => document.getElementById('menu-section')?.scrollIntoView({ behavior: 'smooth' }));
     document.getElementById('nav-deals')?.addEventListener('click', () => document.querySelector('.promo-section')?.scrollIntoView({ behavior: 'smooth' }));
+    document.getElementById('nav-locations')?.addEventListener('click', async () => {
+      await App.loadBranchLocations();
+      document.getElementById('store-locations-section')?.scrollIntoView({ behavior: 'smooth' });
+    });
     document.getElementById('order-now-btn')?.addEventListener('click', () => document.getElementById('menu-section')?.scrollIntoView({ behavior: 'smooth' }));
     document.getElementById('deal-promo-button')?.addEventListener('click', () => {
       document.getElementById('menu-section')?.scrollIntoView({ behavior: 'smooth' });

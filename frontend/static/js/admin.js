@@ -4,6 +4,7 @@ const Admin = {
   products: [],
   coupons: [],
   orders: [],
+  locations: [],
   editingProductId: '',
 
   init: async function () {
@@ -48,6 +49,9 @@ const Admin = {
     document.getElementById('settings-featured-image')?.addEventListener('change', (event) => Admin.uploadDecoration(event, 'featured'));
     document.getElementById('settings-deal-image')?.addEventListener('change', (event) => Admin.uploadDecoration(event, 'deal'));
     document.getElementById('refresh-orders-btn')?.addEventListener('click', () => Admin.loadOrders());
+    document.getElementById('add-location-btn')?.addEventListener('click', () => Admin.showLocationForm());
+    document.getElementById('location-cancel-btn')?.addEventListener('click', () => Admin.hideLocationForm());
+    document.getElementById('location-form')?.addEventListener('submit', Admin.saveLocation);
     document.getElementById('sidebar-toggle')?.addEventListener('click', () => {
       document.getElementById('admin-sidebar')?.classList.toggle('open');
     });
@@ -82,6 +86,7 @@ const Admin = {
       categories: Admin.loadCategories,
       coupons: Admin.loadCoupons,
       orders: Admin.loadOrders,
+      locations: Admin.loadLocations,
       settings: Admin.loadSettings,
     };
     loaders[name]?.();
@@ -357,6 +362,92 @@ const Admin = {
       Admin.toast('Coupon deleted.', 'success');
     } catch (error) {
       Admin.toast(`Could not delete coupon: ${error.message}`, 'error');
+    }
+  },
+
+  loadLocations: async function () {
+    try {
+      Admin.locations = await API.admin.getLocations();
+      const tbody = document.getElementById('locations-tbody');
+      if (!tbody) return;
+      tbody.innerHTML = Admin.locations.map((location) => `
+        <tr>
+          <td>${Admin.escape(location.name)}</td>
+          <td>${Admin.escape(location.branch_no)}</td>
+          <td>${Admin.escape(location.open_time)} – ${Admin.escape(location.close_time)}</td>
+          <td>${location.is_open ? 'Open now' : 'Closed'}</td>
+          <td class="actions-cell">
+            <button type="button" class="btn-edit" data-edit-location="${Admin.escape(location.id)}">Edit</button>
+            <button type="button" class="btn-delete" data-delete-location="${Admin.escape(location.id)}">Delete</button>
+          </td>
+        </tr>`).join('') || '<tr><td colspan="5" class="table-empty">No locations yet.</td></tr>';
+      tbody.querySelectorAll('[data-edit-location]').forEach((button) => {
+        button.addEventListener('click', () => Admin.editLocation(button.dataset.editLocation));
+      });
+      tbody.querySelectorAll('[data-delete-location]').forEach((button) => {
+        button.addEventListener('click', () => Admin.deleteLocation(button.dataset.deleteLocation));
+      });
+    } catch (error) {
+      Admin.toast(`Could not load locations: ${error.message}`, 'error');
+    }
+  },
+
+  showLocationForm: function () {
+    document.getElementById('location-form')?.reset();
+    document.getElementById('location-id').value = '';
+    document.getElementById('location-submit-btn').textContent = 'Save Location';
+    document.getElementById('location-form-wrap')?.classList.remove('hidden');
+  },
+
+  editLocation: function (id) {
+    const location = Admin.locations.find((item) => item.id === id);
+    if (!location) return;
+    document.getElementById('location-id').value = id;
+    document.getElementById('location-name').value = location.name;
+    document.getElementById('location-branch-no').value = location.branch_no;
+    document.getElementById('location-open-time').value = location.open_time;
+    document.getElementById('location-close-time').value = location.close_time;
+    document.getElementById('location-submit-btn').textContent = 'Update Location';
+    document.getElementById('location-form-wrap')?.classList.remove('hidden');
+  },
+
+  saveLocation: async function (event) {
+    event.preventDefault();
+    const button = document.getElementById('location-submit-btn');
+    button.disabled = true;
+    const id = document.getElementById('location-id').value;
+    const data = {
+      name: document.getElementById('location-name').value.trim(),
+      branch_no: document.getElementById('location-branch-no').value.trim(),
+      open_time: document.getElementById('location-open-time').value,
+      close_time: document.getElementById('location-close-time').value,
+    };
+    try {
+      if (id) await API.admin.updateLocation(id, data);
+      else await API.admin.addLocation(data);
+      Admin.hideLocationForm();
+      await Admin.loadLocations();
+      Admin.toast('Location saved.', 'success');
+    } catch (error) {
+      Admin.toast(`Could not save location: ${error.message}`, 'error');
+    } finally {
+      button.disabled = false;
+    }
+  },
+
+  hideLocationForm: function () {
+    document.getElementById('location-form-wrap')?.classList.add('hidden');
+    document.getElementById('location-form')?.reset();
+  },
+
+  deleteLocation: async function (id) {
+    if (!window.confirm('Delete this location?')) return;
+    try {
+      await API.admin.deleteLocation(id);
+      await Admin.loadLocations();
+      Admin.toast('Location deleted.', 'success');
+    } catch (error) {
+      Admin.toast(`Could not delete location: ${error.message}`, 'error');
     }
   },
 

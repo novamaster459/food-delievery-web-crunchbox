@@ -155,6 +155,11 @@ const API = {
     return API._get('/api/orders/yangon-locations');
   },
 
+  /** GET /api/locations — store branches with open/closed status */
+  getBranchLocations: async function () {
+    return API._get('/api/locations');
+  },
+
   // ── Admin ─────────────────────────────────────────────────────────────────
 
   admin: {
@@ -250,6 +255,28 @@ const API = {
     /** GET /api/admin/orders */
     getOrders: async function () {
       return API._get('/api/admin/orders');
+    },
+
+    // ---- Branch Locations ----
+
+    /** GET /api/admin/locations */
+    getLocations: async function () {
+      return API._get('/api/admin/locations');
+    },
+
+    /** POST /api/admin/locations */
+    addLocation: async function (data) {
+      return API._json('/api/admin/locations', 'POST', data);
+    },
+
+    /** PUT /api/admin/locations/:id */
+    updateLocation: async function (id, data) {
+      return API._json(`/api/admin/locations/${id}`, 'PUT', data);
+    },
+
+    /** DELETE /api/admin/locations/:id */
+    deleteLocation: async function (id) {
+      return API._json(`/api/admin/locations/${id}`, 'DELETE');
     },
 
     // ---- Logo ----

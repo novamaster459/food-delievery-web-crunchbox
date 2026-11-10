@@ -58,6 +58,7 @@ db: dict = {
     "products": [],    # List[Product]
     "coupons": [],     # List[Coupon]
     "orders": [],      # List[Order]
+    "locations": [],   # List[BranchLocation]
     "settings": {
         "shop_name": "CrunchBox",
         "logo_filename": "",
@@ -358,6 +359,12 @@ def update_settings():
             db["settings"][key] = color.lower()
 
     return jsonify({"success": True, "settings": db["settings"]})
+
+
+@app.route("/api/locations", methods=["GET"])
+def get_locations():
+    """Return all store branches with their current open/closed status."""
+    return jsonify([loc.to_dict() for loc in db["locations"]])
 
 
 # ---------------------------------------------------------------------------

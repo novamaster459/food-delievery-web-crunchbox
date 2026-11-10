@@ -46,6 +46,10 @@
         <span class="admin-nav-icon">📦</span>
         <span class="admin-nav-label">Orders</span>
       </button>
+      <button class="admin-nav-item" data-tab="locations">
+        <span class="admin-nav-icon">📍</span>
+        <span class="admin-nav-label">Locations</span>
+      </button>
       <button class="admin-nav-item" data-tab="settings">
         <span class="admin-nav-icon">⚙️</span>
         <span class="admin-nav-label">Settings</span>
@@ -353,6 +357,63 @@
           </thead>
           <tbody id="orders-tbody">
             <tr><td colspan="6" class="table-empty">Loading orders…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ─── TAB: LOCATIONS ─── -->
+    <div class="admin-tab-content hidden" id="tab-locations">
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <h3 class="admin-card-title">Branch Locations</h3>
+          <button class="btn-primary btn--sm" id="add-location-btn">+ Add Location</button>
+        </div>
+
+        <p class="settings-help">Customers can order while at least one branch is within its opening hours. When every branch is closed, the menu and rewards stay visible but ordering is turned off.</p>
+
+        <div class="admin-form-wrap hidden" id="location-form-wrap">
+          <form class="admin-form" id="location-form">
+            <input type="hidden" id="location-id" value="" />
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="location-name">Location Name *</label>
+                <input class="form-input" id="location-name" type="text" placeholder="e.g. Bahan Branch" maxlength="80" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="location-branch-no">Branch No. *</label>
+                <input class="form-input" id="location-branch-no" type="text" placeholder="e.g. 01" maxlength="20" required />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="location-open-time">Opening Hour *</label>
+                <input class="form-input" id="location-open-time" type="time" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="location-close-time">Closing Hour *</label>
+                <input class="form-input" id="location-close-time" type="time" required />
+              </div>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn-primary" id="location-submit-btn">Save Location</button>
+              <button type="button" class="btn-secondary" id="location-cancel-btn">Cancel</button>
+            </div>
+          </form>
+        </div>
+
+        <table class="admin-table" id="locations-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Branch No.</th>
+              <th>Opening Hours</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="locations-tbody">
+            <tr><td colspan="5" class="table-empty">Loading locations…</td></tr>
           </tbody>
         </table>
       </div>

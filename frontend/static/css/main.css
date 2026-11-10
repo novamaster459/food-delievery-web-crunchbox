@@ -742,6 +742,40 @@ ul, ol { list-style: none; }
 }
 .rewards-current { color: var(--orange); font-weight: 600; }
 
+/* Store locations */
+.store-locations-section { padding: 20px 16px 8px; max-width: 1200px; margin: 0 auto; width: 100%; }
+.store-locations-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+.branch-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  padding: 16px;
+}
+.branch-card-head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.branch-card-icon { font-size: 20px; }
+.branch-card-name { font-size: 16px; flex: 1; min-width: 0; }
+.branch-status {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.branch-status--open { background: rgba(46, 204, 113, 0.15); color: #2ecc71; }
+.branch-status--closed { background: rgba(231, 76, 60, 0.15); color: #e74c3c; }
+.branch-card-meta { color: var(--text-muted); font-size: 13px; }
+.branch-card-hours { color: var(--text-muted); font-size: 13px; margin-top: 4px; }
+.store-locations-empty { color: var(--text-muted); font-size: 14px; padding: 12px 0; }
+.store-locations-closed-note {
+  margin-top: 16px;
+  padding: 12px 14px;
+  border: 1px solid rgba(231, 76, 60, 0.4);
+  border-radius: var(--radius-sm);
+  background: rgba(231, 76, 60, 0.1);
+  color: var(--text);
+  font-size: 14px;
+}
+
 .modal-box.rewards-modal-box {
   max-width: 560px;
   max-height: min(82vh, 760px);

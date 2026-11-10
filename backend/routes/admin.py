@@ -9,6 +9,7 @@ Mounted at `/api/admin` in app.py.
 """
 
 import os
+import re
 import uuid
 from datetime import datetime, timezone
 from functools import wraps
@@ -17,7 +18,7 @@ from flask import Blueprint, current_app, jsonify, request, session
 from werkzeug.utils import secure_filename
 
 from app import db
-from models import Category, Coupon, Product
+from models import BranchLocation, Category, Coupon, Product
 
 # ---------------------------------------------------------------------------
 # Blueprint
@@ -430,6 +431,132 @@ def delete_coupon(coupon_id: str):
         return jsonify({"error": "Coupon not found"}), 404
 
     db["coupons"].remove(coupon)
+    return jsonify({"success": True})
+
+
+# ---------------------------------------------------------------------------
+# Branch Location Routes
+# ---------------------------------------------------------------------------
+
+_HHMM_RE = re.compile(r"^([01]\d|2[0-3]):[0-5]\d$")
+
+
+def _parse_location_payload(data: dict, partial: bool = False):
+    """
+    Validate a location payload.
+
+    Returns (error_message, fields_dict).  `fields_dict` only contains the
+    keys present (and valid) in the request; on error it is empty.
+    """
+    fields = {}
+
+    if "name" in data or not partial:
+        name = str(data.get("name", "")).strip()
+        if not name or len(name) > 80:
+            return "Location name must be between 1 and 80 characters", {}
+        fields["name"] = name
+
+    if "branch_no" in data or not partial:
+        branch_no = str(data.get("branch_no", "")).strip()
+        if not branch_no or len(branch_no) > 20:
+            return "Branch number must be between 1 and 20 characters", {}
+        fields["branch_no"] = branch_no
+
+    if "open_time" in data or not partial:
+        open_time = str(data.get("open_time", "")).strip()
+        if not _HHMM_RE.match(open_time):
+            return "Opening time must be in HH:MM (24-hour) format", {}
+        fields["open_time"] = open_time
+    if "close_time" in data or not partial:
+        close_time = str(data.get("close_time", "")).strip()
+        if not _HHMM_RE.match(close_time):
+            return "Closing time must be in HH:MM (24-hour) format", {}
+        fields["close_time"] = close_time
+
+    return None, fields
+
+
+@admin_bp.route("/locations", methods=["GET"])
+@require_admin
+def list_locations():
+    """Return all branch locations with their current open/closed status."""
+    return jsonify([loc.to_dict() for loc in db["locations"]])
+
+
+@admin_bp.route("/locations", methods=["POST"])
+@require_admin
+def add_location():
+    """
+    Create a new branch location.
+
+    Expected JSON body:
+        { "name": "Bahan Branch", "branch_no": "01",
+          "open_time": "09:00", "close_time": "22:00" }
+    """
+    data = request.get_json(silent=True) or {}
+
+    error, fields = _parse_location_payload(data)
+    if error:
+        return jsonify({"error": error}), 400
+    if fields["open_time"] == fields["close_time"]:
+        return jsonify({"error": "Opening and closing times must differ"}), 400
+
+    if any(loc.branch_no == fields["branch_no"] for loc in db["locations"]):
+        return jsonify({"error": f"Branch number {fields['branch_no']} is already in use"}), 400
+
+    new_location = BranchLocation(**fields)
+    db["locations"].append(new_location)
+    return jsonify({"success": True, "location": new_location.to_dict()}), 201
+
+
+@admin_bp.route("/locations/<loc_id>", methods=["PUT"])
+@require_admin
+def edit_location(loc_id: str):
+    """Update an existing branch location (partial update semantics)."""
+    location = next((loc for loc in db["locations"] if loc.id == loc_id), None)
+    if location is None:
+        return jsonify({"error": "Location not found"}), 404
+
+    data = request.get_json(silent=True) or {}
+
+    if "name" in data:
+        name = str(data["name"]).strip()
+        if not name or len(name) > 80:
+            return jsonify({"error": "Location name must be between 1 and 80 characters"}), 400
+        location.name = name
+    if "branch_no" in data:
+        branch_no = str(data["branch_no"]).strip()
+        if not branch_no or len(branch_no) > 20:
+            return jsonify({"error": "Branch number must be between 1 and 20 characters"}), 400
+        if any(loc.branch_no == branch_no and loc.id != loc_id for loc in db["locations"]):
+            return jsonify({"error": f"Branch number {branch_no} is already in use"}), 400
+        location.branch_no = branch_no
+    if "open_time" in data:
+        open_time = str(data["open_time"]).strip()
+        if not _HHMM_RE.match(open_time):
+            return jsonify({"error": "Opening time must be in HH:MM (24-hour) format"}), 400
+        location.open_time = open_time
+    if "close_time" in data:
+        close_time = str(data["close_time"]).strip()
+        if not _HHMM_RE.match(close_time):
+            return jsonify({"error": "Closing time must be in HH:MM (24-hour) format"}), 400
+        location.close_time = close_time
+
+    if location.open_time == location.close_time:
+        return jsonify({"error": "Opening and closing times must differ"}), 400
+
+    return jsonify({"success": True, "location": location.to_dict()})
+
+
+@admin_bp.route("/locations/<loc_id>", methods=["DELETE"])
+@require_admin
+def delete_location(loc_id: str):
+    """Remove a branch location by ID."""
+    location = next((loc for loc in db["locations"] if loc.id == loc_id), None)
+    if location is None:
+        return jsonify({"error": "Location not found"}), 404
+
+    db["locations"].remove(location)
     return jsonify({"success": True})
 
 
