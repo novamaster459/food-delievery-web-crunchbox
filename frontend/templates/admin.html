@@ -370,7 +370,7 @@
           <button class="btn-primary btn--sm" id="add-location-btn">+ Add Location</button>
         </div>
 
-        <p class="settings-help">Customers can order while at least one branch is within its opening hours. When every branch is closed, the menu and rewards stay visible but ordering is turned off.</p>
+        <p class="settings-help">Customers can order while at least one branch is within its opening hours. When every branch is closed, the menu and rewards stay visible but ordering is turned off. Opening and closing hours are checked against Myanmar time (UTC+6:30).</p>
 
         <div class="admin-form-wrap hidden" id="location-form-wrap">
           <form class="admin-form" id="location-form" enctype="multipart/form-data">
@@ -384,6 +384,10 @@
                 <label class="form-label" for="location-branch-no">Branch No. *</label>
                 <input class="form-input" id="location-branch-no" type="text" placeholder="e.g. 01" maxlength="20" required />
               </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="location-address">Address</label>
+              <input class="form-input" id="location-address" type="text" placeholder="e.g. No. 12, Kabar Aye Pagoda Road, Bahan Township, Yangon" maxlength="200" />
             </div>
             <div class="form-row">
               <div class="form-group">
@@ -413,13 +417,14 @@
               <th>Photo</th>
               <th>Name</th>
               <th>Branch No.</th>
+              <th>Address</th>
               <th>Opening Hours</th>
               <th>Status</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody id="locations-tbody">
-            <tr><td colspan="6" class="table-empty">Loading locations…</td></tr>
+            <tr><td colspan="7" class="table-empty">Loading locations…</td></tr>
           </tbody>
         </table>
       </div>

@@ -377,13 +377,14 @@ const Admin = {
             : '<span aria-label="No branch photo">📍</span>'}</td>
           <td>${Admin.escape(location.name)}</td>
           <td>${Admin.escape(location.branch_no)}</td>
-          <td>${Admin.escape(location.open_time)} – ${Admin.escape(location.close_time)}</td>
+          <td>${location.address ? Admin.escape(location.address) : '—'}</td>
+          <td>${Admin.escape(location.open_label || location.open_time)} – ${Admin.escape(location.close_label || location.close_time)}</td>
           <td>${location.is_open ? 'Open now' : 'Closed'}</td>
           <td class="actions-cell">
             <button type="button" class="btn-edit" data-edit-location="${Admin.escape(location.id)}">Edit</button>
             <button type="button" class="btn-delete" data-delete-location="${Admin.escape(location.id)}">Delete</button>
           </td>
-        </tr>`).join('') || '<tr><td colspan="6" class="table-empty">No locations yet.</td></tr>';
+        </tr>`).join('') || '<tr><td colspan="7" class="table-empty">No locations yet.</td></tr>';
       tbody.querySelectorAll('[data-edit-location]').forEach((button) => {
         button.addEventListener('click', () => Admin.editLocation(button.dataset.editLocation));
       });
@@ -410,6 +411,7 @@ const Admin = {
     document.getElementById('location-id').value = id;
     document.getElementById('location-name').value = location.name;
     document.getElementById('location-branch-no').value = location.branch_no;
+    document.getElementById('location-address').value = location.address || '';
     document.getElementById('location-open-time').value = location.open_time;
     document.getElementById('location-close-time').value = location.close_time;
     const preview = document.getElementById('location-image-preview');
@@ -430,6 +432,7 @@ const Admin = {
     const body = new FormData();
     body.append('name', document.getElementById('location-name').value.trim());
     body.append('branch_no', document.getElementById('location-branch-no').value.trim());
+    body.append('address', document.getElementById('location-address').value.trim());
     body.append('open_time', document.getElementById('location-open-time').value);
     body.append('close_time', document.getElementById('location-close-time').value);
     const image = document.getElementById('location-image').files[0];

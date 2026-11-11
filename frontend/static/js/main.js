@@ -18,6 +18,8 @@ const App = {
     App.restoreLastOrder();
     Cart.render();
     Cart.updateBadge();
+    // Keep open/closed badges in sync as Myanmar time passes closing hour.
+    setInterval(() => App.loadBranchLocations(), 60 * 1000);
   },
 
   loadBranchLocations: async function () {
@@ -59,7 +61,8 @@ const App = {
           ${status}
         </div>
         <p class="branch-card-meta">Branch No. ${App.escapeHTML(location.branch_no)}</p>
-        <p class="branch-card-hours">🕒 ${App.escapeHTML(location.open_time)} – ${App.escapeHTML(location.close_time)}</p>`;
+        ${location.address ? `<p class="branch-card-address">${App.escapeHTML(location.address)}</p>` : ''}
+        <p class="branch-card-hours">🕒 ${App.escapeHTML(location.open_label || location.open_time)} – ${App.escapeHTML(location.close_label || location.close_time)}</p>`;
       grid.appendChild(card);
     });
     App.applyStoreOpenState();
@@ -72,8 +75,14 @@ const App = {
     if (note) {
       note.classList.toggle('hidden', !closed);
       if (closed && opensAt) {
-        opensAt.textContent = [...new Set(App.branchLocations.map((loc) => loc.open_time))]
-          .sort()
+        opensAt.textContent = [
+          ...new Map(App.branchLocations.map((loc) => [
+            loc.open_time,
+            loc.open_label || loc.open_time,
+          ])).entries(),
+        ]
+          .sort((a, b) => a[0].localeCompare(b[0]))
+          .map(([, label]) => label)
           .join(' / ');
       }
     }

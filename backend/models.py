@@ -10,9 +10,18 @@ JSON-serialisable dictionary suitable for use in Flask `jsonify()` calls.
 """
 
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 from typing import List, Optional
 import uuid
+
+
+# ---------------------------------------------------------------------------
+# Myanmar time
+# ---------------------------------------------------------------------------
+
+# Myanmar Standard Time is UTC+06:30 all year round (no daylight saving), so a
+# fixed offset is exact and avoids depending on an IANA timezone database.
+MYANMAR_TZ = timezone(timedelta(hours=6, minutes=30), name="Asia/Yangon")
 
 
 # ---------------------------------------------------------------------------
@@ -163,13 +172,17 @@ class BranchLocation:
     id: str = field(default_factory=_new_id)
     name: str = ""
     branch_no: str = ""
+    address: str = ""
     open_time: str = "09:00"
     close_time: str = "22:00"
     image_filename: str = ""            # Filename inside /static/uploads/
 
     def is_open_now(self, moment: datetime = None) -> bool:
-        """Return True if the branch is open at the given time (default: now)."""
-        moment = moment or datetime.now()
+        """Return True if the branch is open right now, in Myanmar time."""
+        if moment is None:
+            moment = datetime.now(MYANMAR_TZ)
+        elif moment.tzinfo is not None:
+            moment = moment.astimezone(MYANMAR_TZ)
         now_minutes = moment.hour * 60 + moment.minute
         open_minutes = self._to_minutes(self.open_time)
         close_minutes = self._to_minutes(self.close_time)
@@ -184,13 +197,24 @@ class BranchLocation:
         hours, minutes = str(hhmm).split(":", 1)
         return int(hours) * 60 + int(minutes)
 
+    @staticmethod
+    def format_hhmm(hhmm: str) -> str:
+        """Turn a 24-hour "HH:MM" value into a 12-hour label, e.g. 19:00 → 7:00 PM."""
+        hours, minutes = (int(part) for part in str(hhmm).split(":", 1))
+        suffix = "AM" if hours < 12 else "PM"
+        return f"{hours % 12 or 12}:{minutes:02d} {suffix}"
+
     def to_dict(self) -> dict:
         return {
             "id": self.id,
             "name": self.name,
             "branch_no": self.branch_no,
+            "address": self.address,
             "open_time": self.open_time,
             "close_time": self.close_time,
+            "open_label": self.format_hhmm(self.open_time),
+            "close_label": self.format_hhmm(self.close_time),
+            "timezone": "Asia/Yangon (UTC+6:30)",
             "image_filename": self.image_filename,
             "image_url": f"/static/uploads/{self.image_filename}" if self.image_filename else "",
             "is_open": self.is_open_now(),

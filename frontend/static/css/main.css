@@ -776,6 +776,7 @@ ul, ol { list-style: none; }
 .branch-status--open { background: rgba(46, 204, 113, 0.15); color: #2ecc71; }
 .branch-status--closed { background: rgba(231, 76, 60, 0.15); color: #e74c3c; }
 .branch-card-meta { color: var(--text-muted); font-size: 13px; }
+.branch-card-address { color: var(--text-muted); font-size: 13px; margin-top: 4px; }
 .branch-card-hours { color: var(--text-muted); font-size: 13px; margin-top: 4px; }
 .store-locations-empty { color: var(--text-muted); font-size: 14px; padding: 12px 0; }
 .store-locations-closed-note {

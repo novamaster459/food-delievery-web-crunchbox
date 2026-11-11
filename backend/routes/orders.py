@@ -13,7 +13,7 @@ from datetime import datetime
 from flask import Blueprint, jsonify, request, session
 
 from app import db
-from models import Order
+from models import BranchLocation, Order
 
 # ---------------------------------------------------------------------------
 # Blueprint
@@ -182,7 +182,10 @@ def checkout():
             (loc.open_time for loc in locations if loc.open_time != loc.close_time),
             default="",
         )
-        suffix = f" Ordering opens at {next_open}." if next_open else ""
+        suffix = (
+            f" Ordering opens at {BranchLocation.format_hhmm(next_open)} (Myanmar time)."
+            if next_open else ""
+        )
         return jsonify({"error": f"All branches are closed right now.{suffix}"}), 403
 
     city = address.get("city")

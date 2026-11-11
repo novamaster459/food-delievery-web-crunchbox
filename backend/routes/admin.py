@@ -462,6 +462,12 @@ def _parse_location_payload(data: dict, partial: bool = False):
             return "Branch number must be between 1 and 20 characters", {}
         fields["branch_no"] = branch_no
 
+    if "address" in data or not partial:
+        address = str(data.get("address", "")).strip()
+        if len(address) > 200:
+            return "Address must be 200 characters or fewer", {}
+        fields["address"] = address
+
     if "open_time" in data or not partial:
         open_time = str(data.get("open_time", "")).strip()
         if not _HHMM_RE.match(open_time):
@@ -492,6 +498,7 @@ def add_location():
     Form fields:
         name        (str, required)
         branch_no   (str, required)
+        address     (str, optional, max 200 chars)
         open_time   (str "HH:MM", required)
         close_time  (str "HH:MM", required)
         image       (file, optional)
@@ -540,6 +547,11 @@ def edit_location(loc_id: str):
         if any(loc.branch_no == branch_no and loc.id != loc_id for loc in db["locations"]):
             return jsonify({"error": f"Branch number {branch_no} is already in use"}), 400
         location.branch_no = branch_no
+    if "address" in form:
+        address = form["address"].strip()
+        if len(address) > 200:
+            return jsonify({"error": "Address must be 200 characters or fewer"}), 400
+        location.address = address
     if "open_time" in form:
         open_time = form["open_time"].strip()
         if not _HHMM_RE.match(open_time):

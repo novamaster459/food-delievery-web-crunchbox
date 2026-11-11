@@ -88,14 +88,15 @@
           ${status}
         </div>
         <p class="branch-card-meta">Branch No. ${escapeHTML(location.branch_no)}</p>
+        ${location.address ? `<p class="branch-card-address">${escapeHTML(location.address)}</p>` : ''}
         <div class="branch-card-hours-row">
           <div class="branch-hours-block">
             <span class="branch-hours-label">Opening Hour</span>
-            <span class="branch-hours-value">${escapeHTML(location.open_time)}</span>
+            <span class="branch-hours-value">${escapeHTML(location.open_label || location.open_time)}</span>
           </div>
           <div class="branch-hours-block">
             <span class="branch-hours-label">Closing Hour</span>
-            <span class="branch-hours-value">${escapeHTML(location.close_time)}</span>
+            <span class="branch-hours-value">${escapeHTML(location.close_label || location.close_time)}</span>
           </div>
         </div>
       </div>`;
