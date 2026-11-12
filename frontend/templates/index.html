@@ -14,31 +14,15 @@
        TOP HEADER BAR
   ═══════════════════════════════════════════════════ -->
   <header class="app-header">
-    <!-- Left: Delivery location -->
-    <div class="header-left">
-      <button class="location-btn" id="location-btn">
-        <span class="loc-icon">📍</span>
-        <div class="loc-text-wrap">
-          <span class="loc-label">Deliver to</span>
-          <span id="deliver-to-text" class="loc-value">Home <span class="dropdown-arrow">▼</span></span>
-        </div>
-      </button>
-    </div>
-
     <!-- Center: Shop Logo + Name -->
     <div class="shop-logo-area">
       <img id="shop-logo" alt="Shop logo" style="display:none" />
       <span id="shop-name" class="shop-name-text">CrunchBox</span>
     </div>
 
-    <!-- Right: Notifications + Cart -->
+    <!-- Right: Cart -->
     <div class="header-right">
-      <button class="icon-btn notif-btn" id="notif-btn" aria-label="Notifications">
-        <span>🔔</span>
-        <span class="notif-dot"></span>
-      </button>
       <a id="admin-dashboard-link" class="admin-shortcut hidden" href="/admin">Admin</a>
-      <button id="see-order-btn" class="see-order-btn hidden" type="button">See Order</button>
       <button id="cart-btn" class="cart-btn" aria-label="Open cart">
         <span>🛒</span>
         <span class="cart-badge" id="cart-count">0</span>
@@ -393,6 +377,17 @@
   </div>
 
   <!-- ═══════════════════════════════════════════════════
+       ALERT MODAL (OK-only dismissal)
+  ═══════════════════════════════════════════════════ -->
+  <div id="alert-modal" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-box alert-modal-box" role="alertdialog" aria-modal="true" aria-labelledby="alert-modal-message">
+      <p id="alert-modal-message" class="alert-modal-message"></p>
+      <button class="btn-primary alert-modal-ok" id="alert-modal-ok" type="button">OK</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════
        TOAST CONTAINER
   ═══════════════════════════════════════════════════ -->
   <div id="toast-container" class="toast-container"></div>
@@ -428,6 +423,10 @@
     <button class="bottom-nav-item" id="nav-locations" data-page="locations">
       <span class="nav-icon">📍</span>
       <span class="nav-label">Location</span>
+    </button>
+    <button class="bottom-nav-item" id="nav-luck" type="button">
+      <span class="nav-icon">🍀</span>
+      <span class="nav-label">Luck</span>
     </button>
     <button class="bottom-nav-item" id="nav-profile" data-page="profile">
       <span class="nav-icon">👤</span>

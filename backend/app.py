@@ -274,10 +274,12 @@ if __name__ == "__main__":
 from routes.auth import auth_bp      # noqa: E402
 from routes.admin import admin_bp    # noqa: E402
 from routes.orders import orders_bp  # noqa: E402
+from routes.games import games_bp    # noqa: E402
 
 app.register_blueprint(auth_bp,   url_prefix="/api/auth")
 app.register_blueprint(admin_bp,  url_prefix="/api/admin")
 app.register_blueprint(orders_bp, url_prefix="/api/orders")
+app.register_blueprint(games_bp,  url_prefix="/api/games")
 
 
 # ---------------------------------------------------------------------------
@@ -470,6 +472,12 @@ def serve_track():
 def serve_branch_locations():
     """Serve the branch locations page."""
     return send_from_directory(FRONTEND_TEMPLATES, "locations.html")
+
+
+@app.route("/luck")
+def serve_luck():
+    """Serve the games page."""
+    return send_from_directory(FRONTEND_TEMPLATES, "luck.html")
 
 
 @app.route("/", defaults={"path": ""})

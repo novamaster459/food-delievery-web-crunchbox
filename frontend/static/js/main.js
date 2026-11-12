@@ -89,6 +89,21 @@ const App = {
     Cart.render();
   },
 
+  closedMessage: function () {
+    const labels = [
+      ...new Map(App.branchLocations.map((loc) => [
+        loc.open_time,
+        loc.open_label || loc.open_time,
+      ])).entries(),
+    ]
+      .sort((a, b) => a[0].localeCompare(b[0]))
+      .map(([, label]) => label)
+      .join(' / ');
+    return labels
+      ? `All branches are closed right now. You can browse the menu and rewards, but ordering opens at ${labels} (Myanmar time).`
+      : 'All branches are closed right now. Ordering opens during opening hours.';
+  },
+
   loadSettings: async function () {
     try {
       const settings = await API.getSettings();
@@ -253,7 +268,7 @@ const App = {
       </div>`;
     card.querySelector('.add-to-cart-btn').addEventListener('click', () => {
       if (!App.storeOpen) {
-        Cart.showToast('All branches are closed right now. Ordering opens during opening hours.', 'error');
+        App.showAlert(App.closedMessage());
         return;
       }
       Cart.addItem(product);
@@ -271,8 +286,8 @@ const App = {
 
   setupEvents: function () {
     document.getElementById('cart-btn')?.addEventListener('click', () => Cart.open());
-    document.getElementById('see-order-btn')?.addEventListener('click', () => App.showLastOrder());
     document.getElementById('track-order-fab')?.addEventListener('click', () => App.showLastOrder());
+    document.getElementById('alert-modal-ok')?.addEventListener('click', () => App.hideAlert());
     document.getElementById('nav-order')?.addEventListener('click', () => Cart.open());
     document.getElementById('cart-close-btn')?.addEventListener('click', () => Cart.close());
     document.getElementById('cart-clear-btn')?.addEventListener('click', () => {
@@ -290,6 +305,9 @@ const App = {
     document.getElementById('nav-deals')?.addEventListener('click', () => document.querySelector('.promo-section')?.scrollIntoView({ behavior: 'smooth' }));
     document.getElementById('nav-locations')?.addEventListener('click', () => {
       window.location.href = '/locations';
+    });
+    document.getElementById('nav-luck')?.addEventListener('click', () => {
+      window.location.href = '/luck';
     });
     document.getElementById('order-now-btn')?.addEventListener('click', () => document.getElementById('menu-section')?.scrollIntoView({ behavior: 'smooth' }));
     document.getElementById('deal-promo-button')?.addEventListener('click', () => {
@@ -426,19 +444,27 @@ const App = {
   },
 
   updateSeeOrderButton: function () {
-    const button = document.getElementById('see-order-btn');
     const fab = document.getElementById('track-order-fab');
     const fabText = fab?.querySelector('.track-order-fab-text');
-    if (button) {
-      button.classList.toggle('hidden', !App.lastOrder);
-      if (App.lastOrder) button.textContent = `See Order #${App.lastOrder.order.id.slice(0, 6)}`;
-    }
     if (fab) {
       fab.classList.toggle('hidden', !App.lastOrder);
       if (fabText && App.lastOrder) {
         fabText.textContent = `Track order #${App.lastOrder.order.id.slice(0, 6)}`;
       }
     }
+  },
+
+  showAlert: function (message) {
+    const modal = document.getElementById('alert-modal');
+    const text = document.getElementById('alert-modal-message');
+    if (!modal || !text) return;
+    text.textContent = message;
+    modal.classList.remove('hidden');
+    document.getElementById('alert-modal-ok')?.focus();
+  },
+
+  hideAlert: function () {
+    document.getElementById('alert-modal')?.classList.add('hidden');
   },
 
   showLastOrder: function () {

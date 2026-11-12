@@ -303,7 +303,7 @@ const Cart = {
 
   handleCheckout: async function () {
     if (typeof App !== 'undefined' && App.storeOpen === false) {
-      Cart.showToast('All branches are closed right now. Ordering opens during opening hours.', 'error');
+      App.showAlert(App.closedMessage());
       return;
     }
     const { valid, address } = LocationManager.validateAddress();
@@ -342,6 +342,8 @@ const Cart = {
         await App.loadMenu();
         Cart.reconcileWithMenu(App.menuData);
         Cart.showToast('Your saved order was refreshed with the current menu. Please review it and try again.', 'info');
+      } else if (/all branches are closed/i.test(error.message || '')) {
+        if (typeof App !== 'undefined') App.showAlert(error.message);
       } else {
         Cart.showToast(error.message || 'Checkout failed.', 'error');
       }
