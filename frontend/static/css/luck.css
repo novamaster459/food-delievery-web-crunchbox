@@ -141,17 +141,24 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 58px;
-  height: 58px;
+  width: 62px;
+  height: 62px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 26px;
+  overflow: hidden;
   background: var(--surface);
   border: 3px solid var(--border);
   box-shadow: var(--shadow-md);
   pointer-events: none;
+}
+
+.wheel-hub img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .spin-status {
