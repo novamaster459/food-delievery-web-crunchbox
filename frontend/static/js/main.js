@@ -152,8 +152,16 @@ const App = {
     const hero = document.getElementById('hero');
     const heroHeading = document.getElementById('hero-heading');
     const heroSubtext = document.getElementById('hero-subtext');
+    const heroLogo = document.getElementById('hero-logo');
+    const heroLogoWrap = document.getElementById('hero-logo-wrap');
     if (heroHeading && settings.hero_heading) heroHeading.textContent = settings.hero_heading;
     if (heroSubtext && settings.hero_subtext) heroSubtext.textContent = settings.hero_subtext;
+    if (heroLogo && settings.logo_url) {
+      heroLogo.src = settings.logo_url;
+      heroLogoWrap?.classList.remove('hidden');
+    } else if (heroLogoWrap) {
+      heroLogoWrap.classList.add('hidden');
+    }
     if (hero) {
       const image = settings.hero_image_url;
       hero.style.backgroundImage = image
@@ -247,7 +255,7 @@ const App = {
       button.dataset.categoryId = id;
       if (isSpecial) button.dataset.special = 'true';
       const imgSrc = iconSrc || '/static/images/icons/icon-main.png';
-      button.innerHTML = `<img src="${App.escapeHTML(imgSrc)}" alt="" class="tab-icon" /><span class="tab-label">${App.escapeHTML(label)}</span>`;
+      button.innerHTML = `<img src="${App.escapeHTML(imgSrc)}" alt="" class="tab-icon" />`;
       button.addEventListener('click', () => App.onTabClick(id, isSpecial));
       tabs.appendChild(button);
     };

@@ -385,11 +385,20 @@ def update_settings():
         sync_reward_product_points(changed_reward_settings)
 
     for key in ("accent_color", "background_color"):
-        if key in data:
-            color = str(data[key]).strip()
-            if not re.fullmatch(r"#[0-9a-fA-F]{6}", color):
-                return jsonify({"error": f"{key} must be a six-digit hex color"}), 400
-            db["settings"][key] = color.lower()
+      if key in data:
+        color = str(data[key]).strip()
+        if not re.fullmatch(r"#[0-9a-fA-F]{6}", color):
+          return jsonify({"error": f"{key} must be a six-digit hex color"}), 400
+        db["settings"][key] = color.lower()
+
+    # Allow admins to clear image filenames (remove logo / promo images)
+    for key in ("logo_filename", "hero_image_filename", "featured_image_filename", "deal_image_filename"):
+      if key in data:
+        value = data[key]
+        if value is None or (isinstance(value, str) and not value.strip()):
+          db["settings"][key] = ""
+        elif isinstance(value, str):
+          db["settings"][key] = value.strip()
 
     return jsonify({"success": True, "settings": db["settings"]})
 
