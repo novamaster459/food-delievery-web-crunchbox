@@ -152,13 +152,13 @@
 
       window.setTimeout(() => {
         updatePoints(result.points);
-        setStatus(`🎉 You won ${Number(result.prize_points).toLocaleString('en-US')} points!`, 'win');
+        setStatus(`You won ${Number(result.prize_points).toLocaleString('en-US')} points!`, 'win');
         state.spinning = false;
         spinButton.disabled = false;
         spinButton.textContent = `Spin · ${state.cost} pts`;
         updatePlayer();
         if (state.points < state.cost) {
-          setStatus(`🎉 You won ${Number(result.prize_points).toLocaleString('en-US')} points! You need ${state.cost} to spin again.`, 'win');
+          setStatus(`You won ${Number(result.prize_points).toLocaleString('en-US')} points! You need ${state.cost} to spin again.`, 'win');
         }
       }, 4300);
     } catch (error) {

@@ -134,7 +134,7 @@ const Admin = {
         <tr>
           <td>${product.image_url
             ? `<img class="table-thumb" src="${Admin.escape(product.image_url)}" alt="${Admin.escape(product.name)}">`
-            : '<span aria-label="No product image">🍗</span>'}</td>
+            : '<span aria-label="No product image"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 11h16M4 11a2 2 0 002-2V7a2 2 0 012-2h8a2 2 0 012 2v2a2 2 0 002 2M4 11v8a2 2 0 002 2h12a2 2 0 002-2v-8"/></svg></span>'}</td>
           <td>${Admin.escape(product.name)}</td>
           <td>${Admin.escape(product.category_name)}</td>
           <td>${Admin.price(product.price)}</td>
@@ -374,7 +374,7 @@ const Admin = {
         <tr>
           <td>${location.image_url
             ? `<img class="table-thumb" src="${Admin.escape(location.image_url)}" alt="${Admin.escape(location.name)}">`
-            : '<span aria-label="No branch photo">📍</span>'}</td>
+            : '<span aria-label="No branch photo"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 21s-6-5.686-6-11a6 6 0 1112 0c0 5.314-6 11-6 11z"/><circle cx="12" cy="10" r="2.5"/></svg></span>'}</td>
           <td>${Admin.escape(location.name)}</td>
           <td>${Admin.escape(location.branch_no)}</td>
           <td>${location.address ? Admin.escape(location.address) : '—'}</td>

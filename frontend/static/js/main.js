@@ -8,9 +8,19 @@ const App = {
   lastOrder: null,
   branchLocations: [],
   storeOpen: true,
+  orderHistory: [],
+  specialTabIds: ['popular', 'recommended', 'new'],
+  categoryIconMap: {
+    'Mains': '/static/images/icons/icon-main.png',
+    'Vegan Main Meal': '/static/images/icons/icon-vegan.png',
+    'Drinks': '/static/images/icons/icon-drinks.png',
+    'Appetizers': '/static/images/icons/icon-appetizer.png',
+    'Desserts': '/static/images/icons/icon-dessert.png',
+    'Special Combo Sets': '/static/images/icons/icon-combo.png',
+  },
 
   init: async function () {
-    await Promise.all([App.loadSettings(), App.loadUser(), App.loadBranchLocations()]);
+    await Promise.all([App.loadSettings(), App.loadUser(), App.loadBranchLocations(), App.loadOrderHistory()]);
     await App.loadMenu();
     Cart.reconcileWithMenu(App.menuData);
     await LocationManager.wireDropdowns();
@@ -18,7 +28,6 @@ const App = {
     App.restoreLastOrder();
     Cart.render();
     Cart.updateBadge();
-    // Keep open/closed badges in sync as Myanmar time passes closing hour.
     setInterval(() => App.loadBranchLocations(), 60 * 1000);
   },
 
@@ -56,13 +65,22 @@ const App = {
         : '<span class="branch-status branch-status--closed">Closed</span>';
       card.innerHTML = `
         <div class="branch-card-head">
-          <span class="branch-card-icon">📍</span>
+          <svg class="branch-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
+            <circle cx="12" cy="10" r="3"></circle>
+          </svg>
           <h3 class="branch-card-name">${App.escapeHTML(location.name)}</h3>
           ${status}
         </div>
         <p class="branch-card-meta">Branch No. ${App.escapeHTML(location.branch_no)}</p>
         ${location.address ? `<p class="branch-card-address">${App.escapeHTML(location.address)}</p>` : ''}
-        <p class="branch-card-hours">🕒 ${App.escapeHTML(location.open_label || location.open_time)} – ${App.escapeHTML(location.close_label || location.close_time)}</p>`;
+        <p class="branch-card-hours">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          ${App.escapeHTML(location.open_label || location.open_time)} – ${App.escapeHTML(location.close_label || location.close_time)}
+        </p>`;
       grid.appendChild(card);
     });
     App.applyStoreOpenState();
@@ -76,10 +94,7 @@ const App = {
       note.classList.toggle('hidden', !closed);
       if (closed && opensAt) {
         opensAt.textContent = [
-          ...new Map(App.branchLocations.map((loc) => [
-            loc.open_time,
-            loc.open_label || loc.open_time,
-          ])).entries(),
+          ...new Map(App.branchLocations.map((loc) => [loc.open_time, loc.open_label || loc.open_time])).entries(),
         ]
           .sort((a, b) => a[0].localeCompare(b[0]))
           .map(([, label]) => label)
@@ -91,10 +106,7 @@ const App = {
 
   closedMessage: function () {
     const labels = [
-      ...new Map(App.branchLocations.map((loc) => [
-        loc.open_time,
-        loc.open_label || loc.open_time,
-      ])).entries(),
+      ...new Map(App.branchLocations.map((loc) => [loc.open_time, loc.open_label || loc.open_time])).entries(),
     ]
       .sort((a, b) => a[0].localeCompare(b[0]))
       .map(([, label]) => label)
@@ -114,7 +126,7 @@ const App = {
       if (name) name.textContent = settings.shop_name || 'Food Delivery';
       document.title = `${settings.shop_name || 'Food Delivery'} — Fresh food, delivered`;
       const memberNote = document.getElementById('member-discount-note');
-      if (memberNote) memberNote.textContent = `🏷️ ${Number(settings.member_discount_pct)}% member discount applied!`;
+      if (memberNote) memberNote.textContent = `${Number(settings.member_discount_pct)}% member discount applied!`;
       const memberLabel = document.querySelector('#member-discount-row span');
       if (memberLabel) memberLabel.textContent = `Member Discount (${Number(settings.member_discount_pct)}%)`;
       const logo = document.getElementById('shop-logo');
@@ -145,8 +157,8 @@ const App = {
     if (hero) {
       const image = settings.hero_image_url;
       hero.style.backgroundImage = image
-        ? `linear-gradient(90deg, rgba(14, 10, 7, .93) 0%, rgba(14, 10, 7, .74) 42%, rgba(14, 10, 7, .18) 100%), url("${image}")`
-        : 'radial-gradient(ellipse at 78% 50%, rgba(255,107,0,.24), transparent 34%), linear-gradient(110deg, #180d07 0%, #301507 56%, #121212 100%)';
+        ? `linear-gradient(90deg, rgba(10, 5, 5, .95) 0%, rgba(10, 5, 5, .78) 42%, rgba(10, 5, 5, .18) 100%), url("${image}")`
+        : 'radial-gradient(ellipse at 78% 50%, rgba(255,94,0,.24), transparent 34%), linear-gradient(135deg, #0a0a0a 0%, #1a0505 35%, #2a1000 65%, #0f0f0f 100%)';
       hero.classList.toggle('has-hero-photo', Boolean(image));
     }
 
@@ -163,11 +175,7 @@ const App = {
     const element = document.getElementById(elementId);
     if (!element) return;
     element.classList.toggle('has-promo-photo', Boolean(image));
-    element.style.backgroundImage = image
-      ? `url("${image}")`
-      : variant === 'orange'
-        ? ''
-        : '';
+    element.style.backgroundImage = image ? `url("${image}")` : '';
   },
 
   setText: function (id, value) {
@@ -193,46 +201,203 @@ const App = {
     App.updateMemberUI();
   },
 
+  loadOrderHistory: async function () {
+    try {
+      App.orderHistory = await API.getOrderHistory();
+    } catch (error) {
+      App.orderHistory = [];
+    }
+  },
+
   loadMenu: async function () {
     const grid = document.getElementById('menu-grid');
     try {
       App.menuData = await API.getMenu();
       App.renderCategoryTabs();
-      if (App.menuData.length) App.onTabClick(App.menuData[0].id);
-      else if (grid) grid.textContent = 'There are no menu categories yet.';
+      App.renderSpecialSections();
+      if (App.menuData.length) {
+        const firstRegular = App.menuData[0].id;
+        App.onTabClick(firstRegular);
+      } else if (grid) {
+        grid.textContent = 'There are no menu categories yet.';
+      }
     } catch (error) {
       console.error('[App] Failed to load menu:', error);
       if (grid) grid.textContent = 'Could not load the menu. Please refresh the page.';
     }
   },
 
+  allProducts: function () {
+    const list = [];
+    App.menuData.forEach((cat) => {
+      cat.products.forEach((p) => list.push({ ...p, categoryName: cat.name, categoryIcon: cat.icon }));
+    });
+    return list;
+  },
+
   renderCategoryTabs: function () {
     const tabs = document.getElementById('category-tabs');
     if (!tabs) return;
     tabs.replaceChildren();
-    App.menuData.forEach((category) => {
+
+    const addTab = (id, label, iconSrc, isSpecial = false) => {
       const button = document.createElement('button');
       button.type = 'button';
       button.className = 'tab-btn';
-      button.dataset.categoryId = category.id;
-      button.innerHTML = `<span class="tab-icon">${App.escapeHTML(category.icon || '')}</span><span class="tab-label">${App.escapeHTML(category.name)}</span>`;
-      button.addEventListener('click', () => App.onTabClick(category.id));
+      button.dataset.categoryId = id;
+      if (isSpecial) button.dataset.special = 'true';
+      const imgSrc = iconSrc || '/static/images/icons/icon-main.png';
+      button.innerHTML = `<img src="${App.escapeHTML(imgSrc)}" alt="" class="tab-icon" /><span class="tab-label">${App.escapeHTML(label)}</span>`;
+      button.addEventListener('click', () => App.onTabClick(id, isSpecial));
       tabs.appendChild(button);
+    };
+
+    addTab('popular', 'POPULAR TODAY', '/static/images/icons/icon-combo.png', true);
+    addTab('recommended', 'Recommended', '/static/images/icons/icon-main.png', true);
+    addTab('new', 'New', '/static/images/icons/icon-dessert.png', true);
+
+    App.menuData.forEach((category) => {
+      const icon = App.categoryIconMap[category.name] || category.icon || '/static/images/icons/icon-main.png';
+      addTab(category.id, category.name, icon, false);
     });
   },
 
-  onTabClick: function (categoryId) {
+  renderSpecialSections: function () {
+    App.renderPopularSection();
+    App.renderRecommendedSection();
+    App.renderNewArrivalSection();
+  },
+
+  renderPopularSection: function () {
+    const section = document.getElementById('popular-section');
+    const grid = document.getElementById('popular-grid');
+    if (!section || !grid) return;
+    const products = App.allProducts();
+    const popular = products.find((p) => p.is_bestseller);
+    section.classList.toggle('hidden', !popular);
+    grid.replaceChildren();
+    if (popular) grid.appendChild(App.createProductCard(popular, true));
+  },
+
+  renderRecommendedSection: function () {
+    const section = document.getElementById('recommended-section');
+    const grid = document.getElementById('recommended-grid');
+    if (!section || !grid) return;
+
+    const counts = {};
+    App.orderHistory.forEach((order) => {
+      (order.items || []).forEach((item) => {
+        const pid = item.product_id || item.id;
+        counts[pid] = (counts[pid] || 0) + Number(item.quantity || 1);
+      });
+    });
+
+    const products = App.allProducts();
+    let recommended = [];
+    if (Object.keys(counts).length) {
+      const sortedPids = Object.entries(counts).sort((a, b) => b[1] - a[1]).map(([pid]) => pid);
+      recommended = sortedPids
+        .map((pid) => products.find((p) => p.id === pid))
+        .filter(Boolean)
+        .slice(0, 3);
+    } else {
+      recommended = products.filter((p) => p.is_bestseller).slice(0, 3);
+      if (!recommended.length) recommended = products.slice(0, 3);
+    }
+
+    section.classList.toggle('hidden', !recommended.length);
+    grid.replaceChildren();
+    recommended.forEach((p) => grid.appendChild(App.createProductCard(p)));
+  },
+
+  renderNewArrivalSection: function () {
+    const section = document.getElementById('new-arrival-section');
+    const grid = document.getElementById('new-arrival-grid');
+    if (!section || !grid) return;
+    const products = App.allProducts();
+    const newest = products.find((p) => p.is_new);
+    section.classList.toggle('hidden', !newest);
+    grid.replaceChildren();
+    if (newest) grid.appendChild(App.createProductCard(newest, true));
+  },
+
+  onTabClick: function (categoryId, isSpecial = false) {
     App.currentCategory = String(categoryId);
-    const category = App.menuData.find((item) => item.id === App.currentCategory);
-    if (!category) return;
+    const isSpecialTab = isSpecial || App.specialTabIds.includes(App.currentCategory);
+
     document.querySelectorAll('.tab-btn').forEach((button) => {
       button.classList.toggle('active', button.dataset.categoryId === App.currentCategory);
     });
-    const title = document.querySelector('#menu-section .section-title');
+
+    App.hideSpecialSections(!isSpecialTab);
+
+    const menuSection = document.getElementById('menu-section');
+    const title = menuSection?.querySelector('.section-title');
     const count = document.getElementById('menu-count-label');
-    if (title) title.textContent = `${category.icon || ''} ${category.name}`;
+    const grid = document.getElementById('menu-grid');
+    const noResults = document.getElementById('no-results');
+
+    if (isSpecialTab) {
+      if (menuSection) menuSection.classList.add('hidden');
+      let products = [];
+      if (App.currentCategory === 'popular') {
+        const popular = App.allProducts().find((p) => p.is_bestseller);
+        if (popular) products = [popular];
+        if (title) title.innerHTML = `<img src="/static/images/icons/icon-combo.png" alt="" /> Popular Today`;
+      } else if (App.currentCategory === 'recommended') {
+        products = App.computeRecommended();
+        if (title) title.innerHTML = `<img src="/static/images/icons/icon-main.png" alt="" /> Recommended`;
+      } else if (App.currentCategory === 'new') {
+        const newest = App.allProducts().find((p) => p.is_new);
+        if (newest) products = [newest];
+        if (title) title.innerHTML = `<img src="/static/images/icons/icon-dessert.png" alt="" /> New Arrival`;
+      }
+      if (count) count.textContent = `${products.length} item${products.length !== 1 ? 's' : ''}`;
+      if (grid) {
+        grid.replaceChildren();
+        products.forEach((p) => grid.appendChild(App.createProductCard(p, true)));
+      }
+      if (noResults) noResults.classList.toggle('hidden', products.length > 0);
+      if (menuSection) {
+        menuSection.classList.remove('hidden');
+        menuSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+      return;
+    }
+
+    if (menuSection) menuSection.classList.remove('hidden');
+    const category = App.menuData.find((item) => item.id === App.currentCategory);
+    if (!category) return;
+    if (title) title.innerHTML = `<img src="${App.escapeHTML(App.categoryIconMap[category.name] || category.icon || '/static/images/icons/icon-main.png')}" alt="" /> ${App.escapeHTML(category.name)}`;
     if (count) count.textContent = `${category.products.length} items`;
     App.renderProducts(category.products);
+    menuSection?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  },
+
+  hideSpecialSections: function (hide) {
+    document.getElementById('popular-section')?.classList.toggle('hidden', hide);
+    document.getElementById('recommended-section')?.classList.toggle('hidden', hide);
+    document.getElementById('new-arrival-section')?.classList.toggle('hidden', hide);
+  },
+
+  computeRecommended: function () {
+    const counts = {};
+    App.orderHistory.forEach((order) => {
+      (order.items || []).forEach((item) => {
+        const pid = item.product_id || item.id;
+        counts[pid] = (counts[pid] || 0) + Number(item.quantity || 1);
+      });
+    });
+    const products = App.allProducts();
+    if (Object.keys(counts).length) {
+      return Object.entries(counts)
+        .sort((a, b) => b[1] - a[1])
+        .map(([pid]) => products.find((p) => p.id === pid))
+        .filter(Boolean)
+        .slice(0, 3);
+    }
+    const fallback = products.filter((p) => p.is_bestseller).slice(0, 3);
+    return fallback.length ? fallback : products.slice(0, 3);
   },
 
   renderProducts: function (products) {
@@ -244,20 +409,27 @@ const App = {
     products.forEach((product) => grid.appendChild(App.createProductCard(product)));
   },
 
-  createProductCard: function (product) {
+  createProductCard: function (product, withRibbon = false) {
     const card = document.createElement('article');
     card.className = 'menu-card';
     const imageMarkup = product.image_url
       ? `<img src="${App.escapeHTML(product.image_url)}" alt="${App.escapeHTML(product.name)}" class="menu-card-img" loading="lazy">`
-      : '<div class="menu-card-img menu-card-placeholder" aria-hidden="true">🍗</div>';
+      : `<div class="menu-card-img menu-card-placeholder" aria-hidden="true"><img src="/static/images/icons/icon-main.png" alt="" /></div>`;
+
+    const ribbon = withRibbon && product.is_bestseller
+      ? `<img src="/static/images/icons/bestseller-ribbon.png" alt="Bestseller" class="bestseller-ribbon" />`
+      : '';
+
     card.innerHTML = `
-      <div class="menu-card-img-wrap">${imageMarkup}
-        ${product.is_combo ? `<span class="menu-card-combo-label">🎁 Combo −${Number(product.combo_discount_pct)}%</span>` : ''}
+      <div class="menu-card-img-wrap">
+        ${ribbon}
+        ${imageMarkup}
+        ${product.is_combo ? `<span class="menu-card-combo-label">Combo −${Number(product.combo_discount_pct)}%</span>` : ''}
       </div>
       <div class="menu-card-body">
         <div class="menu-card-badges">
-          ${product.is_bestseller ? '<span class="menu-badge menu-badge--bestseller">🔥 Bestseller</span>' : ''}
-          ${product.is_new ? '<span class="menu-badge menu-badge--new">✨ New on CrunchBox</span>' : ''}
+          ${product.is_bestseller ? '<span class="menu-badge menu-badge--bestseller">Bestseller</span>' : ''}
+          ${product.is_new ? '<span class="menu-badge menu-badge--new">New</span>' : ''}
         </div>
         <h3 class="menu-card-name">${App.escapeHTML(product.name)}</h3>
         <p class="menu-card-desc">${App.escapeHTML(product.description || '')}</p>
@@ -266,7 +438,14 @@ const App = {
           <button class="add-to-cart-btn" type="button" aria-label="Add ${App.escapeHTML(product.name)} to cart">+</button>
         </div>
       </div>`;
-    card.querySelector('.add-to-cart-btn').addEventListener('click', () => {
+
+    card.addEventListener('click', (event) => {
+      if (event.target.closest('.add-to-cart-btn')) return;
+      App.openProductModal(product);
+    });
+
+    card.querySelector('.add-to-cart-btn').addEventListener('click', (event) => {
+      event.stopPropagation();
       if (!App.storeOpen) {
         App.showAlert(App.closedMessage());
         return;
@@ -274,14 +453,61 @@ const App = {
       Cart.addItem(product);
       Cart.showToast('Added to your order.', 'success');
     });
-    const image = card.querySelector('img');
-    if (image) image.addEventListener('error', () => {
-      image.replaceWith(Object.assign(document.createElement('div'), {
-        className: 'menu-card-img menu-card-placeholder',
-        textContent: '🍗',
-      }));
-    });
+
+    const image = card.querySelector('img.menu-card-img');
+    if (image) {
+      image.addEventListener('error', () => {
+        image.replaceWith(Object.assign(document.createElement('div'), {
+          className: 'menu-card-img menu-card-placeholder',
+          innerHTML: '<img src="/static/images/icons/icon-main.png" alt="" />',
+        }));
+      });
+    }
     return card;
+  },
+
+  openProductModal: function (product) {
+    const modal = document.getElementById('product-modal');
+    const img = document.getElementById('product-modal-img');
+    const name = document.getElementById('product-modal-name');
+    const desc = document.getElementById('product-modal-desc');
+    const price = document.getElementById('product-modal-price');
+    const points = document.getElementById('product-modal-points');
+    const badges = document.getElementById('product-modal-badges');
+    const addBtn = document.getElementById('product-modal-add');
+
+    if (img) img.src = product.image_url || '/static/images/icons/icon-main.png';
+    if (img) img.alt = product.name;
+    if (name) name.textContent = product.name;
+    if (desc) desc.textContent = product.description || '';
+    if (price) price.innerHTML = `${Cart.formatPrice(product.price)}`;
+    if (points) points.textContent = `+${product.loyalty_points || 100} pts`;
+
+    if (badges) {
+      badges.replaceChildren();
+      if (product.is_bestseller) badges.insertAdjacentHTML('beforeend', '<span class="menu-badge menu-badge--bestseller">Bestseller</span>');
+      if (product.is_new) badges.insertAdjacentHTML('beforeend', '<span class="menu-badge menu-badge--new">New</span>');
+      if (product.is_combo) badges.insertAdjacentHTML('beforeend', `<span class="menu-badge menu-badge--bestseller">Combo −${Number(product.combo_discount_pct)}%</span>`);
+    }
+
+    addBtn.onclick = () => {
+      if (!App.storeOpen) {
+        App.showAlert(App.closedMessage());
+        return;
+      }
+      Cart.addItem(product);
+      Cart.showToast('Added to your order.', 'success');
+      App.closeProductModal();
+    };
+
+    modal?.classList.remove('hidden');
+    modal?.classList.add('open');
+  },
+
+  closeProductModal: function () {
+    const modal = document.getElementById('product-modal');
+    modal?.classList.add('hidden');
+    modal?.classList.remove('open');
   },
 
   setupEvents: function () {
@@ -300,22 +526,57 @@ const App = {
     document.getElementById('cart-overlay')?.addEventListener('click', () => Cart.close());
     document.getElementById('checkout-btn')?.addEventListener('click', () => Cart.handleCheckout());
     document.getElementById('coupon-apply-btn')?.addEventListener('click', () => Cart.handleCouponApply());
-    document.getElementById('nav-home')?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
-    document.getElementById('nav-menu')?.addEventListener('click', () => document.getElementById('menu-section')?.scrollIntoView({ behavior: 'smooth' }));
-    document.getElementById('nav-deals')?.addEventListener('click', () => document.querySelector('.promo-section')?.scrollIntoView({ behavior: 'smooth' }));
+
+    document.getElementById('product-modal-backdrop')?.addEventListener('click', App.closeProductModal);
+    document.getElementById('product-modal-close-x')?.addEventListener('click', App.closeProductModal);
+    document.getElementById('profile-modal-backdrop')?.addEventListener('click', App.closeProfileModal);
+    document.getElementById('profile-modal-close-x')?.addEventListener('click', App.closeProfileModal);
+    document.getElementById('profile-logout-btn')?.addEventListener('click', App.handleLogout);
+
+    const setActiveNav = (id) => {
+      document.querySelectorAll('.bottom-nav-item').forEach((item) => {
+        item.classList.toggle('active', item.id === id);
+      });
+    };
+
+    document.getElementById('nav-home')?.addEventListener('click', () => {
+      setActiveNav('nav-home');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+    document.getElementById('nav-menu')?.addEventListener('click', () => {
+      setActiveNav('nav-menu');
+      document.getElementById('menu-section')?.scrollIntoView({ behavior: 'smooth' });
+    });
+    document.getElementById('nav-deals')?.addEventListener('click', () => {
+      setActiveNav('nav-deals');
+      document.querySelector('.promo-section')?.scrollIntoView({ behavior: 'smooth' });
+    });
     document.getElementById('nav-locations')?.addEventListener('click', () => {
+      setActiveNav('nav-locations');
       window.location.href = '/locations';
     });
     document.getElementById('nav-luck')?.addEventListener('click', () => {
       window.location.href = '/luck';
     });
-    document.getElementById('order-now-btn')?.addEventListener('click', () => document.getElementById('menu-section')?.scrollIntoView({ behavior: 'smooth' }));
+    document.getElementById('nav-profile')?.addEventListener('click', () => {
+      setActiveNav('nav-profile');
+      if (!App.currentUser) {
+        App.openAuthModal('login');
+        return;
+      }
+      App.openProfileModal();
+    });
+
+    document.getElementById('order-now-btn')?.addEventListener('click', () => {
+      document.getElementById('menu-section')?.scrollIntoView({ behavior: 'smooth' });
+    });
     document.getElementById('deal-promo-button')?.addEventListener('click', () => {
       document.getElementById('menu-section')?.scrollIntoView({ behavior: 'smooth' });
     });
 
     document.getElementById('search-input')?.addEventListener('input', async (event) => {
       const query = event.target.value.trim();
+      App.hideSpecialSections(!query);
       if (!query) {
         if (App.currentCategory) App.onTabClick(App.currentCategory);
         return;
@@ -328,19 +589,6 @@ const App = {
       } catch (error) {
         console.error('[App] Search failed:', error);
       }
-    });
-
-    document.getElementById('nav-profile')?.addEventListener('click', () => {
-      if (!App.currentUser) {
-        App.openAuthModal('login');
-        return;
-      }
-      if (App.currentUser.is_admin) {
-        window.location.href = '/admin';
-        return;
-      }
-      const shouldLogout = window.confirm(`Signed in as ${App.currentUser.username}. Log out?`);
-      if (shouldLogout) App.handleLogout();
     });
 
     document.getElementById('login-tab')?.addEventListener('click', () => App.openAuthModal('login'));
@@ -358,8 +606,51 @@ const App = {
     document.getElementById('order-modal-backdrop')?.addEventListener('click', App.closeOrderModal);
     window.addEventListener('beforeunload', App.confirmExit);
     document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape') App.closeRewardsModal();
+      if (event.key === 'Escape') {
+        App.closeRewardsModal();
+        App.closeProductModal();
+        App.closeProfileModal();
+      }
     });
+  },
+
+  openProfileModal: function () {
+    const modal = document.getElementById('profile-modal');
+    const username = document.getElementById('profile-username');
+    const email = document.getElementById('profile-email');
+    const stats = document.getElementById('profile-stats');
+    const adminBtn = document.getElementById('profile-admin-btn');
+    const user = App.currentUser;
+    if (!user || !modal) return;
+
+    if (username) username.textContent = user.username;
+    if (email) email.textContent = user.email;
+    if (adminBtn) adminBtn.classList.toggle('hidden', !user.is_admin);
+
+    const orderCount = App.orderHistory.length;
+    const totalItems = App.orderHistory.reduce((sum, order) => sum + (order.items || []).reduce((s, i) => s + Number(i.quantity || 1), 0), 0);
+    const totalSpent = App.orderHistory.reduce((sum, order) => sum + Number(order.total || 0), 0);
+    const joined = user.created_at ? new Date(user.created_at).toLocaleDateString() : '—';
+
+    if (stats) {
+      stats.innerHTML = `
+        <div class="profile-stat"><div class="profile-stat-value">${(user.points || 0).toLocaleString()}</div><div class="profile-stat-label">Points</div></div>
+        <div class="profile-stat"><div class="profile-stat-value">${orderCount}</div><div class="profile-stat-label">Orders</div></div>
+        <div class="profile-stat"><div class="profile-stat-value">${totalItems}</div><div class="profile-stat-label">Items Ordered</div></div>
+        <div class="profile-stat"><div class="profile-stat-value">${Cart.formatPrice(totalSpent)}</div><div class="profile-stat-label">Total Spent</div></div>
+        <div class="profile-stat"><div class="profile-stat-value">${joined}</div><div class="profile-stat-label">Member Since</div></div>
+        <div class="profile-stat"><div class="profile-stat-value">${user.is_admin ? 'Admin' : 'Member'}</div><div class="profile-stat-label">Account Type</div></div>
+      `;
+    }
+
+    modal.classList.remove('hidden');
+    modal.classList.add('open');
+  },
+
+  closeProfileModal: function () {
+    const modal = document.getElementById('profile-modal');
+    modal?.classList.add('hidden');
+    modal?.classList.remove('open');
   },
 
   updateMemberUI: function () {
@@ -397,14 +688,8 @@ const App = {
     if (rewardsLink) {
       rewardsLink.textContent = App.currentUser ? 'View Rewards →' : 'Sign in to earn →';
       rewardsLink.onclick = App.currentUser
-        ? (event) => {
-            event.preventDefault();
-            App.openRewardsModal();
-          }
-        : (event) => {
-            event.preventDefault();
-            App.openAuthModal('login');
-          };
+        ? (event) => { event.preventDefault(); App.openRewardsModal(); }
+        : (event) => { event.preventDefault(); App.openAuthModal('login'); };
     }
   },
 
@@ -415,11 +700,7 @@ const App = {
   },
 
   saveLastOrder: function (result, address) {
-    App.lastOrder = {
-      order: result.order,
-      placedAt: Date.now(),
-      address,
-    };
+    App.lastOrder = { order: result.order, placedAt: Date.now(), address };
     try {
       localStorage.setItem(App.lastOrderKey, JSON.stringify(App.lastOrder));
     } catch (error) {
@@ -431,10 +712,7 @@ const App = {
   restoreLastOrder: function () {
     try {
       const saved = JSON.parse(localStorage.getItem(App.lastOrderKey) || 'null');
-      if (
-        saved && saved.order && typeof saved.order.id === 'string' &&
-        Number.isFinite(Number(saved.placedAt))
-      ) {
+      if (saved && saved.order && typeof saved.order.id === 'string' && Number.isFinite(Number(saved.placedAt))) {
         App.lastOrder = saved;
       }
     } catch (error) {
@@ -448,9 +726,7 @@ const App = {
     const fabText = fab?.querySelector('.track-order-fab-text');
     if (fab) {
       fab.classList.toggle('hidden', !App.lastOrder);
-      if (fabText && App.lastOrder) {
-        fabText.textContent = `Track order #${App.lastOrder.order.id.slice(0, 6)}`;
-      }
+      if (fabText && App.lastOrder) fabText.textContent = `Track order #${App.lastOrder.order.id.slice(0, 6)}`;
     }
   },
 
@@ -554,9 +830,7 @@ const App = {
       card.append(copy, redeem);
       catalog.appendChild(card);
     });
-    if (!data.catalog?.length && status) {
-      status.textContent = 'There are no rewards available right now.';
-    }
+    if (!data.catalog?.length && status) status.textContent = 'There are no rewards available right now.';
   },
 
   redeemReward: async function (rewardId, button) {
@@ -587,11 +861,7 @@ const App = {
       if (!Cart.items.some((item) => item.product_id === String(reward.product.id))) {
         Cart.addItem(reward.product);
       }
-      Cart.appliedCoupon = {
-        code: result.code,
-        discount_pct: Number(result.discount_pct),
-        reward_product_id: result.reward_product_id || '',
-      };
+      Cart.appliedCoupon = { code: result.code, discount_pct: Number(result.discount_pct), reward_product_id: result.reward_product_id || '' };
       Cart.render();
       const couponInput = document.getElementById('coupon-input');
       if (couponInput) couponInput.value = result.code;
@@ -641,8 +911,10 @@ const App = {
         document.getElementById('login-password').value
       );
       App.currentUser = response.user;
+      await App.loadOrderHistory();
       App.updateMemberUI();
       App.closeAuthModal();
+      App.renderSpecialSections();
       Cart.showToast(`Welcome back, ${App.currentUser.username}!`, 'success');
     } catch (error) {
       Cart.showToast(error.message, 'error');
@@ -669,7 +941,7 @@ const App = {
       App.currentUser = login.user || response.user;
       App.updateMemberUI();
       App.closeAuthModal();
-      Cart.showToast('Account created. Please log in to receive member pricing.', 'success');
+      Cart.showToast('Account created. Welcome to CrunchBox!', 'success');
     } catch (error) {
       Cart.showToast(error.message, 'error');
     } finally {
@@ -681,7 +953,10 @@ const App = {
     try {
       await API.logout();
       App.currentUser = null;
+      App.orderHistory = [];
       App.updateMemberUI();
+      App.renderSpecialSections();
+      App.closeProfileModal();
       Cart.appliedCoupon = null;
       Cart.showToast('You have been logged out.', 'info');
     } catch (error) {
@@ -717,12 +992,7 @@ const App = {
         : '';
       requestSummary.classList.toggle('hidden', !address);
     }
-    Tracker.startStages({
-      stagePrefix: 'stage-',
-      supportId: 'order-support-box',
-      totalStages: 5,
-      startedAt: savedOrder?.placedAt || Date.now(),
-    });
+    Tracker.startStages({ stagePrefix: 'stage-', supportId: 'order-support-box', totalStages: 5, startedAt: savedOrder?.placedAt || Date.now() });
   },
 
   closeOrderModal: function () {
@@ -732,9 +1002,7 @@ const App = {
   },
 
   escapeHTML: function (value) {
-    return String(value).replace(/[&<>"']/g, (char) => ({
-      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
-    })[char]);
+    return String(value).replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
   },
 };
 

@@ -133,12 +133,13 @@ def seed_data() -> None:
     # Categories
     # ------------------------------------------------------------------
     cat_mains      = Category(name="Mains",             icon="🍗", sort_order=1)
-    cat_drinks     = Category(name="Drinks",            icon="🥤", sort_order=2)
-    cat_appetizers = Category(name="Appetizers",        icon="🍟", sort_order=3)
-    cat_desserts   = Category(name="Desserts",          icon="🍰", sort_order=4)
-    cat_combos     = Category(name="Special Combo Sets",icon="🎁", sort_order=5)
+    cat_vegan      = Category(name="Vegan Main Meal",   icon="🌱", sort_order=2)
+    cat_drinks     = Category(name="Drinks",            icon="🥤", sort_order=3)
+    cat_appetizers = Category(name="Appetizers",        icon="🍟", sort_order=4)
+    cat_desserts   = Category(name="Desserts",          icon="🍰", sort_order=5)
+    cat_combos     = Category(name="Special Combo Sets",icon="🎁", sort_order=6)
 
-    db["categories"].extend([cat_mains, cat_drinks, cat_appetizers, cat_desserts, cat_combos])
+    db["categories"].extend([cat_mains, cat_vegan, cat_drinks, cat_appetizers, cat_desserts, cat_combos])
 
     # ------------------------------------------------------------------
     # Products — Mains
@@ -167,6 +168,30 @@ def seed_data() -> None:
             name="Grilled Chicken Sandwich",
             description="Tender grilled chicken breast with lettuce, tomato and honey mustard on ciabatta.",
             price=8500,
+        ),
+    ])
+
+    # ------------------------------------------------------------------
+    # Products — Vegan Main Meal
+    # ------------------------------------------------------------------
+    db["products"].extend([
+        Product(
+            category_id=cat_vegan.id,
+            name="Plant-Powered Crunch Burger",
+            description="Crispy plant-based patty, vegan slaw and pickles on a toasted brioche-style bun.",
+            price=8500,
+        ),
+        Product(
+            category_id=cat_vegan.id,
+            name="Crispy Vegan Nuggets",
+            description="Golden plant-protein nuggets with a crunchy seasoned coating and dipping sauce.",
+            price=7500,
+        ),
+        Product(
+            category_id=cat_vegan.id,
+            name="Vegan BBQ Wrap",
+            description="Smoky BBQ plant strips with fresh salad wrapped in a soft tortilla.",
+            price=8000,
         ),
     ])
 
@@ -385,17 +410,25 @@ def get_menu():
     Return all categories with their available products nested inside.
     Categories are sorted by sort_order ascending.
     """
-    # Rank bestsellers by total units ordered; the top three with at least
-    # two units sold earn the badge.
+    # Rank bestsellers by total units ordered; only the single top seller
+    # with at least two units sold earns the badge.
     sales_totals: dict = {}
     for order in db["orders"]:
         for item in order.items:
             pid = item.get("product_id")
             sales_totals[pid] = sales_totals.get(pid, 0) + int(item.get("quantity", 0))
-    top_sellers = sorted(sales_totals.items(), key=lambda kv: kv[1], reverse=True)[:3]
+    top_sellers = sorted(sales_totals.items(), key=lambda kv: kv[1], reverse=True)[:1]
     bestseller_ids = {pid for pid, qty in top_sellers if qty >= 2}
 
-    new_cutoff = datetime.utcnow() - timedelta(days=14)
+    # Only the single newest item added within the last 30 days earns the
+    # "New" badge — adding a newer item automatically retires the old one.
+    new_cutoff = datetime.utcnow() - timedelta(days=30)
+    newest_product = None
+    for product in db["products"]:
+        if product.is_available and product.created_at >= new_cutoff:
+            if newest_product is None or product.created_at > newest_product.created_at:
+                newest_product = product
+    new_product_id = newest_product.id if newest_product else None
 
     # Build a lookup: category_id → list of available product dicts
     products_by_cat: dict = {}
@@ -403,7 +436,7 @@ def get_menu():
         if product.is_available:
             d = product.to_dict()
             d["is_bestseller"] = product.id in bestseller_ids
-            d["is_new"] = product.created_at >= new_cutoff
+            d["is_new"] = product.id == new_product_id
             products_by_cat.setdefault(product.category_id, []).append(d)
 
     # Assemble the response

@@ -494,28 +494,28 @@
   color: #fff;
   box-shadow: 0 2px 6px rgba(255, 107, 0, 0.4);
 }
-.badge-combo::before { content: '🎁 '; }
+.badge-combo::before { content: ''; }
 
 /* Bestseller badge */
 .badge-bestseller {
   background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
   color: #1a1000;
 }
-.badge-bestseller::before { content: '🔥 '; }
+.badge-bestseller::before { content: ''; }
 
 /* Member badge */
 .badge-member {
   background: linear-gradient(135deg, #9C27B0 0%, #673AB7 100%);
   color: #fff;
 }
-.badge-member::before { content: '👑 '; }
+.badge-member::before { content: ''; }
 
 /* New badge */
 .badge-new {
   background: linear-gradient(135deg, var(--success) 0%, #2E7D32 100%);
   color: #fff;
 }
-.badge-new::before { content: '✨ '; }
+.badge-new::before { content: ''; }
 
 /* Table combo indicator */
 .combo-indicator {

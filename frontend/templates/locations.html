@@ -33,7 +33,7 @@
   ═══════════════════════════════════════════════════ -->
   <main class="locations-page">
     <div class="section-header locations-page-header">
-      <h2 class="section-title">📍 Our Locations</h2>
+      <h2 class="section-title">Our Locations</h2>
       <span class="section-subtitle" id="locations-count-label">Loading…</span>
     </div>
 
@@ -76,7 +76,7 @@
     card.className = 'branch-card branch-card--detailed';
     const imageMarkup = location.image_url
       ? `<img class="branch-card-img" src="${escapeHTML(location.image_url)}" alt="${escapeHTML(location.name)}" loading="lazy">`
-      : '<div class="branch-card-img branch-card-img--placeholder" aria-hidden="true">📍</div>';
+      : '<div class="branch-card-img branch-card-img--placeholder" aria-hidden="true"><svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 21s-6-5.686-6-11a6 6 0 1112 0c0 5.314-6 11-6 11z"/><circle cx="12" cy="10" r="2.5"/></svg></div>';
     const status = location.is_open
       ? '<span class="branch-status branch-status--open">Open now</span>'
       : '<span class="branch-status branch-status--closed">Closed</span>';

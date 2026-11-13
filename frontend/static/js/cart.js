@@ -12,10 +12,9 @@ const Cart = {
       const saved = JSON.parse(localStorage.getItem(Cart.storageKey) || '{}');
       const items = Array.isArray(saved) ? saved : saved.items;
       Cart.appliedCoupon = Array.isArray(saved) ? null : (saved.appliedCoupon || null);
-      return Array.isArray(items) ? items.filter((item) =>
-        item && typeof item.product_id === 'string' &&
-        Number.isInteger(item.quantity) && item.quantity > 0
-      ) : [];
+      return Array.isArray(items)
+        ? items.filter((item) => item && typeof item.product_id === 'string' && Number.isInteger(item.quantity) && item.quantity > 0)
+        : [];
     } catch (error) {
       console.error('[Cart] Could not restore saved cart:', error);
       return [];
@@ -24,10 +23,7 @@ const Cart = {
 
   saveState: function () {
     try {
-      localStorage.setItem(Cart.storageKey, JSON.stringify({
-        items: Cart.items,
-        appliedCoupon: Cart.appliedCoupon,
-      }));
+      localStorage.setItem(Cart.storageKey, JSON.stringify({ items: Cart.items, appliedCoupon: Cart.appliedCoupon }));
     } catch (error) {
       console.error('[Cart] Could not save cart:', error);
     }
@@ -70,8 +66,7 @@ const Cart = {
     let changed = false;
     let dropped = 0;
     Cart.items = Cart.items.filter((item) => {
-      const product = products.find((entry) => String(entry.id) === item.product_id)
-        || byName.get(item.name);
+      const product = products.find((entry) => String(entry.id) === item.product_id) || byName.get(item.name);
       if (!product) {
         dropped += 1;
         changed = true;
@@ -96,9 +91,7 @@ const Cart = {
     Cart.saveState();
     Cart.render();
     Cart.updateBadge();
-    if (dropped) {
-      Cart.showToast('Some saved items are no longer on the menu and were removed.', 'info');
-    }
+    if (dropped) Cart.showToast('Some saved items are no longer on the menu and were removed.', 'info');
   },
 
   calculateTotals: function () {
@@ -108,37 +101,23 @@ const Cart = {
       : 0;
     const comboSavings = Cart.items.reduce((sum, item) => {
       if (!item.is_combo) return sum;
-      const memberSaving = Cart.currentUser
-        ? Math.floor(item.unit_price * item.quantity * Cart.memberDiscountPct / 100)
-        : 0;
+      const memberSaving = Cart.currentUser ? Math.floor(item.unit_price * item.quantity * Cart.memberDiscountPct / 100) : 0;
       const discountedBase = item.unit_price * item.quantity - memberSaving;
       return sum + Math.floor(discountedBase * item.combo_discount_pct / 100);
     }, 0);
     const couponBase = Math.max(0, subtotal - comboSavings - memberDiscount);
     let couponSavings = 0;
     if (Cart.appliedCoupon?.reward_product_id) {
-      const rewardItem = Cart.items.find(
-        (item) => item.product_id === String(Cart.appliedCoupon.reward_product_id)
-      );
+      const rewardItem = Cart.items.find((item) => item.product_id === String(Cart.appliedCoupon.reward_product_id));
       if (rewardItem) {
-        const memberPerUnit = Cart.currentUser
-          ? Math.floor(rewardItem.unit_price * Cart.memberDiscountPct / 100)
-          : 0;
-        const comboPerUnit = rewardItem.is_combo
-          ? Math.floor((rewardItem.unit_price - memberPerUnit) * rewardItem.combo_discount_pct / 100)
-          : 0;
+        const memberPerUnit = Cart.currentUser ? Math.floor(rewardItem.unit_price * Cart.memberDiscountPct / 100) : 0;
+        const comboPerUnit = rewardItem.is_combo ? Math.floor((rewardItem.unit_price - memberPerUnit) * rewardItem.combo_discount_pct / 100) : 0;
         couponSavings = Math.max(0, rewardItem.unit_price - memberPerUnit - comboPerUnit);
       }
     } else if (Cart.appliedCoupon) {
       couponSavings = Math.floor(couponBase * Cart.appliedCoupon.discount_pct / 100);
     }
-    return {
-      subtotal,
-      comboSavings,
-      memberDiscount,
-      couponSavings,
-      total: Math.max(0, subtotal - comboSavings - memberDiscount - couponSavings),
-    };
+    return { subtotal, comboSavings, memberDiscount, couponSavings, total: Math.max(0, subtotal - comboSavings - memberDiscount - couponSavings) };
   },
 
   render: function () {
@@ -146,68 +125,36 @@ const Cart = {
     if (!list) return;
     list.replaceChildren();
     if (!Cart.items.length) {
-      const empty = document.createElement('div');
-      empty.className = 'cart-empty';
-      empty.textContent = 'Your cart is empty. Add something delicious!';
-      list.appendChild(empty);
+      list.innerHTML = `
+        <div class="cart-empty">
+          <svg class="cart-empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 6h15l-1.5 9h-12z"></path>
+            <circle cx="9" cy="20" r="1.5"></circle>
+            <circle cx="18" cy="20" r="1.5"></circle>
+            <path d="M6 6L5 3H2"></path>
+          </svg>
+          <p>Your cart is empty.<br/>Add some delicious items!</p>
+        </div>`;
     } else {
       Cart.items.forEach((item) => {
+        const product = App.allProducts().find((p) => p.id === item.product_id);
+        const imgUrl = product?.image_url || '/static/images/icons/icon-main.png';
         const row = document.createElement('div');
         row.className = 'cart-item';
-        const info = document.createElement('div');
-        info.className = 'cart-item-info';
-        info.innerHTML = `<span class="cart-item-name">${App.escapeHTML(item.name)}</span><span class="cart-item-price">${Cart.formatPrice(item.unit_price)}</span>`;
-        const controls = document.createElement('div');
-        controls.className = 'cart-item-controls';
-        const minus = Cart.createButton('−', 'decrease');
-        const quantity = document.createElement('span');
-        quantity.className = 'qty-value';
-        quantity.textContent = item.quantity;
-        const plus = Cart.createButton('+', 'increase');
-        const remove = Cart.createButton('Remove', 'remove');
-        remove.className = 'remove-btn';
-        controls.append(minus, quantity, plus, remove);
-        const lineTotal = document.createElement('span');
-        lineTotal.className = 'cart-item-line-total';
-        lineTotal.textContent = Cart.formatPrice(item.unit_price * item.quantity);
-        const requestToggle = document.createElement('button');
-        requestToggle.type = 'button';
-        requestToggle.className = 'cart-request-toggle';
-        requestToggle.setAttribute('aria-expanded', 'false');
-        const request = document.createElement('textarea');
-        request.className = 'cart-special-request';
-        request.maxLength = 500;
-        request.rows = 2;
-        request.placeholder = 'Special request (optional) — e.g. extra spicy, no onions';
-        request.setAttribute('aria-label', `Special request for ${item.name}`);
-        request.value = item.special_request || '';
-        const syncRequestUI = () => {
-          const hasRequest = Boolean(item.special_request?.trim());
-          requestToggle.textContent = hasRequest ? '✎ Edit special request' : '＋ Add special request';
-          requestToggle.classList.toggle('has-request', hasRequest);
-        };
-        const setRequestOpen = (open) => {
-          request.classList.toggle('is-open', open);
-          requestToggle.setAttribute('aria-expanded', String(open));
-          if (open) Cart.openRequests.add(item.product_id);
-          else Cart.openRequests.delete(item.product_id);
-        };
-        setRequestOpen(Cart.openRequests.has(item.product_id) || Boolean(item.special_request));
-        syncRequestUI();
-        requestToggle.addEventListener('click', () => {
-          const open = !request.classList.contains('is-open');
-          setRequestOpen(open);
-          if (open) request.focus();
-        });
-        request.addEventListener('input', () => {
-          item.special_request = request.value;
-          Cart.saveState();
-          syncRequestUI();
-        });
-        row.append(info, controls, lineTotal, requestToggle, request);
-        minus.addEventListener('click', () => Cart.updateQuantity(item.product_id, item.quantity - 1));
-        plus.addEventListener('click', () => Cart.updateQuantity(item.product_id, item.quantity + 1));
-        remove.addEventListener('click', () => Cart.updateQuantity(item.product_id, 0));
+        row.innerHTML = `
+          <img src="${App.escapeHTML(imgUrl)}" alt="" class="cart-item-img" onerror="this.src='/static/images/icons/icon-main.png'" />
+          <div class="cart-item-info">
+            <span class="cart-item-name">${App.escapeHTML(item.name)}</span>
+            <span class="cart-item-price">${Cart.formatPrice(item.unit_price)}</span>
+          </div>
+          <div class="cart-item-qty">
+            <button class="qty-btn" type="button" data-action="decrease">−</button>
+            <span class="qty-num">${item.quantity}</span>
+            <button class="qty-btn" type="button" data-action="increase">+</button>
+          </div>
+        `;
+        row.querySelector('[data-action="decrease"]').addEventListener('click', () => Cart.updateQuantity(item.product_id, item.quantity - 1));
+        row.querySelector('[data-action="increase"]').addEventListener('click', () => Cart.updateQuantity(item.product_id, item.quantity + 1));
         list.appendChild(row);
       });
     }
@@ -218,25 +165,17 @@ const Cart = {
     Cart.setDiscountRow('member-discount-row', 'member-discount-amt', totals.memberDiscount);
     Cart.setDiscountRow('combo-discount-row', 'combo-discount-amt', totals.comboSavings);
     Cart.setDiscountRow('coupon-discount-row', 'coupon-discount-amt', totals.couponSavings);
+
     const checkout = document.getElementById('checkout-btn');
     if (checkout) {
       const closed = typeof App !== 'undefined' && App.storeOpen === false;
       checkout.disabled = !Cart.items.length || closed;
-      checkout.textContent = closed ? '🔒 Closed — opens during opening hours' : 'Place Order 🍗';
+      checkout.textContent = closed ? 'Closed — opens during opening hours' : 'Place Order';
     }
     const clearButton = document.getElementById('cart-clear-btn');
     if (clearButton) clearButton.disabled = !Cart.items.length;
     const couponInput = document.getElementById('coupon-input');
     if (couponInput && Cart.appliedCoupon) couponInput.value = Cart.appliedCoupon.code;
-  },
-
-  createButton: function (text, action) {
-    const button = document.createElement('button');
-    button.type = 'button';
-    button.className = 'qty-btn';
-    button.dataset.action = action;
-    button.textContent = text;
-    return button;
   },
 
   setText: function (id, value) {
@@ -320,9 +259,7 @@ const Cart = {
     }
     try {
       const result = await API.checkout({
-        items: Cart.items.map(({ product_id, quantity, special_request }) => ({
-          product_id, quantity, special_request: special_request || '',
-        })),
+        items: Cart.items.map(({ product_id, quantity, special_request }) => ({ product_id, quantity, special_request: special_request || '' })),
         coupon_code: Cart.appliedCoupon?.code || '',
         address,
       });
@@ -334,9 +271,7 @@ const Cart = {
       Cart.clear();
       Cart.close();
       App.openOrderModal(result.order, App.lastOrder);
-      if (result.loyalty?.points_earned > 0) {
-        Cart.showToast(`You earned ${result.loyalty.points_earned} loyalty points!`, 'success');
-      }
+      if (result.loyalty?.points_earned > 0) Cart.showToast(`You earned ${result.loyalty.points_earned} loyalty points!`, 'success');
     } catch (error) {
       if (/not found/i.test(error.message || '')) {
         await App.loadMenu();
@@ -350,7 +285,7 @@ const Cart = {
     } finally {
       if (button) {
         const closed = typeof App !== 'undefined' && App.storeOpen === false;
-        button.textContent = closed ? '🔒 Closed — opens during opening hours' : 'Place Order 🍗';
+        button.textContent = closed ? 'Closed — opens during opening hours' : 'Place Order';
         button.disabled = closed || Cart.items.length === 0;
       }
     }
