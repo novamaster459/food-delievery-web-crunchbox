@@ -1,0 +1,7 @@
+name: Local Config
+version: 0.0.1
+schema: v1
+models:
+  - name: "Local Qwen Coder"
+    provider: "ollama"
+    model: "qwen2.5-coder:1.5b"
