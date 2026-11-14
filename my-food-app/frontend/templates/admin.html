@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CrunchBox Admin Dashboard</title>
+  <link rel="stylesheet" href="/static/css/main.css" />
+  <link rel="stylesheet" href="/static/css/components.css" />
+  <link rel="stylesheet" href="/static/css/storefront-customization.css" />
+  <style>
+    /* Admin layout override */
+    body { display: flex; min-height: 100vh; overflow-x: hidden; padding-bottom: 0; }
+    .admin-layout { display: flex; width: 100%; }
+  </style>
+</head>
+<body>
+<div class="admin-layout">
+
+  <!-- ═══════════════════════════════════════════════════
+       SIDEBAR
+  ═══════════════════════════════════════════════════ -->
+  <aside class="admin-sidebar" id="admin-sidebar">
+    <div class="admin-sidebar-header">
+      <span class="admin-logo-text">CrunchBox</span>
+      <span class="admin-logo-sub">Admin Panel</span>
+    </div>
+
+    <nav class="admin-nav">
+      <button class="admin-nav-item active" data-tab="dashboard">
+        <span class="admin-nav-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6v6H9z"/></svg></span>
+        <span class="admin-nav-label">Dashboard</span>
+      </button>
+      <button class="admin-nav-item" data-tab="products">
+        <span class="admin-nav-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 11h16M4 11a2 2 0 002-2V7a2 2 0 012-2h8a2 2 0 012 2v2a2 2 0 002 2M4 11v8a2 2 0 002 2h12a2 2 0 002-2v-8"/></svg></span>
+        <span class="admin-nav-label">Products</span>
+      </button>
+      <button class="admin-nav-item" data-tab="categories">
+        <span class="admin-nav-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span>
+        <span class="admin-nav-label">Categories</span>
+      </button>
+      <button class="admin-nav-item" data-tab="coupons">
+        <span class="admin-nav-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><circle cx="7" cy="7" r="1.5" fill="currentColor"/></svg></span>
+        <span class="admin-nav-label">Coupons</span>
+      </button>
+      <button class="admin-nav-item" data-tab="orders">
+        <span class="admin-nav-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><path d="M3.27 6.96L12 12.01l8.73-5.05M12 22V12"/></svg></span>
+        <span class="admin-nav-label">Orders</span>
+      </button>
+      <button class="admin-nav-item" data-tab="locations">
+        <span class="admin-nav-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-6-5.686-6-11a6 6 0 1112 0c0 5.314-6 11-6 11z"/><circle cx="12" cy="10" r="2.5"/></svg></span>
+        <span class="admin-nav-label">Locations</span>
+      </button>
+      <button class="admin-nav-item" data-tab="settings">
+        <span class="admin-nav-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09a1.65 1.65 0 00-1-1.51 1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09a1.65 1.65 0 001.51-1 1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></span>
+        <span class="admin-nav-label">Settings</span>
+      </button>
+    </nav>
+
+    <div class="admin-sidebar-footer">
+      <a href="/" class="admin-nav-item admin-nav-item--link">
+        <span class="admin-nav-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/></svg></span>
+        <span class="admin-nav-label">View Store</span>
+      </a>
+      <button type="button" class="admin-nav-item admin-logout-btn" id="admin-logout-btn">
+        <span class="admin-nav-icon">↪</span>
+        <span class="admin-nav-label">Log Out</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ═══════════════════════════════════════════════════
+       MAIN CONTENT
+  ═══════════════════════════════════════════════════ -->
+  <main class="admin-main" id="admin-main">
+
+    <!-- Top bar -->
+    <div class="admin-topbar">
+      <button class="sidebar-toggle-btn" id="sidebar-toggle"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+      <h1 class="admin-page-title" id="admin-page-title">Dashboard</h1>
+      <div class="admin-topbar-right">
+        <span class="admin-user-badge"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:4px"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Admin</span>
+      </div>
+    </div>
+
+    <!-- ─── TAB: DASHBOARD ─── -->
+    <div class="admin-tab-content active" id="tab-dashboard">
+      <div class="admin-stats-grid">
+        <div class="stat-card" id="stat-products">
+          <div class="stat-icon"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 11h16M4 11a2 2 0 002-2V7a2 2 0 012-2h8a2 2 0 012 2v2a2 2 0 002 2M4 11v8a2 2 0 002 2h12a2 2 0 002-2v-8"/></svg></div>
+          <div class="stat-info">
+            <span class="stat-value" id="stat-total-products">—</span>
+            <span class="stat-label">Total Products</span>
+          </div>
+        </div>
+        <div class="stat-card" id="stat-orders-card">
+          <div class="stat-icon"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><path d="M3.27 6.96L12 12.01l8.73-5.05M12 22V12"/></svg></div>
+          <div class="stat-info">
+            <span class="stat-value" id="stat-total-orders">—</span>
+            <span class="stat-label">Total Orders</span>
+          </div>
+        </div>
+        <div class="stat-card" id="stat-categories-card">
+          <div class="stat-icon"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>
+          <div class="stat-info">
+            <span class="stat-value" id="stat-total-categories">—</span>
+            <span class="stat-label">Categories</span>
+          </div>
+        </div>
+        <div class="stat-card" id="stat-coupons-card">
+          <div class="stat-icon"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><circle cx="7" cy="7" r="1.5" fill="currentColor"/></svg></div>
+          <div class="stat-info">
+            <span class="stat-value" id="stat-active-coupons">—</span>
+            <span class="stat-label">Active Coupons</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Orders mini-preview -->
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <h3 class="admin-card-title">Recent Orders</h3>
+          <button class="btn-secondary btn--sm" onclick="document.querySelector('[data-tab=orders]').click()">View All</button>
+        </div>
+        <table class="admin-table" id="dashboard-recent-orders">
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>User</th>
+              <th>Total (MMK)</th>
+              <th>Status</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody id="dashboard-orders-body">
+            <tr><td colspan="5" class="table-empty">Loading recent orders…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ─── TAB: PRODUCTS ─── -->
+    <div class="admin-tab-content hidden" id="tab-products">
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <h3 class="admin-card-title">All Products</h3>
+          <button class="btn-primary btn--sm" id="add-product-btn">+ Add Product</button>
+        </div>
+
+        <!-- Add/Edit Product Form -->
+        <div class="admin-form-wrap hidden" id="product-form-wrap">
+          <form class="admin-form" id="product-form" enctype="multipart/form-data">
+            <input type="hidden" id="product-id" value="" />
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="product-name">Product Name *</label>
+                <input class="form-input" id="product-name" type="text" placeholder="e.g. Crispy Chicken Burger" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="product-category">Category *</label>
+                <select class="form-input" id="product-category" required>
+                  <option value="">Select Category</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="product-desc">Description</label>
+              <textarea class="form-input form-textarea" id="product-desc" rows="3" placeholder="Short description of the product…"></textarea>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="product-price">Price (MMK) *</label>
+                <input class="form-input" id="product-price" type="number" min="0" placeholder="e.g. 5000" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="product-loyalty-points">Points per item</label>
+                <input class="form-input" id="product-loyalty-points" type="number" min="0" max="1000000" value="100" required />
+              </div>
+              <div class="form-group form-group--checkbox">
+                <label class="form-label">Is Combo?</label>
+                <label class="checkbox-label">
+                  <input type="checkbox" id="product-is-combo" />
+                  <span class="checkbox-custom"></span>
+                  <span>Yes, this is a combo</span>
+                </label>
+              </div>
+            </div>
+            <div class="form-group combo-discount-group hidden" id="combo-discount-group">
+              <label class="form-label" for="product-combo-discount">Combo Discount (%)</label>
+              <input class="form-input" id="product-combo-discount" type="number" min="0" max="100" placeholder="e.g. 15" />
+            </div>
+            <div class="form-row">
+              <div class="form-group form-group--checkbox">
+                <label class="form-label">Points reward option?</label>
+                <label class="checkbox-label">
+                  <input type="checkbox" id="product-is-reward" />
+                  <span class="checkbox-custom"></span>
+                  <span>Members can redeem this item with points</span>
+                </label>
+              </div>
+              <div class="form-group hidden" id="reward-points-group">
+                <label class="form-label" for="product-reward-points">Points needed to redeem</label>
+                <input class="form-input" id="product-reward-points" type="number" min="1" max="1000000" placeholder="e.g. 2000" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="product-image">Product Image</label>
+              <input class="form-input form-file" id="product-image" type="file" accept="image/*" />
+              <div class="image-preview-wrap" id="product-image-preview"></div>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn-primary" id="product-submit-btn">Save Product</button>
+              <button type="button" class="btn-secondary" id="product-cancel-btn">Cancel</button>
+            </div>
+          </form>
+        </div>
+
+        <table class="admin-table" id="products-table">
+          <thead>
+            <tr>
+              <th>Image</th>
+              <th>Name</th>
+              <th>Category</th>
+              <th>Price (MMK)</th>
+              <th>Points / item</th>
+              <th>Reward option</th>
+              <th>Combo?</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="products-tbody">
+            <tr><td colspan="8" class="table-empty">Loading products…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ─── TAB: CATEGORIES ─── -->
+    <div class="admin-tab-content hidden" id="tab-categories">
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <h3 class="admin-card-title">Categories</h3>
+          <button class="btn-primary btn--sm" id="add-category-btn">+ Add Category</button>
+        </div>
+
+        <div class="admin-form-wrap hidden" id="category-form-wrap">
+          <form class="admin-form" id="category-form">
+            <input type="hidden" id="category-id" value="" />
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="category-icon">Icon (text or symbol)</label>
+                <input class="form-input" id="category-icon" type="text" placeholder="e.g. Mains" maxlength="10" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="category-name">Category Name *</label>
+                <input class="form-input" id="category-name" type="text" placeholder="e.g. Fried Chicken" required />
+              </div>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn-primary">Save Category</button>
+              <button type="button" class="btn-secondary" id="category-cancel-btn">Cancel</button>
+            </div>
+          </form>
+        </div>
+
+        <table class="admin-table" id="categories-table">
+          <thead>
+            <tr>
+              <th>Icon</th>
+              <th>Name</th>
+              <th>Products</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="categories-tbody">
+            <tr><td colspan="4" class="table-empty">Loading categories…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ─── TAB: COUPONS ─── -->
+    <div class="admin-tab-content hidden" id="tab-coupons">
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <h3 class="admin-card-title">Coupons</h3>
+          <button class="btn-primary btn--sm" id="add-coupon-btn">+ Add Coupon</button>
+        </div>
+
+        <div class="admin-form-wrap hidden" id="coupon-form-wrap">
+          <form class="admin-form" id="coupon-form">
+            <input type="hidden" id="coupon-id" value="" />
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="coupon-code">Coupon Code *</label>
+                <input class="form-input" id="coupon-code" type="text" placeholder="e.g. CRUNCH25" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="coupon-discount">Discount (%) *</label>
+                <input class="form-input" id="coupon-discount" type="number" min="1" max="100" placeholder="e.g. 25" required />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="coupon-expiry">Expiry Date *</label>
+                <input class="form-input" id="coupon-expiry" type="date" required />
+              </div>
+              <div class="form-group form-group--checkbox">
+                <label class="form-label">Active?</label>
+                <label class="checkbox-label">
+                  <input type="checkbox" id="coupon-active" checked />
+                  <span class="checkbox-custom"></span>
+                  <span>Yes, coupon is active</span>
+                </label>
+              </div>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn-primary">Save Coupon</button>
+              <button type="button" class="btn-secondary" id="coupon-cancel-btn">Cancel</button>
+            </div>
+          </form>
+        </div>
+
+        <table class="admin-table" id="coupons-table">
+          <thead>
+            <tr>
+              <th>Code</th>
+              <th>Discount (%)</th>
+              <th>Expires</th>
+              <th>Active</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="coupons-tbody">
+            <tr><td colspan="5" class="table-empty">Loading coupons…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ─── TAB: ORDERS ─── -->
+    <div class="admin-tab-content hidden" id="tab-orders">
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <h3 class="admin-card-title">All Orders</h3>
+          <button class="btn-secondary btn--sm" id="refresh-orders-btn">Refresh</button>
+        </div>
+        <table class="admin-table" id="orders-table">
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>User</th>
+              <th>Total (MMK)</th>
+              <th>Status</th>
+              <th>Date</th>
+              <th>Details</th>
+            </tr>
+          </thead>
+          <tbody id="orders-tbody">
+            <tr><td colspan="6" class="table-empty">Loading orders…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ─── TAB: LOCATIONS ─── -->
+    <div class="admin-tab-content hidden" id="tab-locations">
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <h3 class="admin-card-title">Branch Locations</h3>
+          <button class="btn-primary btn--sm" id="add-location-btn">+ Add Location</button>
+        </div>
+
+        <p class="settings-help">Customers can order while at least one branch is within its opening hours. When every branch is closed, the menu and rewards stay visible but ordering is turned off. Opening and closing hours are checked against Myanmar time (UTC+6:30).</p>
+
+        <div class="admin-form-wrap hidden" id="location-form-wrap">
+          <form class="admin-form" id="location-form" enctype="multipart/form-data">
+            <input type="hidden" id="location-id" value="" />
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="location-name">Location Name *</label>
+                <input class="form-input" id="location-name" type="text" placeholder="e.g. Bahan Branch" maxlength="80" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="location-branch-no">Branch No. *</label>
+                <input class="form-input" id="location-branch-no" type="text" placeholder="e.g. 01" maxlength="20" required />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="location-address">Address</label>
+              <input class="form-input" id="location-address" type="text" placeholder="e.g. No. 12, Kabar Aye Pagoda Road, Bahan Township, Yangon" maxlength="200" />
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="location-open-time">Opening Hour *</label>
+                <input class="form-input" id="location-open-time" type="time" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="location-close-time">Closing Hour *</label>
+                <input class="form-input" id="location-close-time" type="time" required />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="location-image">Branch Photo</label>
+              <input class="form-input form-file" id="location-image" type="file" accept="image/*" />
+              <div class="image-preview-wrap" id="location-image-preview"></div>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn-primary" id="location-submit-btn">Save Location</button>
+              <button type="button" class="btn-secondary" id="location-cancel-btn">Cancel</button>
+            </div>
+          </form>
+        </div>
+
+        <table class="admin-table" id="locations-table">
+          <thead>
+            <tr>
+              <th>Photo</th>
+              <th>Name</th>
+              <th>Branch No.</th>
+              <th>Address</th>
+              <th>Opening Hours</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="locations-tbody">
+            <tr><td colspan="7" class="table-empty">Loading locations…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ─── TAB: SETTINGS ─── -->
+    <div class="admin-tab-content hidden" id="tab-settings">
+      <div class="admin-card settings-card">
+        <div class="admin-card-header">
+          <h3 class="admin-card-title">Shop Settings</h3>
+        </div>
+        <form class="admin-form" id="settings-form" enctype="multipart/form-data">
+          <div class="form-group">
+            <label class="form-label" for="settings-shop-name">Shop Name</label>
+            <input class="form-input" id="settings-shop-name" type="text" placeholder="CrunchBox" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="settings-logo">Shop Logo</label>
+            <input class="form-input form-file" id="settings-logo" type="file" accept="image/*" />
+            <button type="button" class="btn-danger btn--sm image-remove-btn hidden" id="remove-logo-btn" data-key="logo_filename">Remove Logo</button>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="settings-member-discount">Member Discount (%)</label>
+            <input class="form-input" id="settings-member-discount" type="number" min="0" max="100" placeholder="10" />
+          </div>
+          <h4 class="admin-card-title">Loyalty Rewards</h4>
+          <p class="settings-help">Points earned per product are set when editing that product, and any product can be marked as a points reward in the Products tab. Set the points required for the three built-in rewards below.</p>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="settings-reward-iced-cola">Iced Cola points</label>
+              <input class="form-input" id="settings-reward-iced-cola" type="number" min="1" max="1000000" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="settings-reward-burger">Spicy Crunch Burger points</label>
+              <input class="form-input" id="settings-reward-burger" type="number" min="1" max="1000000" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="settings-reward-bucket">Crispy Chicken Bucket points</label>
+              <input class="form-input" id="settings-reward-bucket" type="number" min="1" max="1000000" />
+            </div>
+          </div>
+          <hr class="settings-divider" />
+          <h4 class="admin-card-title">Storefront Style</h4>
+          <p class="settings-help">Customize the visible theme, hero and promotion cards. Upload your own food photography for the best match to the store preview.</p>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="settings-accent-color">Accent color</label>
+              <input class="form-input settings-color" id="settings-accent-color" type="color" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="settings-background-color">Page background</label>
+              <input class="form-input settings-color" id="settings-background-color" type="color" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="settings-hero-heading">Hero headline</label>
+            <textarea class="form-input form-textarea" id="settings-hero-heading" rows="2" maxlength="100"></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="settings-hero-subtext">Hero subtitle</label>
+            <input class="form-input" id="settings-hero-subtext" type="text" maxlength="180" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="settings-hero-image">Hero background image</label>
+            <input class="form-input form-file" id="settings-hero-image" type="file" accept="image/png,image/jpeg,image/gif,image/webp" />
+            <img id="settings-hero-preview" class="settings-decoration-preview hidden" alt="Hero image preview" />
+            <button type="button" class="btn-danger btn--sm image-remove-btn hidden" id="remove-hero-btn" data-key="hero_image_filename">Remove Hero Image</button>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="settings-featured-title">Featured card title</label>
+              <input class="form-input" id="settings-featured-title" type="text" maxlength="60" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="settings-featured-image">Featured card photo</label>
+              <input class="form-input form-file" id="settings-featured-image" type="file" accept="image/png,image/jpeg,image/gif,image/webp" />
+              <img id="settings-featured-preview" class="settings-decoration-preview hidden" alt="Featured card preview" />
+              <button type="button" class="btn-danger btn--sm image-remove-btn hidden" id="remove-featured-btn" data-key="featured_image_filename">Remove Featured Image</button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="settings-featured-text">Featured card description</label>
+            <textarea class="form-input form-textarea" id="settings-featured-text" rows="2" maxlength="240"></textarea>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="settings-deal-title">Deal card title</label>
+              <input class="form-input" id="settings-deal-title" type="text" maxlength="60" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="settings-deal-image">Deal card photo</label>
+              <input class="form-input form-file" id="settings-deal-image" type="file" accept="image/png,image/jpeg,image/gif,image/webp" />
+              <img id="settings-deal-preview" class="settings-decoration-preview hidden" alt="Deal card preview" />
+              <button type="button" class="btn-danger btn--sm image-remove-btn hidden" id="remove-deal-btn" data-key="deal_image_filename">Remove Deal Image</button>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="settings-deal-text">Deal description</label>
+              <textarea class="form-input form-textarea" id="settings-deal-text" rows="2" maxlength="180"></textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="settings-deal-button">Deal button label</label>
+              <input class="form-input" id="settings-deal-button" type="text" maxlength="30" />
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn-primary">Save Settings</button>
+          </div>
+        </form>
+
+        <!-- Settings Preview -->
+        <div class="settings-preview-area">
+          <h4 class="settings-preview-title">Live Preview</h4>
+          <div class="settings-preview-box">
+            <img id="settings-logo-preview" alt="Shop logo" style="display:none" />
+            <span id="settings-name-preview" class="settings-preview-name">CrunchBox</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="admin-card settings-card">
+        <div class="admin-card-header">
+          <h3 class="admin-card-title">Change Admin Password</h3>
+        </div>
+        <form class="admin-form" id="password-form">
+          <div class="form-group">
+            <label class="form-label" for="password-current">Current password</label>
+            <input class="form-input" id="password-current" type="password" autocomplete="current-password" required />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="password-new">New password</label>
+              <input class="form-input" id="password-new" type="password" minlength="6" autocomplete="new-password" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="password-confirm">Confirm new password</label>
+              <input class="form-input" id="password-confirm" type="password" minlength="6" autocomplete="new-password" required />
+            </div>
+          </div>
+          <p class="settings-help">Use at least 6 characters. You stay signed in after changing it.</p>
+          <div class="form-actions">
+            <button type="submit" class="btn-primary" id="password-submit-btn">Update Password</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </main><!-- end admin-main -->
+</div><!-- end admin-layout -->
+
+<!-- Toast Container -->
+<div id="toast-container" class="toast-container"></div>
+
+<!-- Delete Confirm Modal -->
+<div id="confirm-modal" class="modal hidden">
+  <div class="modal-backdrop" id="confirm-backdrop"></div>
+  <div class="modal-box confirm-modal-box">
+    <h3 class="confirm-title">Confirm Delete</h3>
+    <p class="confirm-message" id="confirm-message">Are you sure you want to delete this item?</p>
+    <div class="confirm-actions">
+      <button class="btn-danger" id="confirm-yes-btn">Yes, Delete</button>
+      <button class="btn-secondary" id="confirm-no-btn">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script src="/static/js/api.js"></script>
+<script src="/static/js/admin.js"></script>
+</body>
+</html>

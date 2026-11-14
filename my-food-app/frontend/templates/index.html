@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CrunchBox - Crispy Flavor, Delivered Fast</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="/static/css/main.css" />
+  <link rel="stylesheet" href="/static/css/components.css" />
+  <link rel="stylesheet" href="/static/css/storefront-customization.css" />
+</head>
+
+<body>
+
+  <!-- ═══════════════════════════════════════════════════
+       TOP HEADER BAR
+  ═══════════════════════════════════════════════════ -->
+  <header class="app-header">
+    <div class="shop-logo-area">
+      <img id="shop-logo" alt="Shop logo" style="display:none" />
+      <span id="shop-name" class="shop-name-text">CrunchBox</span>
+    </div>
+
+    <div class="header-right">
+      <a id="admin-dashboard-link" class="admin-shortcut hidden" href="/admin">Admin</a>
+      <button id="cart-btn" class="cart-btn" aria-label="Open cart">
+        <svg class="cart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 6h15l-1.5 9h-12z"></path>
+          <circle cx="9" cy="20" r="1.5"></circle>
+          <circle cx="18" cy="20" r="1.5"></circle>
+          <path d="M6 6L5 3H2"></path>
+        </svg>
+        <span class="cart-badge" id="cart-count">0</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ═══════════════════════════════════════════════════
+       HERO SECTION
+  ═══════════════════════════════════════════════════ -->
+  <section class="hero-section" id="hero">
+    <div class="hero-content">
+      <div class="hero-text">
+        <h1 class="hero-heading" id="hero-heading">
+          Crispy Flavor,<br />Delivered Fast.
+        </h1>
+        <p class="hero-subtext" id="hero-subtext">Hot, crunchy &amp; made fresh for you.</p>
+        <a href="#menu-section" class="btn-order-now hero-cta" id="order-now-btn">
+          Order Now
+        </a>
+      </div>
+      <div class="hero-logo-wrap" id="hero-logo-wrap">
+        <img src="/static/images/icons/icon-main.png" alt="CrunchBox" class="hero-logo" id="hero-logo" />
+        <div class="hero-glow"></div>
+      </div>
+    </div>
+    <div class="hero-wave">
+      <svg viewBox="0 0 1440 80" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+        <path d="M0,40 C360,80 1080,0 1440,40 L1440,80 L0,80 Z" fill="#121212" />
+      </svg>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════
+       SEARCH BAR
+  ═══════════════════════════════════════════════════ -->
+  <div class="search-container" id="search-container">
+    <div class="search-pill">
+      <svg class="search-icon-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"></circle>
+        <path d="m21 21-4.35-4.35"></path>
+      </svg>
+      <input id="search-input" type="text" placeholder="Search for meals, combos, drinks..." autocomplete="off" />
+      <button class="search-filter-btn" id="filter-btn" aria-label="Filter">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════
+       RECOMMENDED SECTION (above tabs)
+  ═══════════════════════════════════════════════════ -->
+  <section class="recommended-section" id="recommended-section">
+    <div class="section-header">
+      <h2 class="section-title">Recommended For You</h2>
+      <span class="section-subtitle">Top picks based on your orders</span>
+    </div>
+    <div class="recommended-grid" id="recommended-grid"></div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════
+       CATEGORY TABS
+  ═══════════════════════════════════════════════════ -->
+  <div class="category-tabs-wrap">
+    <div class="category-tabs" id="category-tabs">
+      <div class="tab-skeleton"></div>
+      <div class="tab-skeleton"></div>
+      <div class="tab-skeleton"></div>
+      <div class="tab-skeleton"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════
+       MENU SECTION
+  ═══════════════════════════════════════════════════ -->
+  <section class="menu-section" id="menu-section">
+    <div class="section-header">
+      <h2 class="section-title">Our Menu</h2>
+      <span class="section-subtitle" id="menu-count-label"></span>
+    </div>
+    <!-- Playlists (sub-tab slideshows) injected here -->
+    <div id="playlists-container"></div>
+    <div class="menu-grid" id="menu-grid">
+      <div class="menu-card-skeleton"></div>
+      <div class="menu-card-skeleton"></div>
+      <div class="menu-card-skeleton"></div>
+      <div class="menu-card-skeleton"></div>
+    </div>
+    <div class="no-results hidden" id="no-results">
+      <svg class="no-results-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+        stroke-linecap="round" stroke-linejoin="round">
+        <path d="M8 21h8a2 2 0 0 0 2-2v-6.5a1 1 0 0 0-.3-.7l-5-5a1 1 0 0 0-1.4 0l-5 5a1 1 0 0 0-.3.7V19a2 2 0 0 0 2 2z">
+        </path>
+        <path d="M10 21v-6h4v6"></path>
+      </svg>
+      <p>No items found. Try a different search!</p>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════
+       PROMOTIONAL BANNERS
+  ═══════════════════════════════════════════════════ -->
+  <section class="promo-section">
+    <div class="promo-card promo-card--dark" id="featured-promo-card">
+      <div class="promo-text">
+        <span class="promo-eyebrow">Featured</span>
+        <h3 class="promo-title" id="featured-promo-title">Chef Specials</h3>
+        <p class="promo-desc" id="featured-promo-text">Made with care by our chefs — unique recipes you won't find
+          anywhere else.</p>
+        <button class="btn-secondary promo-btn"
+          onclick="document.getElementById('search-input').value='special'; document.getElementById('search-input').dispatchEvent(new Event('input'))">Explore</button>
+      </div>
+    </div>
+    <div class="promo-card promo-card--orange" id="deal-promo-card">
+      <h3 class="promo-title promo-title--white" id="deal-promo-title">Weekend Crunch Fest</h3>
+      <p class="promo-desc promo-desc--white" id="deal-promo-text">Up to 25% OFF on selected items. Limited time only!
+      </p>
+      <button class="btn-dark promo-btn" id="deal-promo-button">Order Now</button>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════
+       REWARDS PANEL
+  ═══════════════════════════════════════════════════ -->
+  <div class="rewards-panel" id="rewards-panel">
+    <div class="rewards-top">
+      <div class="rewards-left">
+        <svg class="rewards-star" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+        </svg>
+        <div class="rewards-info">
+          <span class="rewards-label">Your Points</span>
+          <span class="rewards-points" id="rewards-points">0</span>
+        </div>
+      </div>
+      <a href="#" class="rewards-link" id="view-rewards-link">Sign in to earn →</a>
+    </div>
+    <div class="rewards-progress-wrap">
+      <div class="progress-bar-track">
+        <div class="progress-bar-fill" id="rewards-fill" style="width: 0%"></div>
+      </div>
+      <div class="rewards-milestone">
+        <span class="rewards-current" id="rewards-current-label">0 pts</span>
+        <span class="rewards-next" id="rewards-next-label">Next Reward: 2,000 pts</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════
+       STORE LOCATIONS
+  ═══════════════════════════════════════════════════ -->
+  <section class="store-locations-section" id="store-locations-section">
+    <div class="section-header">
+      <h2 class="section-title">Our Locations</h2>
+      <span class="section-subtitle" id="locations-count-label"></span>
+    </div>
+    <div class="store-locations-grid" id="store-locations-grid"></div>
+    <p class="store-locations-empty hidden" id="store-locations-empty">No branch locations have been added yet.</p>
+    <p class="store-locations-closed-note hidden" id="closed-ordering-note">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+        stroke-linejoin="round">
+        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+      </svg>
+      All branches are closed right now. You can browse the menu and rewards, but ordering opens at <span
+        id="closed-opens-at"></span> (Myanmar time).
+    </p>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════
+       CART SIDEBAR / DRAWER
+  ═══════════════════════════════════════════════════ -->
+  <div class="cart-overlay hidden" id="cart-overlay"></div>
+  <div id="cart-sidebar" class="cart-sidebar hidden">
+    <div class="cart-header">
+      <h2 class="cart-title">Your Order</h2>
+      <div class="cart-header-actions">
+        <button class="cart-clear-btn" id="cart-clear-btn" type="button">Clear all</button>
+        <button class="cart-close-btn" id="cart-close-btn" aria-label="Close cart">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M18 6 6 18"></path>
+            <path d="m6 6 12 12"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="cart-scroll-area" id="cart-scroll-area">
+      <div class="member-discount-note hidden" id="member-discount-note">
+        10% member discount applied!
+      </div>
+      <div id="cart-items" class="cart-items-list">
+        <div class="cart-empty" id="cart-empty">
+          <svg class="cart-empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 6h15l-1.5 9h-12z"></path>
+            <circle cx="9" cy="20" r="1.5"></circle>
+            <circle cx="18" cy="20" r="1.5"></circle>
+            <path d="M6 6L5 3H2"></path>
+          </svg>
+          <p>Your cart is empty.<br />Add some delicious items!</p>
+        </div>
+      </div>
+
+      <div class="cart-summary" id="cart-summary">
+        <div class="cart-summary-row">
+          <span>Subtotal</span>
+          <span id="cart-subtotal">0 MMK</span>
+        </div>
+        <div class="cart-summary-row discount-row hidden" id="member-discount-row">
+          <span>Member Discount (10%)</span>
+          <span id="member-discount-amt" class="text-success">-0 MMK</span>
+        </div>
+        <div class="cart-summary-row discount-row hidden" id="combo-discount-row">
+          <span>Combo Discount</span>
+          <span id="combo-discount-amt" class="text-success">-0 MMK</span>
+        </div>
+        <div class="cart-summary-row discount-row hidden" id="coupon-discount-row">
+          <span>Coupon Discount</span>
+          <span id="coupon-discount-amt" class="text-success">-0 MMK</span>
+        </div>
+        <div class="cart-summary-row cart-total-row">
+          <span>Total</span>
+          <span id="cart-total" class="cart-total-amt">0 MMK</span>
+        </div>
+      </div>
+
+      <div class="coupon-section">
+        <div class="coupon-input-wrap">
+          <input id="coupon-input" type="text" placeholder="Enter promo code..." />
+          <button class="btn-primary coupon-apply-btn" id="coupon-apply-btn">Apply</button>
+        </div>
+        <span class="coupon-status" id="coupon-status"></span>
+      </div>
+
+      <div class="address-section">
+        <h4 class="address-title">Delivery Address</h4>
+        <div class="address-selects">
+          <select id="addr-city" class="addr-select">
+            <option value="">Select City</option>
+            <option value="Yangon">Yangon</option>
+            <option value="Mandalay">Mandalay</option>
+            <option value="Naypyidaw">Naypyidaw</option>
+            <option value="Bago">Bago</option>
+            <option value="Mawlamyine">Mawlamyine</option>
+          </select>
+          <select id="addr-township" class="addr-select">
+            <option value="">Select Township</option>
+          </select>
+          <input id="addr-ward" type="text" class="addr-input" placeholder="Ward" maxlength="100" />
+          <input id="addr-street" type="text" class="addr-input" placeholder="Street" maxlength="160" />
+          <input id="addr-house" type="text" class="addr-input" placeholder="House / Room No." />
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-primary checkout-btn" id="checkout-btn">
+      Place Order
+    </button>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════
+       PRODUCT DETAIL MODAL
+  ═══════════════════════════════════════════════════ -->
+  <div id="product-modal" class="modal hidden">
+    <div class="modal-backdrop" id="product-modal-backdrop"></div>
+    <div class="modal-box product-modal-box">
+      <button class="modal-close-x" id="product-modal-close-x" type="button" aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="M18 6 6 18"></path>
+          <path d="m6 6 12 12"></path>
+        </svg>
+      </button>
+      <div class="product-modal-media">
+        <img id="product-modal-img" src="" alt="" />
+      </div>
+      <div class="product-modal-body">
+        <div class="product-modal-badges" id="product-modal-badges"></div>
+        <h2 class="product-modal-name" id="product-modal-name"></h2>
+        <p class="product-modal-desc" id="product-modal-desc"></p>
+        <div class="product-modal-meta">
+          <span class="product-modal-price" id="product-modal-price"></span>
+          <span class="product-modal-points" id="product-modal-points"></span>
+        </div>
+        <button class="btn-primary product-modal-add" id="product-modal-add" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M12 5v14"></path>
+            <path d="M5 12h14"></path>
+          </svg>
+          Add to Order
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════
+       PROFILE MODAL
+  ═══════════════════════════════════════════════════ -->
+  <div id="profile-modal" class="modal hidden">
+    <div class="modal-backdrop" id="profile-modal-backdrop"></div>
+    <div class="modal-box profile-modal-box">
+      <button class="modal-close-x" id="profile-modal-close-x" type="button" aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="M18 6 6 18"></path>
+          <path d="m6 6 12 12"></path>
+        </svg>
+      </button>
+      <div class="profile-modal-header">
+        <div class="profile-avatar">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+          </svg>
+        </div>
+        <h2 class="profile-username" id="profile-username"></h2>
+        <p class="profile-email" id="profile-email"></p>
+      </div>
+      <div class="profile-stats" id="profile-stats"></div>
+      <div class="profile-actions">
+        <a href="/admin" class="btn-primary profile-admin-btn hidden" id="profile-admin-btn">Admin Dashboard</a>
+        <button class="btn-secondary profile-logout-btn" id="profile-logout-btn" type="button">Log Out</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════
+       ORDER CONFIRMATION MODAL
+  ═══════════════════════════════════════════════════ -->
+  <div id="order-modal" class="modal hidden">
+    <div class="modal-backdrop" id="order-modal-backdrop"></div>
+    <div class="modal-box order-modal-box">
+      <div class="order-confirm-header">
+        <div class="order-confirm-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+          </svg>
+        </div>
+        <h2 class="order-confirm-title">Order Placed!</h2>
+        <p class="order-confirm-sub">Order <span id="order-modal-id"></span> · Sit tight — your crunch is on its way.
+        </p>
+      </div>
+      <div class="order-track-stages" id="order-track-stages">
+        <div class="stage-card" id="stage-1">
+          <div class="stage-icon-circle">1</div>
+          <div class="stage-connector"></div>
+          <div class="stage-info">
+            <span class="stage-title">Order Received</span>
+          </div>
+        </div>
+        <div class="stage-card pending" id="stage-2">
+          <div class="stage-icon-circle">2</div>
+          <div class="stage-connector"></div>
+          <div class="stage-info">
+            <span class="stage-title">Crafting Your Crunch</span>
+          </div>
+        </div>
+        <div class="stage-card pending" id="stage-3">
+          <div class="stage-icon-circle">3</div>
+          <div class="stage-connector"></div>
+          <div class="stage-info">
+            <span class="stage-title">Courier Dispatched</span>
+          </div>
+        </div>
+        <div class="stage-card pending" id="stage-4">
+          <div class="stage-icon-circle">4</div>
+          <div class="stage-connector"></div>
+          <div class="stage-info">
+            <span class="stage-title">Cruising To You</span>
+          </div>
+        </div>
+        <div class="stage-card pending" id="stage-5">
+          <div class="stage-icon-circle">5</div>
+          <div class="stage-connector stage-connector--last"></div>
+          <div class="stage-info">
+            <span class="stage-title">Arrived! Bon Appétit</span>
+          </div>
+        </div>
+      </div>
+      <div class="order-special-request hidden" id="order-special-request"></div>
+      <div class="order-receipt-items" id="order-receipt-items"></div>
+      <div class="order-support-box hidden" id="order-support-box">
+        <p>Need help with your order? If your driver hasn't arrived, please call our support line at <a
+            class="support-phone" href="tel:+959970020705">+959970020705</a>.</p>
+      </div>
+      <button class="btn-secondary order-modal-close" id="order-modal-close">Close</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════
+       AUTH MODAL
+  ═══════════════════════════════════════════════════ -->
+  <div id="auth-modal" class="modal hidden">
+    <div class="modal-backdrop" id="auth-modal-backdrop"></div>
+    <div class="modal-box auth-modal-box">
+      <button class="modal-close-x" id="auth-modal-close-x" type="button" aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="M18 6 6 18"></path>
+          <path d="m6 6 12 12"></path>
+        </svg>
+      </button>
+      <div class="auth-logo">
+        <span class="auth-logo-text">CrunchBox</span>
+      </div>
+      <div class="modal-tabs">
+        <button class="modal-tab active" id="login-tab" data-tab="login">Login</button>
+        <button class="modal-tab" id="register-tab" data-tab="register">Register</button>
+      </div>
+
+      <form class="auth-form" id="login-form">
+        <div class="form-group">
+          <label class="form-label" for="login-email">Email</label>
+          <input class="form-input" id="login-email" type="email" placeholder="you@email.com" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="login-password">Password</label>
+          <input class="form-input" id="login-password" type="password" placeholder="••••••••" required />
+        </div>
+        <button type="submit" class="btn-primary auth-submit-btn">Login</button>
+        <p class="auth-switch-text">Don't have an account? <button type="button" class="auth-switch-link"
+            data-tab="register">Register here</button></p>
+      </form>
+
+      <form class="auth-form hidden" id="register-form">
+        <div class="form-group">
+          <label class="form-label" for="reg-username">Username</label>
+          <input class="form-input" id="reg-username" type="text" placeholder="Your name" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="reg-email">Email</label>
+          <input class="form-input" id="reg-email" type="email" placeholder="you@email.com" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="reg-password">Password</label>
+          <input class="form-input" id="reg-password" type="password" placeholder="••••••••" required />
+        </div>
+        <button type="submit" class="btn-primary auth-submit-btn">Create Account</button>
+        <p class="auth-switch-text">Already have an account? <button type="button" class="auth-switch-link"
+            data-tab="login">Login here</button></p>
+      </form>
+    </div>
+  </div>
+
+  <div id="rewards-modal" class="modal hidden">
+    <div class="modal-backdrop" id="rewards-modal-backdrop"></div>
+    <div class="modal-box rewards-modal-box" role="dialog" aria-modal="true" aria-labelledby="rewards-modal-title">
+      <button class="modal-close-x" id="rewards-modal-close" type="button" aria-label="Close rewards">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="M18 6 6 18"></path>
+          <path d="m6 6 12 12"></path>
+        </svg>
+      </button>
+      <div class="rewards-modal-header">
+        <svg class="rewards-star" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+        </svg>
+        <h2 id="rewards-modal-title">Crunch Rewards</h2>
+        <p id="rewards-modal-points">Redeem your points for a treat.</p>
+      </div>
+      <div id="rewards-active-list" class="rewards-list"></div>
+      <h3 class="rewards-section-title">Choose a reward</h3>
+      <div id="rewards-catalog" class="rewards-list"></div>
+      <p id="rewards-modal-status" class="rewards-modal-status" role="status"></p>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════
+       ALERT MODAL (OK-only dismissal)
+  ═══════════════════════════════════════════════════ -->
+  <div id="alert-modal" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-box alert-modal-box" role="alertdialog" aria-modal="true" aria-labelledby="alert-modal-message">
+      <p id="alert-modal-message" class="alert-modal-message"></p>
+      <button class="btn-primary alert-modal-ok" id="alert-modal-ok" type="button">OK</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════
+       TOAST CONTAINER
+  ═══════════════════════════════════════════════════ -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- ═══════════════════════════════════════════════════
+       FLOATING TRACK-ORDER SHORTCUT (saved orders only)
+  ═══════════════════════════════════════════════════ -->
+  <button id="track-order-fab" class="track-order-fab hidden" type="button">
+    <svg class="track-order-fab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+      stroke-linecap="round" stroke-linejoin="round">
+      <rect x="1" y="3" width="15" height="13"></rect>
+      <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+      <circle cx="5.5" cy="18.5" r="2.5"></circle>
+      <circle cx="18.5" cy="18.5" r="2.5"></circle>
+    </svg>
+    <span class="track-order-fab-text">Track your order</span>
+  </button>
+
+  <!-- ═══════════════════════════════════════════════════
+       FIXED BOTTOM NAVIGATION
+  ═══════════════════════════════════════════════════ -->
+  <nav class="bottom-nav">
+    <button class="bottom-nav-item active" id="nav-home" data-page="home">
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+          <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg>
+      </span>
+      <span class="nav-label">Home</span>
+    </button>
+    <button class="bottom-nav-item" id="nav-menu" data-page="menu">
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="M3 6h18"></path>
+          <path d="M3 12h18"></path>
+          <path d="M3 18h18"></path>
+        </svg>
+      </span>
+      <span class="nav-label">Menu</span>
+    </button>
+    <button class="bottom-nav-item" id="nav-deals" data-page="deals">
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path
+            d="M20.59 13.41 13.42 20.58a2.06 2.06 0 0 1-2.91 0L3.41 13.41a2 2 0 0 1 0-2.83L10.59 3.41a2.06 2.06 0 0 1 2.91 0l7.17 7.17a2 2 0 0 1-.08 2.83Z">
+          </path>
+          <line x1="11" y1="12" x2="13" y2="12"></line>
+        </svg>
+      </span>
+      <span class="nav-label">Deals</span>
+    </button>
+
+    <button class="bottom-nav-fab" id="nav-order" aria-label="Order">
+      <span class="fab-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="M6 6h15l-1.5 9h-12z"></path>
+          <circle cx="9" cy="20" r="1.5"></circle>
+          <circle cx="18" cy="20" r="1.5"></circle>
+          <path d="M6 6L5 3H2"></path>
+        </svg>
+      </span>
+    </button>
+
+    <button class="bottom-nav-item" id="nav-locations" data-page="locations">
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
+          <circle cx="12" cy="10" r="3"></circle>
+        </svg>
+      </span>
+      <span class="nav-label">Location</span>
+    </button>
+    <button class="bottom-nav-item nav-luck" id="nav-luck" type="button">
+      <span class="nav-icon luck-icon">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path
+            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z" />
+          <circle cx="9" cy="9" r="1.5" fill="#FFD700" />
+          <circle cx="15" cy="9" r="1.5" fill="#FFD700" />
+          <path d="M12 17c-2.5 0-4.5-1.5-5-3h10c-.5 1.5-2.5 3-5 3z" fill="#FFD700" />
+        </svg>
+      </span>
+      <span class="nav-label">Luck</span>
+    </button>
+    <button class="bottom-nav-item" id="nav-profile" data-page="profile">
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+      </span>
+      <span class="nav-label">Profile</span>
+    </button>
+  </nav>
+
+  <!-- ═══════════════════════════════════════════════════
+       SCRIPTS
+  ═══════════════════════════════════════════════════ -->
+  <script src="/static/js/api.js"></script>
+  <script src="/static/js/cart.js"></script>
+  <script src="/static/js/location.js"></script>
+  <script src="/static/js/tracker.js"></script>
+  <script src="/static/js/main.js"></script>
+</body>
+
+</html>
