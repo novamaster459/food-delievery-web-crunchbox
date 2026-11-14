@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Track Order — CrunchBox</title>
+  <link rel="stylesheet" href="/static/css/main.css" />
+  <link rel="stylesheet" href="/static/css/components.css" />
+</head>
+<body class="track-page">
+
+  <!-- ─── TRACK PAGE HEADER ─── -->
+  <header class="track-header">
+    <a href="/" class="track-back-btn">← Back</a>
+    <h1 class="track-header-title">Track Order</h1>
+    <div class="track-header-spacer"></div>
+  </header>
+
+  <!-- ─── ETA BANNER ─── -->
+  <div class="track-eta-banner">
+    <span class="track-eta-label">Estimated Arrival</span>
+    <span class="track-eta-value" id="track-eta">15–20 min</span>
+  </div>
+
+  <!-- ─── 5-STAGE TRACKER ─── -->
+  <main class="track-main">
+    <div class="track-stages-wrap" id="track-stages">
+
+      <!-- Stage 1 -->
+      <div class="stage-card active" id="track-stage-1" data-stage="1">
+        <div class="stage-icon-circle"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2h8l4 4v16H6z"/><path d="M14 2v4h4M9 12h6M9 16h4"/></svg></div>
+        <div class="stage-connector"></div>
+        <div class="stage-info">
+          <h3 class="stage-title">Order Received</h3>
+          <p class="stage-desc">Our kitchen has accepted your order and is preparing your meal.</p>
+        </div>
+        <div class="stage-status-badge" id="badge-1">In Progress</div>
+      </div>
+
+      <!-- Stage 2 -->
+      <div class="stage-card pending" id="track-stage-2" data-stage="2">
+        <div class="stage-icon-circle"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 13c0-4 3-8 6-8s6 4 6 8"/><path d="M4 13h16M7 13v3a3 3 0 003 3h4a3 3 0 003-3v-3"/><path d="M10 7c0-2 1-3 2-3s2 1 2 3"/></svg></div>
+        <div class="stage-connector"></div>
+        <div class="stage-info">
+          <h3 class="stage-title">Crafting Your Crunch</h3>
+          <p class="stage-desc">Your food is fresh, hot, and currently being packed.</p>
+        </div>
+        <div class="stage-status-badge stage-status-badge--pending" id="badge-2">Pending</div>
+      </div>
+
+      <!-- Stage 3 -->
+      <div class="stage-card pending" id="track-stage-3" data-stage="3">
+        <div class="stage-icon-circle"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/><path d="M5 18h-2v-6l3-6h8l3 6v6h-2M9 6v6h6"/></svg></div>
+        <div class="stage-connector"></div>
+        <div class="stage-info">
+          <h3 class="stage-title">Courier Dispatched</h3>
+          <p class="stage-desc">A delivery partner has picked up your food and is heading out.</p>
+        </div>
+        <div class="stage-status-badge stage-status-badge--pending" id="badge-3">Pending</div>
+      </div>
+
+      <!-- Stage 4 -->
+      <div class="stage-card pending" id="track-stage-4" data-stage="4">
+        <div class="stage-icon-circle"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="19" r="2"/><circle cx="18" cy="19" r="2"/><path d="M6 17v-7h12v7M6 10l3-5h6l3 5"/></svg></div>
+        <div class="stage-connector"></div>
+        <div class="stage-info">
+          <h3 class="stage-title">Cruising To You</h3>
+          <p class="stage-desc">Your order is minutes away. Get ready for flavor!</p>
+        </div>
+        <div class="stage-status-badge stage-status-badge--pending" id="badge-4">Pending</div>
+      </div>
+
+      <!-- Stage 5 -->
+      <div class="stage-card pending" id="track-stage-5" data-stage="5">
+        <div class="stage-icon-circle"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="4 12 9 17 20 6"/></svg></div>
+        <div class="stage-connector stage-connector--last"></div>
+        <div class="stage-info">
+          <h3 class="stage-title">Arrived! Bon Appetit</h3>
+          <p class="stage-desc">Your delivery has arrived hot and fresh.</p>
+        </div>
+        <div class="stage-status-badge stage-status-badge--pending" id="badge-5">Pending</div>
+      </div>
+    </div>
+
+    <!-- ─── PROGRESS BAR ─── -->
+    <div class="track-progress-wrap">
+      <div class="progress-bar-track">
+        <div class="progress-bar-fill" id="track-progress-fill" style="width: 10%"></div>
+      </div>
+      <span class="track-progress-label" id="track-progress-label">Step 1 of 5</span>
+    </div>
+
+    <!-- ─── SUPPORT BOX (shown after stage 5) ─── -->
+    <div class="track-support-box hidden" id="track-support-box">
+      <div class="support-icon"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.91.34 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg></div>
+      <div class="support-text">
+        <h4>Need help with your order?</h4>
+        <p>If your driver hasn't arrived, please call our support line at</p>
+        <a class="support-phone-link" href="tel:+959970020705">+959970020705</a>
+      </div>
+    </div>
+
+    <!-- ─── BACK TO SHOP BUTTON (after delivery) ─── -->
+    <div class="track-actions hidden" id="track-actions">
+      <a href="/" class="btn-primary track-reorder-btn">Order Again</a>
+    </div>
+  </main>
+
+  <!-- Toast Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <script src="/static/js/tracker.js"></script>
+  <script>
+    // Initialize tracker automatically on this page
+    document.addEventListener('DOMContentLoaded', () => {
+      if (typeof startTracker === 'function') {
+        startTracker({
+          stagePrefix: 'track-stage-',
+          badgePrefix: 'badge-',
+          progressFillId: 'track-progress-fill',
+          progressLabelId: 'track-progress-label',
+          supportBoxId: 'track-support-box',
+          actionsId: 'track-actions',
+          totalStages: 5,
+          intervalMs: 3000
+        });
+      }
+    });
+  </script>
+</body>
+</html>
