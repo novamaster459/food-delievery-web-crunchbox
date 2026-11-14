@@ -356,8 +356,6 @@ const App = {
         '<span class="playlist-block-title">' + App.escapeHTML(playlist.name) + '</span>' +
         '<div class="playlist-block-controls">' +
           '<span class="playlist-counter"></span>' +
-          '<button type="button" class="playlist-nav-btn" data-dir="-1" aria-label="Previous item">&#8249;</button>' +
-          '<button type="button" class="playlist-nav-btn" data-dir="1" aria-label="Next item">&#8250;</button>' +
           '<button type="button" class="playlist-more-btn">See all ' +
             '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>' +
           '</button>' +
@@ -391,13 +389,6 @@ const App = {
         App.playlistTimers = {};
         App.playlistTimers[playlist.id] = setInterval(() => goTo(state.pos + 1), 4000);
       };
-
-      header.querySelectorAll('.playlist-nav-btn').forEach((btn) => {
-        btn.addEventListener('click', () => {
-          goTo(state.pos + Number(btn.dataset.dir));
-          startAuto();
-        });
-      });
 
       header.querySelector('.playlist-more-btn').addEventListener('click', () => App.openPlaylistModal(playlist));
 
