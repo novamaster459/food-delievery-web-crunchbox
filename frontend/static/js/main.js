@@ -382,7 +382,7 @@ const App = {
       const goTo = (next) => {
         state.pos = (next + playlist.items.length) % playlist.items.length;
         const card = track.querySelector('.menu-card');
-        const step = card ? card.getBoundingClientRect().width + 14 : 234; // card width + gap
+        const step = card ? card.getBoundingClientRect().width : 220; // exactly one card width
         track.style.transform = 'translateX(-' + (state.pos * step) + 'px)';
         counter.textContent = (state.pos + 1) + ' / ' + playlist.items.length;
       };

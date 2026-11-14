@@ -2249,15 +2249,21 @@ body.track-page { padding-top: 0; padding-bottom: 0; }
   transform: translateY(-2px);
 }
 /* one spot only, exactly the size of a regular product card */
+/* Grey-bordered 1-product spotlight viewport */
 .playlist-stage {
   display: flex;
   justify-content: flex-start;
   overflow: hidden;
-  padding: 6px 0 4px;
+  width: 220px;
+  max-width: 220px;
+  border: 1.5px solid var(--border, #3a3a3a);
+  border-radius: 16px;
+  padding: 0;
+  margin: 6px 0 4px;
 }
 .playlist-track {
   display: flex;
-  gap: 14px;
+  gap: 0;
   transition: transform 0.6s ease;
 }
 .playlist-track .menu-card {
@@ -2292,7 +2298,11 @@ body.track-page { padding-top: 0; padding-bottom: 0; }
 }
 
 @media (max-width: 600px) {
-  .playlist-stage .menu-card {
+  .playlist-stage {
+    width: 170px;
+    max-width: 170px;
+  }
+  .playlist-track .menu-card {
     width: 170px;
     flex: 0 0 170px;
   }
