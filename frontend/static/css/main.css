@@ -2199,24 +2199,24 @@ body.track-page { padding-top: 0; padding-bottom: 0; }
   .bestseller-flame { animation: none !important; }
 }
 
-/* Playlist shelf: horizontal auto-sliding carousel (reference-style) */
-.playlist-shelf {
-  margin: 4px 0 18px;
+/* Playlist sections: single-slot slideshow + "See all" (iShop-style, CrunchBox colours) */
+.playlist-block {
+  margin: 10px 0 18px;
   animation: fadeInUp 0.45s ease both;
 }
-.playlist-shelf-header {
+.playlist-block-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 10px;
   margin-bottom: 10px;
 }
-.playlist-shelf-title {
-  font-size: 15px;
+.playlist-block-title {
+  font-size: 16px;
   font-weight: 800;
   color: var(--text);
 }
-.playlist-shelf-controls {
+.playlist-block-controls {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -2237,7 +2237,7 @@ body.track-page { padding-top: 0; padding-bottom: 0; }
   border: 1.5px solid var(--border);
   background: var(--surface);
   color: var(--text-muted);
-  font-size: 16px;
+  font-size: 15px;
   line-height: 1;
   cursor: pointer;
   transition: transform 0.15s ease, background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
@@ -2247,24 +2247,70 @@ body.track-page { padding-top: 0; padding-bottom: 0; }
   border-color: var(--orange);
   color: var(--text);
 }
-.playlist-viewport {
-  overflow: hidden;
-  border-radius: var(--radius-lg);
+.playlist-more-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1.5px solid var(--orange);
+  background: transparent;
+  color: var(--orange);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
 }
-.playlist-track {
+.playlist-more-btn:hover {
+  background: var(--orange);
+  color: #fff;
+  transform: translateY(-2px);
+}
+/* one spot only, exactly the size of a regular product card */
+.playlist-stage {
   display: flex;
-  gap: 14px;
-  will-change: transform;
+  justify-content: center;
+  padding: 6px 0 4px;
 }
-/* same size as regular menu-grid items */
-.playlist-track .menu-card {
-  flex: 0 0 220px;
+.playlist-stage .menu-card {
   width: 220px;
+  flex: 0 0 220px;
+}
+
+/* Playlist "See all" modal */
+.playlist-modal-box {
+  max-width: 880px;
+  width: calc(100% - 32px);
+  max-height: 80vh;
+  overflow-y: auto;
+}
+.playlist-modal-header {
+  padding: 18px 18px 6px;
+}
+.playlist-modal-header h2 {
+  font-size: 20px;
+  font-weight: 800;
+}
+.playlist-modal-header p {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+.playlist-modal-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 14px;
+  padding: 14px 18px 18px;
 }
 
 @media (max-width: 600px) {
-  .playlist-track .menu-card {
-    flex: 0 0 170px;
+  .playlist-stage .menu-card {
     width: 170px;
+    flex: 0 0 170px;
+  }
+  .playlist-modal-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   }
 }

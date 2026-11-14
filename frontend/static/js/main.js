@@ -341,100 +341,96 @@ const App = {
     const playlists = (category.playlists || []).filter((pl) => pl.items && pl.items.length);
     if (!playlists.length) return;
 
+    // Each playlist is one section: a single product slot that keeps sliding
+    // through its items, with a "See all" button on top of the section.
     const wrap = document.createElement('div');
     wrap.className = 'playlist-subtabs';
 
-    const bar = document.createElement('div');
-    bar.className = 'playlist-subtab-bar';
+    playlists.forEach((playlist) => {
+      const block = document.createElement('section');
+      block.className = 'playlist-block';
 
-    // Horizontal shelf (slideshow) for the active playlist — items stay out of the regular grid
-    const shelf = document.createElement('div');
-    shelf.className = 'playlist-shelf';
-    shelf.innerHTML =
-      '<div class="playlist-shelf-header">' +
-        '<span class="playlist-shelf-title"></span>' +
-        '<div class="playlist-shelf-controls">' +
+      const header = document.createElement('div');
+      header.className = 'playlist-block-header';
+      header.innerHTML =
+        '<span class="playlist-block-title">' + App.escapeHTML(playlist.name) + '</span>' +
+        '<div class="playlist-block-controls">' +
           '<span class="playlist-counter"></span>' +
-          '<button type="button" class="playlist-nav-btn" data-dir="-1" aria-label="Previous items">&#8249;</button>' +
-          '<button type="button" class="playlist-nav-btn" data-dir="1" aria-label="Next items">&#8250;</button>' +
-        '</div>' +
-      '</div>' +
-      '<div class="playlist-viewport"><div class="playlist-track"></div></div>';
+          '<button type="button" class="playlist-nav-btn" data-dir="-1" aria-label="Previous item">&#8249;</button>' +
+          '<button type="button" class="playlist-nav-btn" data-dir="1" aria-label="Next item">&#8250;</button>' +
+          '<button type="button" class="playlist-more-btn">See all ' +
+            '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>' +
+          '</button>' +
+        '</div>';
 
-    const titleEl = shelf.querySelector('.playlist-shelf-title');
-    const counter = shelf.querySelector('.playlist-counter');
-    const track = shelf.querySelector('.playlist-track');
-    const state = { playlistIndex: 0, pos: 0 };
+      const stage = document.createElement('div');
+      stage.className = 'playlist-stage';
 
-    const cardStep = () => {
-      const card = track.querySelector('.menu-card');
-      const gap = parseFloat(getComputedStyle(track).gap || '0') || 0;
-      return card ? card.getBoundingClientRect().width + gap : 234;
-    };
+      block.appendChild(header);
+      block.appendChild(stage);
+      wrap.appendChild(block);
 
-    const updateScroll = (animate) => {
-      if (animate === undefined) animate = true;
-      track.style.transition = animate ? 'transform 0.45s ease' : 'none';
-      track.style.transform = 'translateX(-' + (state.pos * cardStep()) + 'px)';
-      const total = track.children.length;
-      counter.textContent = total ? (state.pos + 1) + ' / ' + total : '';
-    };
+      const counter = header.querySelector('.playlist-counter');
+      const state = { pos: 0 };
 
-    const advance = (delta) => {
-      const total = track.children.length;
-      if (!total) return;
-      state.pos = (state.pos + delta + total) % total;
-      updateScroll(true);
-    };
+      const renderCard = () => {
+        stage.replaceChildren();
+        const card = App.createProductCard(playlist.items[state.pos]);
+        card.classList.add('slide-enter');
+        stage.appendChild(card);
+        counter.textContent = (state.pos + 1) + ' / ' + playlist.items.length;
+      };
 
-    const startAuto = () => {
-      Object.values(App.playlistTimers).forEach((timer) => clearInterval(timer));
-      App.playlistTimers = {};
-      App.playlistTimers[playlists[state.playlistIndex].id] = setInterval(() => advance(1), 4000);
-    };
+      const goTo = (next) => {
+        state.pos = (next + playlist.items.length) % playlist.items.length;
+        renderCard();
+      };
 
-    const showPlaylist = (playlistIndex) => {
-      state.playlistIndex = playlistIndex;
-      bar.querySelectorAll('.playlist-subtab').forEach((chip, i) => {
-        chip.classList.toggle('active', i === playlistIndex);
+      const startAuto = () => {
+        Object.values(App.playlistTimers).forEach((timer) => clearInterval(timer));
+        App.playlistTimers = {};
+        App.playlistTimers[playlist.id] = setInterval(() => goTo(state.pos + 1), 4000);
+      };
+
+      header.querySelectorAll('.playlist-nav-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          goTo(state.pos + Number(btn.dataset.dir));
+          startAuto();
+        });
       });
-      const playlist = playlists[playlistIndex];
-      titleEl.textContent = playlist.name;
 
-      track.replaceChildren();
-      playlist.items.forEach((item) => {
-        track.appendChild(App.createProductCard(item));
+      header.querySelector('.playlist-more-btn').addEventListener('click', () => App.openPlaylistModal(playlist));
+
+      block.addEventListener('mouseenter', () => {
+        Object.values(App.playlistTimers).forEach((timer) => clearInterval(timer));
       });
-      state.pos = 0;
-      updateScroll(false);
+      block.addEventListener('mouseleave', startAuto);
+
+      renderCard();
       startAuto();
-    };
-
-    shelf.querySelectorAll('.playlist-nav-btn').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        advance(Number(btn.dataset.dir));
-        startAuto();
-      });
-    });
-    shelf.addEventListener('mouseenter', () => {
-      Object.values(App.playlistTimers).forEach((timer) => clearInterval(timer));
-    });
-    shelf.addEventListener('mouseleave', startAuto);
-
-    playlists.forEach((playlist, i) => {
-      const chip = document.createElement('button');
-      chip.type = 'button';
-      chip.className = 'playlist-subtab';
-      chip.dataset.playlistId = playlist.id;
-      chip.innerHTML = '<span class="playlist-subtab-label">' + App.escapeHTML(playlist.name) + '</span>';
-      chip.addEventListener('click', () => showPlaylist(i));
-      bar.appendChild(chip);
     });
 
-    wrap.appendChild(bar);
     container.appendChild(wrap);
-    container.appendChild(shelf);
-    showPlaylist(0);
+  },
+
+  openPlaylistModal: function (playlist) {
+    const modal = document.getElementById('playlist-modal');
+    if (!modal) return;
+    document.getElementById('playlist-modal-title').textContent = playlist.name;
+    document.getElementById('playlist-modal-subtitle').textContent =
+      playlist.items.length + ' item' + (playlist.items.length === 1 ? '' : 's') + ' in this playlist';
+    const grid = document.getElementById('playlist-modal-grid');
+    grid.replaceChildren();
+    playlist.items.forEach((item) => grid.appendChild(App.createProductCard(item)));
+    modal.classList.remove('hidden');
+    modal.classList.add('open');
+  },
+
+  closePlaylistModal: function () {
+    const modal = document.getElementById('playlist-modal');
+    if (!modal) return;
+    modal.classList.add('hidden');
+    modal.classList.remove('open');
   },
 
   showPlaylistSlide: function (slideshow, slides, index, dotsContainer) {
@@ -588,6 +584,8 @@ const App = {
     document.getElementById('coupon-apply-btn')?.addEventListener('click', () => Cart.handleCouponApply());
 
     document.getElementById('product-modal-backdrop')?.addEventListener('click', App.closeProductModal);
+    document.getElementById('playlist-modal-backdrop')?.addEventListener('click', App.closePlaylistModal);
+    document.getElementById('playlist-modal-close-x')?.addEventListener('click', App.closePlaylistModal);
     document.getElementById('product-modal-close-x')?.addEventListener('click', App.closeProductModal);
     document.getElementById('profile-modal-backdrop')?.addEventListener('click', App.closeProfileModal);
     document.getElementById('profile-modal-close-x')?.addEventListener('click', App.closeProfileModal);

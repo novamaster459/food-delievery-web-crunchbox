@@ -514,6 +514,21 @@
   <!-- ═══════════════════════════════════════════════════
        ALERT MODAL (OK-only dismissal)
   ═══════════════════════════════════════════════════ -->
+
+  <div id="playlist-modal" class="modal hidden">
+    <div class="modal-backdrop" id="playlist-modal-backdrop"></div>
+    <div class="modal-box playlist-modal-box" role="dialog" aria-modal="true" aria-labelledby="playlist-modal-title">
+      <button class="modal-close-x" id="playlist-modal-close-x" type="button" aria-label="Close">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <div class="playlist-modal-header">
+        <h2 id="playlist-modal-title"></h2>
+        <p id="playlist-modal-subtitle"></p>
+      </div>
+      <div class="playlist-modal-grid" id="playlist-modal-grid"></div>
+    </div>
+  </div>
+
   <div id="alert-modal" class="modal hidden">
     <div class="modal-backdrop"></div>
     <div class="modal-box alert-modal-box" role="alertdialog" aria-modal="true" aria-labelledby="alert-modal-message">
