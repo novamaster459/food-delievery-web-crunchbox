@@ -227,6 +227,29 @@ const API = {
       return API._json(`/api/admin/categories/${id}`, 'DELETE');
     },
 
+    // ---- Playlists ----
+
+    /** GET /api/admin/playlists?category_id=... */
+    getPlaylists: async function (categoryId) {
+      const q = categoryId ? `?category_id=${encodeURIComponent(categoryId)}` : '';
+      return API._get(`/api/admin/playlists${q}`);
+    },
+
+    /** POST /api/admin/playlists */
+    addPlaylist: async function (data) {
+      return API._json('/api/admin/playlists', 'POST', data);
+    },
+
+    /** PUT /api/admin/playlists/:id */
+    updatePlaylist: async function (id, data) {
+      return API._json(`/api/admin/playlists/${id}`, 'PUT', data);
+    },
+
+    /** DELETE /api/admin/playlists/:id */
+    deletePlaylist: async function (id) {
+      return API._json(`/api/admin/playlists/${id}`, 'DELETE');
+    },
+
     // ---- Coupons ----
 
     /** GET /api/admin/coupons */

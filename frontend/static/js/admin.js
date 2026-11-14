@@ -1,4 +1,4 @@
-// Admin dashboard behavior for categories, menu items, promotions and settings.
+﻿// Admin dashboard behavior for categories, menu items, promotions and settings.
 const Admin = {
   categories: [],
   products: [],
@@ -88,6 +88,7 @@ const Admin = {
       orders: Admin.loadOrders,
       locations: Admin.loadLocations,
       settings: Admin.loadSettings,
+      playlists: Admin.loadPlaylists,
     };
     loaders[name]?.();
   },
@@ -140,8 +141,8 @@ const Admin = {
           <td>${Admin.price(product.price)}</td>
           <td>${Number(product.loyalty_points || 0)}</td>
           <td>${product.is_reward
-            ? `Yes · ${Number(product.reward_points || 0).toLocaleString('en-US')} pts`
-            : '—'}</td>
+            ? `Yes Â· ${Number(product.reward_points || 0).toLocaleString('en-US')} pts`
+            : 'â€”'}</td>
           <td>${product.is_combo ? `Yes (${Number(product.combo_discount_pct)}% off)` : 'No'}</td>
           <td class="actions-cell">
             <button type="button" class="btn-edit" data-edit-product="${Admin.escape(product.id)}">Edit</button>
@@ -248,7 +249,7 @@ const Admin = {
         <tr>
           <td>${Admin.escape(category.icon)}</td>
           <td>${Admin.escape(category.name)}</td>
-          <td>${Admin.products.filter((item) => item.category_id === category.id).length || '—'}</td>
+          <td>${Admin.products.filter((item) => item.category_id === category.id).length || 'â€”'}</td>
           <td class="actions-cell">
             <button type="button" class="btn-edit" data-edit-category="${Admin.escape(category.id)}">Edit</button>
             <button type="button" class="btn-delete" data-delete-category="${Admin.escape(category.id)}">Delete</button>
@@ -377,8 +378,8 @@ const Admin = {
             : '<span aria-label="No branch photo"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 21s-6-5.686-6-11a6 6 0 1112 0c0 5.314-6 11-6 11z"/><circle cx="12" cy="10" r="2.5"/></svg></span>'}</td>
           <td>${Admin.escape(location.name)}</td>
           <td>${Admin.escape(location.branch_no)}</td>
-          <td>${location.address ? Admin.escape(location.address) : '—'}</td>
-          <td>${Admin.escape(location.open_label || location.open_time)} – ${Admin.escape(location.close_label || location.close_time)}</td>
+          <td>${location.address ? Admin.escape(location.address) : 'â€”'}</td>
+          <td>${Admin.escape(location.open_label || location.open_time)} â€“ ${Admin.escape(location.close_label || location.close_time)}</td>
           <td>${location.is_open ? 'Open now' : 'Closed'}</td>
           <td class="actions-cell">
             <button type="button" class="btn-edit" data-edit-location="${Admin.escape(location.id)}">Edit</button>
@@ -506,9 +507,9 @@ const Admin = {
             order.address.township,
             order.address.city,
           ].filter(Boolean).join(', ')
-        : '—';
+        : 'â€”';
       const items = (order.items || []).map((item) => `
-        <li>${Number(item.quantity)} × ${Admin.escape(item.name)}${item.special_request
+        <li>${Number(item.quantity)} Ã— ${Admin.escape(item.name)}${item.special_request
           ? `<span class="order-detail-request">Request: ${Admin.escape(item.special_request)}</span>`
           : ''}</li>`).join('') || '<li>No items recorded</li>';
 
@@ -695,7 +696,7 @@ const Admin = {
   },
 
   date: function (value) {
-    return value ? new Date(value).toLocaleDateString() : '—';
+    return value ? new Date(value).toLocaleDateString() : 'â€”';
   },
 
   toast: function (message, type = 'success') {
@@ -706,6 +707,134 @@ const Admin = {
     container.appendChild(toast);
     setTimeout(() => toast.remove(), 3500);
   },
+  loadPlaylists: async function () {
+    try {
+      [Admin.categories, Admin.products, Admin.playlists] = await Promise.all([
+        API.admin.getCategories(), API.admin.getProducts(), API.admin.getPlaylists(),
+      ]);
+      Admin.renderPlaylistTable();
+      const pickerCategory = document.getElementById('playlist-category');
+      if (pickerCategory && !pickerCategory.options.length) {
+        pickerCategory.replaceChildren(new Option('Select Category', ''));
+        Admin.categories.forEach((category) => pickerCategory.add(new Option(category.name, category.id)));
+      }
+    } catch (error) {
+      Admin.toast(`Could not load playlists: ${error.message}`, 'error');
+    }
+  },
+
+  renderPlaylistTable: function () {
+    const tbody = document.getElementById('playlists-tbody');
+    if (!tbody) return;
+    const playlists = Admin.playlists || [];
+    if (!playlists.length) {
+      tbody.innerHTML = '<tr><td colspan="4" class="table-empty">No playlists yet. Add one above.</td></tr>';
+      return;
+    }
+    const catName = (id) => (Admin.categories || []).find((c) => c.id === id)?.name || id;
+    tbody.innerHTML = playlists.map((playlist) => `
+      <tr>
+        <td>${Admin.escape(playlist.name)}</td>
+        <td>${Admin.escape(catName(playlist.category_id))}</td>
+        <td>${(playlist.product_ids || []).length} items</td>
+        <td class="actions-cell">
+          <button type="button" class="btn-edit" data-edit-playlist="${Admin.escape(playlist.id)}">Edit</button>
+          <button type="button" class="btn-delete" data-delete-playlist="${Admin.escape(playlist.id)}">Delete</button>
+        </td>
+      </tr>`).join('');
+    tbody.querySelectorAll('[data-edit-playlist]').forEach((button) => {
+      button.addEventListener('click', () => Admin.editPlaylist(button.dataset.editPlaylist));
+    });
+    tbody.querySelectorAll('[data-delete-playlist]').forEach((button) => {
+      button.addEventListener('click', () => Admin.deletePlaylist(button.dataset.deletePlaylist));
+    });
+  },
+
+  renderPlaylistProductPicker: function (categoryId, selectedIds) {
+    const picker = document.getElementById('playlist-product-picker');
+    if (!picker) return;
+    const selected = new Set(selectedIds || []);
+    const products = (Admin.products || []).filter((product) => product.category_id === categoryId);
+    if (!products.length) {
+      picker.innerHTML = '<p class="table-empty">No products in this category yet.</p>';
+      return;
+    }
+    picker.innerHTML = products.map((product) => `
+      <label class="playlist-product-option">
+        <input type="checkbox" value="${Admin.escape(product.id)}" ${selected.has(product.id) ? 'checked' : ''}>
+        <span class="playlist-product-name">${Admin.escape(product.name)}</span>
+        <span class="playlist-product-price">${Admin.price(product.price)}</span>
+      </label>`).join('');
+  },
+
+  showPlaylistForm: function (playlist) {
+    Admin.editingPlaylistId = playlist?.id || '';
+    document.getElementById('playlist-id').value = Admin.editingPlaylistId;
+    document.getElementById('playlist-name').value = playlist?.name || '';
+    const select = document.getElementById('playlist-category');
+    if (select) {
+      select.replaceChildren(new Option('Select Category', ''));
+      (Admin.categories || []).forEach((category) => select.add(new Option(category.name, category.id)));
+      select.value = playlist?.category_id || '';
+      Admin.renderPlaylistProductPicker(select.value, playlist?.product_ids || []);
+    }
+    document.getElementById('playlist-form-wrap')?.classList.remove('hidden');
+  },
+
+  editPlaylist: function (id) {
+    const playlist = (Admin.playlists || []).find((item) => item.id === id);
+    if (playlist) Admin.showPlaylistForm(playlist);
+  },
+
+  savePlaylist: async function (event) {
+    event.preventDefault();
+    const button = event.submitter || event.currentTarget.querySelector('[type=submit]');
+    if (button) button.disabled = true;
+    try {
+      const payload = {
+        name: document.getElementById('playlist-name').value.trim(),
+        category_id: document.getElementById('playlist-category').value,
+        product_ids: [...document.querySelectorAll('#playlist-product-picker input[type=checkbox]:checked')].map((el) => el.value),
+      };
+      if (Admin.editingPlaylistId) {
+        await API.admin.updatePlaylist(Admin.editingPlaylistId, payload);
+      } else {
+        await API.admin.addPlaylist(payload);
+      }
+      Admin.toast(Admin.editingPlaylistId ? 'Playlist updated' : 'Playlist created');
+      document.getElementById('playlist-form-wrap')?.classList.add('hidden');
+      document.getElementById('playlist-form')?.reset();
+      await Admin.loadPlaylists();
+    } catch (error) {
+      Admin.toast(`Could not save playlist: ${error.message}`, 'error');
+    } finally {
+      if (button) button.disabled = false;
+    }
+  },
+
+  deletePlaylist: async function (id) {
+    if (!window.confirm('Delete this playlist?')) return;
+    try {
+      await API.admin.deletePlaylist(id);
+      Admin.toast('Playlist deleted');
+      await Admin.loadPlaylists();
+    } catch (error) {
+      Admin.toast(`Could not delete playlist: ${error.message}`, 'error');
+    }
+  },
 };
 
 document.addEventListener('DOMContentLoaded', () => Admin.init());
+
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('add-playlist-btn')?.addEventListener('click', () => Admin.showPlaylistForm(null));
+  document.getElementById('playlist-cancel-btn')?.addEventListener('click', () => {
+    document.getElementById('playlist-form-wrap')?.classList.add('hidden');
+  });
+  document.getElementById('playlist-category')?.addEventListener('change', (event) => {
+    Admin.renderPlaylistProductPicker(event.target.value, []);
+  });
+  document.getElementById('playlist-form')?.addEventListener('submit', (event) => Admin.savePlaylist(event));
+});
+

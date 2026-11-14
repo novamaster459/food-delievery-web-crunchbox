@@ -9,7 +9,7 @@ const App = {
   branchLocations: [],
   storeOpen: true,
   orderHistory: [],
-  specialTabIds: ['popular', 'recommended', 'new'],
+  playlistTimers: {},
   categoryIconMap: {
     'Mains': '/static/images/icons/icon-main.png',
     'Vegan Main Meal': '/static/images/icons/icon-vegan.png',
@@ -221,8 +221,8 @@ const App = {
     const grid = document.getElementById('menu-grid');
     try {
       App.menuData = await API.getMenu();
+      App.renderRecommendedSection();
       App.renderCategoryTabs();
-      App.renderSpecialSections();
       if (App.menuData.length) {
         const firstRegular = App.menuData[0].id;
         App.onTabClick(firstRegular);
@@ -248,43 +248,19 @@ const App = {
     if (!tabs) return;
     tabs.replaceChildren();
 
-    const addTab = (id, label, iconSrc, isSpecial = false) => {
+    App.menuData.forEach((category) => {
+      const icon = App.categoryIconMap[category.name] || category.icon || '/static/images/icons/icon-main.png';
       const button = document.createElement('button');
       button.type = 'button';
       button.className = 'tab-btn';
-      button.dataset.categoryId = id;
-      if (isSpecial) button.dataset.special = 'true';
-      const imgSrc = iconSrc || '/static/images/icons/icon-main.png';
-      button.innerHTML = `<img src="${App.escapeHTML(imgSrc)}" alt="" class="tab-icon" />`;
-      button.addEventListener('click', () => App.onTabClick(id, isSpecial));
+      button.dataset.categoryId = category.id;
+      button.innerHTML = `
+        <img src="${App.escapeHTML(icon)}" alt="" class="tab-icon" />
+        <span class="tab-label">${App.escapeHTML(category.name)}</span>
+      `;
+      button.addEventListener('click', () => App.onTabClick(category.id));
       tabs.appendChild(button);
-    };
-
-    addTab('popular', 'POPULAR TODAY', '/static/images/icons/icon-combo.png', true);
-    addTab('recommended', 'Recommended', '/static/images/icons/icon-main.png', true);
-    addTab('new', 'New', '/static/images/icons/icon-dessert.png', true);
-
-    App.menuData.forEach((category) => {
-      const icon = App.categoryIconMap[category.name] || category.icon || '/static/images/icons/icon-main.png';
-      addTab(category.id, category.name, icon, false);
     });
-  },
-
-  renderSpecialSections: function () {
-    App.renderPopularSection();
-    App.renderRecommendedSection();
-    App.renderNewArrivalSection();
-  },
-
-  renderPopularSection: function () {
-    const section = document.getElementById('popular-section');
-    const grid = document.getElementById('popular-grid');
-    if (!section || !grid) return;
-    const products = App.allProducts();
-    const popular = products.find((p) => p.is_bestseller);
-    section.classList.toggle('hidden', !popular);
-    grid.replaceChildren();
-    if (popular) grid.appendChild(App.createProductCard(popular, true));
   },
 
   renderRecommendedSection: function () {
@@ -307,10 +283,14 @@ const App = {
       recommended = sortedPids
         .map((pid) => products.find((p) => p.id === pid))
         .filter(Boolean)
-        .slice(0, 3);
+        .slice(0, 6);
     } else {
-      recommended = products.filter((p) => p.is_bestseller).slice(0, 3);
-      if (!recommended.length) recommended = products.slice(0, 3);
+      // Fallback: bestsellers from each category
+      recommended = App.menuData
+        .map((cat) => cat.products.find((p) => p.is_bestseller))
+        .filter(Boolean)
+        .slice(0, 6);
+      if (!recommended.length) recommended = products.slice(0, 6);
     }
 
     section.classList.toggle('hidden', !recommended.length);
@@ -318,26 +298,15 @@ const App = {
     recommended.forEach((p) => grid.appendChild(App.createProductCard(p)));
   },
 
-  renderNewArrivalSection: function () {
-    const section = document.getElementById('new-arrival-section');
-    const grid = document.getElementById('new-arrival-grid');
-    if (!section || !grid) return;
-    const products = App.allProducts();
-    const newest = products.find((p) => p.is_new);
-    section.classList.toggle('hidden', !newest);
-    grid.replaceChildren();
-    if (newest) grid.appendChild(App.createProductCard(newest, true));
-  },
-
-  onTabClick: function (categoryId, isSpecial = false) {
+  onTabClick: function (categoryId) {
     App.currentCategory = String(categoryId);
-    const isSpecialTab = isSpecial || App.specialTabIds.includes(App.currentCategory);
 
     document.querySelectorAll('.tab-btn').forEach((button) => {
       button.classList.toggle('active', button.dataset.categoryId === App.currentCategory);
     });
 
-    App.hideSpecialSections(!isSpecialTab);
+    // Always show recommended section above tabs
+    document.getElementById('recommended-section')?.classList.remove('hidden');
 
     const menuSection = document.getElementById('menu-section');
     const title = menuSection?.querySelector('.section-title');
@@ -345,67 +314,134 @@ const App = {
     const grid = document.getElementById('menu-grid');
     const noResults = document.getElementById('no-results');
 
-    if (isSpecialTab) {
-      if (menuSection) menuSection.classList.add('hidden');
-      let products = [];
-      if (App.currentCategory === 'popular') {
-        const popular = App.allProducts().find((p) => p.is_bestseller);
-        if (popular) products = [popular];
-        if (title) title.innerHTML = `<img src="/static/images/icons/icon-combo.png" alt="" /> Popular Today`;
-      } else if (App.currentCategory === 'recommended') {
-        products = App.computeRecommended();
-        if (title) title.innerHTML = `<img src="/static/images/icons/icon-main.png" alt="" /> Recommended`;
-      } else if (App.currentCategory === 'new') {
-        const newest = App.allProducts().find((p) => p.is_new);
-        if (newest) products = [newest];
-        if (title) title.innerHTML = `<img src="/static/images/icons/icon-dessert.png" alt="" /> New Arrival`;
-      }
-      if (count) count.textContent = `${products.length} item${products.length !== 1 ? 's' : ''}`;
-      if (grid) {
-        grid.replaceChildren();
-        products.forEach((p) => grid.appendChild(App.createProductCard(p, true)));
-      }
-      if (noResults) noResults.classList.toggle('hidden', products.length > 0);
-      if (menuSection) {
-        menuSection.classList.remove('hidden');
-        menuSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-      return;
-    }
-
     if (menuSection) menuSection.classList.remove('hidden');
     const category = App.menuData.find((item) => item.id === App.currentCategory);
     if (!category) return;
-    if (title) title.innerHTML = `<img src="${App.escapeHTML(App.categoryIconMap[category.name] || category.icon || '/static/images/icons/icon-main.png')}" alt="" /> ${App.escapeHTML(category.name)}`;
+
+    // Set section title with icon + category name
+    const iconSrc = App.categoryIconMap[category.name] || category.icon || '/static/images/icons/icon-main.png';
+    if (title) title.innerHTML = `<img src="${App.escapeHTML(iconSrc)}" alt="" /> ${App.escapeHTML(category.name)}`;
     if (count) count.textContent = `${category.products.length} items`;
+
+    // Render playlists (sub-tab slideshows) above the product grid
+    App.renderPlaylists(category);
+
+    // Render product grid (bestseller is already first in the array from backend)
     App.renderProducts(category.products);
     menuSection?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   },
 
-  hideSpecialSections: function (hide) {
-    document.getElementById('popular-section')?.classList.toggle('hidden', hide);
-    document.getElementById('recommended-section')?.classList.toggle('hidden', hide);
-    document.getElementById('new-arrival-section')?.classList.toggle('hidden', hide);
+  renderPlaylists: function (category) {
+    // Clear any existing slideshow timers
+    Object.values(App.playlistTimers).forEach((timer) => clearInterval(timer));
+    App.playlistTimers = {};
+
+    const container = document.getElementById('playlists-container');
+    if (!container) return;
+    container.replaceChildren();
+
+    const playlists = (category.playlists || []).filter((pl) => pl.items && pl.items.length);
+    if (!playlists.length) return;
+
+    // Sub-tab bar (like "Burger") + a single slideshow stage for the active playlist
+    const wrap = document.createElement('div');
+    wrap.className = 'playlist-subtabs';
+
+    const bar = document.createElement('div');
+    bar.className = 'playlist-subtab-bar';
+
+    const stage = document.createElement('div');
+    stage.className = 'playlist-stage';
+
+    const dotsWrap = document.createElement('div');
+    dotsWrap.className = 'playlist-stage-dots';
+
+    const showSlide = (slides, dots, index) => {
+      slides.forEach((slide, i) => {
+        const visible = i === index;
+        slide.style.display = visible ? 'flex' : 'none';
+        if (visible) {
+          slide.classList.remove('slide-enter');
+          void slide.offsetWidth; // force reflow so the animation replays
+          slide.classList.add('slide-enter');
+        }
+      });
+      dots.forEach((dot, i) => dot.classList.toggle('active', i === index));
+    };
+
+    const renderActive = (index) => {
+      // Stop timers from a previously active playlist
+      Object.values(App.playlistTimers).forEach((timer) => clearInterval(timer));
+      App.playlistTimers = {};
+
+      bar.querySelectorAll('.playlist-subtab').forEach((button, i) => {
+        button.classList.toggle('active', i === index);
+      });
+
+      const playlist = playlists[index];
+      stage.replaceChildren();
+      dotsWrap.replaceChildren();
+
+      const slides = playlist.items.map((item) => {
+        const card = App.createProductCard(item);
+        card.classList.add('playlist-slide');
+        return card;
+      });
+      slides.forEach((slide, i) => {
+        if (i !== 0) slide.style.display = 'none';
+        stage.appendChild(slide);
+      });
+
+      const dots = playlist.items.length > 1
+        ? playlist.items.map((_, i) => {
+            const dot = document.createElement('button');
+            dot.type = 'button';
+            dot.className = 'playlist-dot' + (i === 0 ? ' active' : '');
+            dot.setAttribute('aria-label', 'Show item ' + (i + 1));
+            dotsWrap.appendChild(dot);
+            return dot;
+          })
+        : [];
+
+      let current = 0;
+      const goTo = (next) => { current = (next + slides.length) % slides.length; showSlide(slides, dots, current); };
+      dots.forEach((dot, i) => dot.addEventListener('click', () => goTo(i)));
+
+      if (slides.length > 1) {
+        App.playlistTimers[playlist.id] = setInterval(() => goTo(current + 1), 4000);
+      }
+    };
+
+    playlists.forEach((playlist, i) => {
+      const chip = document.createElement('button');
+      chip.type = 'button';
+      chip.className = 'playlist-subtab';
+      chip.innerHTML = '<span class="playlist-subtab-label">' + App.escapeHTML(playlist.name) + '</span>';
+      chip.addEventListener('click', () => renderActive(i));
+      bar.appendChild(chip);
+    });
+
+    wrap.appendChild(bar);
+    wrap.appendChild(stage);
+    wrap.appendChild(dotsWrap);
+    container.appendChild(wrap);
+    renderActive(0);
   },
 
-  computeRecommended: function () {
-    const counts = {};
-    App.orderHistory.forEach((order) => {
-      (order.items || []).forEach((item) => {
-        const pid = item.product_id || item.id;
-        counts[pid] = (counts[pid] || 0) + Number(item.quantity || 1);
-      });
+  showPlaylistSlide: function (slideshow, slides, index, dotsContainer) {
+    slides.forEach((slide, i) => {
+      slide.style.display = i === index ? 'flex' : 'none';
+      if (i === index) {
+        slide.classList.remove('slide-enter');
+        void slide.offsetWidth; // force reflow
+        slide.classList.add('slide-enter');
+      }
     });
-    const products = App.allProducts();
-    if (Object.keys(counts).length) {
-      return Object.entries(counts)
-        .sort((a, b) => b[1] - a[1])
-        .map(([pid]) => products.find((p) => p.id === pid))
-        .filter(Boolean)
-        .slice(0, 3);
+    if (dotsContainer) {
+      dotsContainer.querySelectorAll('.playlist-dot').forEach((dot, i) => {
+        dot.classList.toggle('active', i === index);
+      });
     }
-    const fallback = products.filter((p) => p.is_bestseller).slice(0, 3);
-    return fallback.length ? fallback : products.slice(0, 3);
   },
 
   renderProducts: function (products) {
@@ -417,26 +453,33 @@ const App = {
     products.forEach((product) => grid.appendChild(App.createProductCard(product)));
   },
 
-  createProductCard: function (product, withRibbon = false) {
+  createProductCard: function (product) {
     const card = document.createElement('article');
     card.className = 'menu-card';
+    if (product.is_bestseller) card.classList.add('menu-card--bestseller');
+
     const imageMarkup = product.image_url
       ? `<img src="${App.escapeHTML(product.image_url)}" alt="${App.escapeHTML(product.name)}" class="menu-card-img" loading="lazy">`
       : `<div class="menu-card-img menu-card-placeholder" aria-hidden="true"><img src="/static/images/icons/icon-main.png" alt="" /></div>`;
 
-    const ribbon = withRibbon && product.is_bestseller
-      ? `<img src="/static/images/icons/bestseller-ribbon.png" alt="Bestseller" class="bestseller-ribbon" />`
+    // New bestseller indicator: flame icon badge overlay on the image
+    const bestsellerBadge = product.is_bestseller
+      ? `<div class="bestseller-flame" title="Bestseller">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+            <path d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.46 7.93 4 10.78 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67zM11.71 19c-1.78 0-3.22-1.4-3.22-3.14 0-1.62 1.06-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.59 2.65.59 4.04 0 2.65-2.15 4.8-4.8 4.8z"/>
+          </svg>
+          <span>Top Pick</span>
+        </div>`
       : '';
 
     card.innerHTML = `
       <div class="menu-card-img-wrap">
-        ${ribbon}
+        ${bestsellerBadge}
         ${imageMarkup}
-        ${product.is_combo ? `<span class="menu-card-combo-label">Combo −${Number(product.combo_discount_pct)}%</span>` : ''}
+        ${product.is_combo ? `<span class="menu-card-combo-label">Combo -${Number(product.combo_discount_pct)}%</span>` : ''}
       </div>
       <div class="menu-card-body">
         <div class="menu-card-badges">
-          ${product.is_bestseller ? '<span class="menu-badge menu-badge--bestseller">Bestseller</span>' : ''}
           ${product.is_new ? '<span class="menu-badge menu-badge--new">New</span>' : ''}
         </div>
         <h3 class="menu-card-name">${App.escapeHTML(product.name)}</h3>
@@ -493,9 +536,9 @@ const App = {
 
     if (badges) {
       badges.replaceChildren();
-      if (product.is_bestseller) badges.insertAdjacentHTML('beforeend', '<span class="menu-badge menu-badge--bestseller">Bestseller</span>');
+      if (product.is_bestseller) badges.insertAdjacentHTML('beforeend', '<span class="menu-badge menu-badge--bestseller">Top Pick</span>');
       if (product.is_new) badges.insertAdjacentHTML('beforeend', '<span class="menu-badge menu-badge--new">New</span>');
-      if (product.is_combo) badges.insertAdjacentHTML('beforeend', `<span class="menu-badge menu-badge--bestseller">Combo −${Number(product.combo_discount_pct)}%</span>`);
+      if (product.is_combo) badges.insertAdjacentHTML('beforeend', `<span class="menu-badge menu-badge--bestseller">Combo -${Number(product.combo_discount_pct)}%</span>`);
     }
 
     addBtn.onclick = () => {
@@ -584,7 +627,6 @@ const App = {
 
     document.getElementById('search-input')?.addEventListener('input', async (event) => {
       const query = event.target.value.trim();
-      App.hideSpecialSections(!query);
       if (!query) {
         if (App.currentCategory) App.onTabClick(App.currentCategory);
         return;
@@ -922,7 +964,7 @@ const App = {
       await App.loadOrderHistory();
       App.updateMemberUI();
       App.closeAuthModal();
-      App.renderSpecialSections();
+      App.renderRecommendedSection();
       Cart.showToast(`Welcome back, ${App.currentUser.username}!`, 'success');
     } catch (error) {
       Cart.showToast(error.message, 'error');
@@ -963,7 +1005,7 @@ const App = {
       App.currentUser = null;
       App.orderHistory = [];
       App.updateMemberUI();
-      App.renderSpecialSections();
+      App.renderRecommendedSection();
       App.closeProfileModal();
       Cart.appliedCoupon = null;
       Cart.showToast('You have been logged out.', 'info');

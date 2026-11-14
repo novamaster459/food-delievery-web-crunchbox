@@ -88,6 +88,17 @@
   </div>
 
   <!-- ═══════════════════════════════════════════════════
+       RECOMMENDED SECTION (above tabs)
+  ═══════════════════════════════════════════════════ -->
+  <section class="recommended-section" id="recommended-section">
+    <div class="section-header">
+      <h2 class="section-title">Recommended For You</h2>
+      <span class="section-subtitle">Top picks based on your orders</span>
+    </div>
+    <div class="recommended-grid" id="recommended-grid"></div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════
        CATEGORY TABS
   ═══════════════════════════════════════════════════ -->
   <div class="category-tabs-wrap">
@@ -100,39 +111,6 @@
   </div>
 
   <!-- ═══════════════════════════════════════════════════
-       POPULAR TODAY SECTION
-  ═══════════════════════════════════════════════════ -->
-  <section class="popular-section hidden" id="popular-section">
-    <div class="section-header">
-      <h2 class="section-title">Popular Today</h2>
-      <span class="section-subtitle">Bestseller</span>
-    </div>
-    <div class="popular-grid" id="popular-grid"></div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════════════
-       RECOMMENDED SECTION
-  ═══════════════════════════════════════════════════ -->
-  <section class="recommended-section hidden" id="recommended-section">
-    <div class="section-header">
-      <h2 class="section-title">Recommended For You</h2>
-      <span class="section-subtitle">Top picks based on your orders</span>
-    </div>
-    <div class="recommended-grid" id="recommended-grid"></div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════════════
-       NEW ARRIVAL SECTION
-  ═══════════════════════════════════════════════════ -->
-  <section class="new-arrival-section hidden" id="new-arrival-section">
-    <div class="section-header">
-      <h2 class="section-title">Fresh Drop</h2>
-      <span class="section-subtitle">Newest on the menu</span>
-    </div>
-    <div class="new-arrival-grid" id="new-arrival-grid"></div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════════════
        MENU SECTION
   ═══════════════════════════════════════════════════ -->
   <section class="menu-section" id="menu-section">
@@ -140,6 +118,8 @@
       <h2 class="section-title">Our Menu</h2>
       <span class="section-subtitle" id="menu-count-label"></span>
     </div>
+    <!-- Playlists (sub-tab slideshows) injected here -->
+    <div id="playlists-container"></div>
     <div class="menu-grid" id="menu-grid">
       <div class="menu-card-skeleton"></div>
       <div class="menu-card-skeleton"></div>

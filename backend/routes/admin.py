@@ -18,7 +18,7 @@ from flask import Blueprint, current_app, jsonify, request, session
 from werkzeug.utils import secure_filename
 
 from app import db
-from models import BranchLocation, Category, Coupon, Product
+from models import BranchLocation, Category, Coupon, Product, Playlist
 
 # ---------------------------------------------------------------------------
 # Blueprint
@@ -351,6 +351,88 @@ def delete_product(prod_id: str):
         return jsonify({"error": "This product has an unexpired member reward voucher and cannot be deleted yet"}), 409
 
     db["products"].remove(product)
+    return jsonify({"success": True})
+
+
+# ---------------------------------------------------------------------------
+# Playlist Routes
+# ---------------------------------------------------------------------------
+
+@admin_bp.route("/playlists", methods=["GET"])
+@require_admin
+def list_playlists():
+    """Return all playlists, optionally filtered by ?category_id=."""
+    category_id = request.args.get("category_id")
+    playlists = db["playlists"]
+    if category_id:
+        playlists = [p for p in playlists if p.category_id == category_id]
+    return jsonify([p.to_dict() for p in sorted(playlists, key=lambda p: p.sort_order)])
+
+
+@admin_bp.route("/playlists", methods=["POST"])
+@require_admin
+def add_playlist():
+    """
+    Create a playlist inside a category.
+
+    Expected JSON body:
+        { "name": "...", "category_id": "...", "product_ids": ["..."] }
+    """
+    data = request.get_json(silent=True) or {}
+    name = str(data.get("name", "")).strip()
+    category_id = str(data.get("category_id", "")).strip()
+    product_ids = data.get("product_ids") or []
+
+    if not name:
+        return jsonify({"error": "Playlist name is required"}), 400
+    if not category_id or not any(c.id == category_id for c in db["categories"]):
+        return jsonify({"error": "Category not found"}), 404
+    if not isinstance(product_ids, list) or not all(isinstance(pid, str) for pid in product_ids):
+        return jsonify({"error": "product_ids must be a list of product ids"}), 400
+
+    max_order = max((p.sort_order for p in db["playlists"] if p.category_id == category_id), default=0)
+    playlist = Playlist(name=name, category_id=category_id, product_ids=product_ids, sort_order=max_order + 1)
+    db["playlists"].append(playlist)
+    return jsonify({"success": True, "playlist": playlist.to_dict()}), 201
+
+
+@admin_bp.route("/playlists/<playlist_id>", methods=["PUT"])
+@require_admin
+def edit_playlist(playlist_id: str):
+    """Update a playlist's name, product_ids and/or sort_order."""
+    playlist = next((p for p in db["playlists"] if p.id == playlist_id), None)
+    if playlist is None:
+        return jsonify({"error": "Playlist not found"}), 404
+
+    data = request.get_json(silent=True) or {}
+
+    if "name" in data:
+        name = str(data["name"]).strip()
+        if not name:
+            return jsonify({"error": "Playlist name is required"}), 400
+        playlist.name = name
+    if "product_ids" in data:
+        product_ids = data["product_ids"]
+        if not isinstance(product_ids, list) or not all(isinstance(pid, str) for pid in product_ids):
+            return jsonify({"error": "product_ids must be a list of product ids"}), 400
+        playlist.product_ids = product_ids
+    if "sort_order" in data:
+        try:
+            playlist.sort_order = int(data["sort_order"])
+        except (TypeError, ValueError):
+            return jsonify({"error": "sort_order must be a whole number"}), 400
+
+    return jsonify({"success": True, "playlist": playlist.to_dict()})
+
+
+@admin_bp.route("/playlists/<playlist_id>", methods=["DELETE"])
+@require_admin
+def delete_playlist(playlist_id: str):
+    """Delete a playlist."""
+    playlist = next((p for p in db["playlists"] if p.id == playlist_id), None)
+    if playlist is None:
+        return jsonify({"error": "Playlist not found"}), 404
+    db["playlists"].remove(playlist)
     return jsonify({"success": True})
 
 

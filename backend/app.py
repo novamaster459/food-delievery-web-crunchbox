@@ -20,7 +20,7 @@ from flask import Flask, jsonify, request, send_from_directory, session
 from flask_cors import CORS
 from werkzeug.security import generate_password_hash
 
-from models import Category, Coupon, Order, Product, User
+from models import Category, Coupon, Order, Product, User, Playlist
 
 # ---------------------------------------------------------------------------
 # Application factory
@@ -59,6 +59,7 @@ db: dict = {
     "coupons": [],     # List[Coupon]
     "orders": [],      # List[Order]
     "locations": [],   # List[BranchLocation]
+    "playlists": [],  # List[Playlist]
     "settings": {
         "shop_name": "CrunchBox",
         "logo_filename": "",
@@ -279,6 +280,18 @@ def seed_data() -> None:
         ),
     ])
 
+    # ------------------------------------------------------------------
+    # Playlists (demo) — shown as slideshow strips inside their category tab.
+    # ------------------------------------------------------------------
+    mains_top = [p for p in db["products"] if p.category_id == cat_mains.id][:3]
+    if mains_top:
+        db["playlists"].append(Playlist(
+            name="Burger Lineup",
+            category_id=cat_mains.id,
+            product_ids=[p.id for p in mains_top],
+            sort_order=1,
+        ))
+
     # Mark the built-in reward items so members can redeem them with points.
     sync_reward_product_points()
 
@@ -418,19 +431,18 @@ def get_menu():
     """
     Return all categories with their available products nested inside.
     Categories are sorted by sort_order ascending.
+
+    Each category marks its bestseller (the top-selling item within that
+    category, or its first item when there are no sales yet) and sorts it to
+    the front. Any playlists belonging to the category are included with their
+    resolved product items.
     """
-    # Rank bestsellers by total units ordered; only the single top seller
-    # with at least two units sold earns the badge.
     sales_totals: dict = {}
     for order in db["orders"]:
         for item in order.items:
             pid = item.get("product_id")
             sales_totals[pid] = sales_totals.get(pid, 0) + int(item.get("quantity", 0))
-    top_sellers = sorted(sales_totals.items(), key=lambda kv: kv[1], reverse=True)[:1]
-    bestseller_ids = {pid for pid, qty in top_sellers if qty >= 2}
 
-    # Only the single newest item added within the last 30 days earns the
-    # "New" badge — adding a newer item automatically retires the old one.
     new_cutoff = datetime.utcnow() - timedelta(days=30)
     newest_product = None
     for product in db["products"]:
@@ -439,20 +451,50 @@ def get_menu():
                 newest_product = product
     new_product_id = newest_product.id if newest_product else None
 
-    # Build a lookup: category_id → list of available product dicts
     products_by_cat: dict = {}
+    product_by_id: dict = {}
     for product in db["products"]:
         if product.is_available:
             d = product.to_dict()
-            d["is_bestseller"] = product.id in bestseller_ids
             d["is_new"] = product.id == new_product_id
             products_by_cat.setdefault(product.category_id, []).append(d)
+            product_by_id[product.id] = d
 
-    # Assemble the response
     menu = []
     for cat in sorted(db["categories"], key=lambda c: c.sort_order):
+        cat_products = products_by_cat.get(cat.id, [])
+
+        bestseller_id = None
+        if cat_products:
+            bestseller_id = sorted(
+                cat_products,
+                key=lambda p: sales_totals.get(p["id"], 0),
+                reverse=True,
+            )[0]["id"]
+            if sales_totals.get(bestseller_id, 0) <= 0:
+                bestseller_id = cat_products[0]["id"]
+
+        for d in cat_products:
+            d["is_bestseller"] = d["id"] == bestseller_id
+
+        if bestseller_id:
+            cat_products.sort(key=lambda p: 0 if p["id"] == bestseller_id else 1)
+
         cat_dict = cat.to_dict()
-        cat_dict["products"] = products_by_cat.get(cat.id, [])
+        cat_dict["products"] = cat_products
+        cat_dict["bestseller_id"] = bestseller_id
+
+        playlists = []
+        for pl in sorted(
+            (p for p in db["playlists"] if p.category_id == cat.id),
+            key=lambda p: p.sort_order,
+        ):
+            items = [product_by_id[pid] for pid in pl.product_ids if pid in product_by_id]
+            pl_dict = pl.to_dict()
+            pl_dict["items"] = items
+            playlists.append(pl_dict)
+        cat_dict["playlists"] = playlists
+
         menu.append(cat_dict)
 
     return jsonify(menu)

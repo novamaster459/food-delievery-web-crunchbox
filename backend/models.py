@@ -130,6 +130,34 @@ class Product:
 
 
 # ---------------------------------------------------------------------------
+# Playlist
+# ---------------------------------------------------------------------------
+
+@dataclass
+class Playlist:
+    """
+    A curated playlist containing an ordered list of product IDs within a
+    single category. Playlists render as horizontal slideshow strips inside
+    their category tab.
+    """
+
+    id: str = field(default_factory=_new_id)
+    name: str = ""
+    category_id: str = ""
+    product_ids: List[str] = field(default_factory=list)
+    sort_order: int = 0
+
+    def to_dict(self) -> dict:
+        return {
+            "id": self.id,
+            "name": self.name,
+            "category_id": self.category_id,
+            "product_ids": self.product_ids,
+            "sort_order": self.sort_order,
+        }
+
+
+# ---------------------------------------------------------------------------
 # Coupon
 # ---------------------------------------------------------------------------
 

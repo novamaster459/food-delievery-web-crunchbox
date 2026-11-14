@@ -1,4 +1,4 @@
-/* Reference-inspired storefront styling; colors and imagery are admin-configurable. */
+﻿/* Reference-inspired storefront styling; colors and imagery are admin-configurable. */
 .hero-section {
   min-height: 390px;
   padding: 48px max(24px, calc((100vw - 1200px) / 2)) 64px;
@@ -46,7 +46,7 @@
 .category-tabs .tab-btn {
   min-width: 82px;
   min-height: 74px;
-  padding: 10px 12px;
+  padding: 9px 8px 8px;
   border-radius: 14px;
   flex-direction: column;
   justify-content: center;
@@ -57,7 +57,9 @@
 }
 
 .category-tabs .tab-btn .tab-icon {
-  font-size: 23px;
+  width: 46px;
+  height: 46px;
+  font-size: inherit;
 }
 
 .category-tabs .tab-btn .tab-label {
@@ -298,18 +300,18 @@
 
 .track-order-fab {
   position: fixed;
-  right: 14px;
-  bottom: calc(var(--bottom-nav-h) + 14px);
+  right: 10px;
+  bottom: calc(var(--bottom-nav-h) + 10px);
   z-index: 950;
   display: flex;
   align-items: center;
-  gap: 7px;
-  max-width: calc(100vw - 28px);
-  padding: 9px 14px;
+  gap: 5px;
+  max-width: calc(100vw - 20px);
+  padding: 6px 10px;
   border-radius: 999px;
   background: var(--orange);
   color: #fff;
-  font-size: 12px;
+  font-size: 10px;
   font-weight: 700;
   box-shadow: var(--shadow-orange);
 }
@@ -322,6 +324,11 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.track-order-fab-icon {
+  width: 14px;
+  height: 14px;
 }
 
 /* Admin order details */
