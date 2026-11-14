@@ -332,10 +332,6 @@ const App = {
   },
 
   renderPlaylists: function (category) {
-    // Clear any existing slideshow timers
-    Object.values(App.playlistTimers).forEach((timer) => clearInterval(timer));
-    App.playlistTimers = {};
-
     const container = document.getElementById('playlists-container');
     if (!container) return;
     container.replaceChildren();
@@ -343,89 +339,62 @@ const App = {
     const playlists = (category.playlists || []).filter((pl) => pl.items && pl.items.length);
     if (!playlists.length) return;
 
-    // Sub-tab bar (like "Burger") + a single slideshow stage for the active playlist
+    // Banner shown while a playlist view is open ("Burger Lineup - 3 items")
+    const banner = document.createElement('div');
+    banner.className = 'playlist-banner hidden';
+    banner.id = 'playlist-banner';
+
     const wrap = document.createElement('div');
     wrap.className = 'playlist-subtabs';
 
     const bar = document.createElement('div');
     bar.className = 'playlist-subtab-bar';
 
-    const stage = document.createElement('div');
-    stage.className = 'playlist-stage';
-
-    const dotsWrap = document.createElement('div');
-    dotsWrap.className = 'playlist-stage-dots';
-
-    const showSlide = (slides, dots, index) => {
-      slides.forEach((slide, i) => {
-        const visible = i === index;
-        slide.style.display = visible ? 'flex' : 'none';
-        if (visible) {
-          slide.classList.remove('slide-enter');
-          void slide.offsetWidth; // force reflow so the animation replays
-          slide.classList.add('slide-enter');
-        }
-      });
-      dots.forEach((dot, i) => dot.classList.toggle('active', i === index));
-    };
-
-    const renderActive = (index) => {
-      // Stop timers from a previously active playlist
-      Object.values(App.playlistTimers).forEach((timer) => clearInterval(timer));
-      App.playlistTimers = {};
-
-      bar.querySelectorAll('.playlist-subtab').forEach((button, i) => {
-        button.classList.toggle('active', i === index);
-      });
-
-      const playlist = playlists[index];
-      stage.replaceChildren();
-      dotsWrap.replaceChildren();
-
-      const slides = playlist.items.map((item) => {
-        const card = App.createProductCard(item);
-        card.classList.add('playlist-slide');
-        return card;
-      });
-      slides.forEach((slide, i) => {
-        if (i !== 0) slide.style.display = 'none';
-        stage.appendChild(slide);
-      });
-
-      const dots = playlist.items.length > 1
-        ? playlist.items.map((_, i) => {
-            const dot = document.createElement('button');
-            dot.type = 'button';
-            dot.className = 'playlist-dot' + (i === 0 ? ' active' : '');
-            dot.setAttribute('aria-label', 'Show item ' + (i + 1));
-            dotsWrap.appendChild(dot);
-            return dot;
-          })
-        : [];
-
-      let current = 0;
-      const goTo = (next) => { current = (next + slides.length) % slides.length; showSlide(slides, dots, current); };
-      dots.forEach((dot, i) => dot.addEventListener('click', () => goTo(i)));
-
-      if (slides.length > 1) {
-        App.playlistTimers[playlist.id] = setInterval(() => goTo(current + 1), 4000);
-      }
-    };
-
-    playlists.forEach((playlist, i) => {
+    playlists.forEach((playlist) => {
       const chip = document.createElement('button');
       chip.type = 'button';
       chip.className = 'playlist-subtab';
+      chip.dataset.playlistId = playlist.id;
       chip.innerHTML = '<span class="playlist-subtab-label">' + App.escapeHTML(playlist.name) + '</span>';
-      chip.addEventListener('click', () => renderActive(i));
+      chip.addEventListener('click', () => App.openPlaylist(category, playlist, bar));
       bar.appendChild(chip);
     });
 
     wrap.appendChild(bar);
-    wrap.appendChild(stage);
-    wrap.appendChild(dotsWrap);
     container.appendChild(wrap);
-    renderActive(0);
+    container.appendChild(banner);
+  },
+
+  // Open a playlist as its own menu (its items were removed from the main grid)
+  openPlaylist: function (category, playlist, bar) {
+    bar.querySelectorAll('.playlist-subtab').forEach((chip) => {
+      chip.classList.toggle('active', chip.dataset.playlistId === playlist.id);
+    });
+
+    const banner = document.getElementById('playlist-banner');
+    if (banner) {
+      banner.classList.remove('hidden');
+      banner.innerHTML =
+        '<span class="playlist-banner-title">' + App.escapeHTML(playlist.name) + '</span>' +
+        '<span class="playlist-banner-count">' + playlist.items.length + ' item' + (playlist.items.length === 1 ? '' : 's') + '</span>' +
+        '<button type="button" class="playlist-back-btn">Back to ' + App.escapeHTML(category.name) + '</button>';
+      banner.querySelector('.playlist-back-btn').addEventListener('click', () => App.closePlaylist(category, bar));
+    }
+
+    App.renderProducts(playlist.items);
+    const count = document.getElementById('menu-count-label');
+    if (count) count.textContent = playlist.items.length + ' item' + (playlist.items.length === 1 ? '' : 's');
+    document.getElementById('menu-grid')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  },
+
+  // Leave the playlist view and return to the full category grid
+  closePlaylist: function (category, bar) {
+    bar.querySelectorAll('.playlist-subtab').forEach((chip) => chip.classList.remove('active'));
+    const banner = document.getElementById('playlist-banner');
+    if (banner) banner.classList.add('hidden');
+    const count = document.getElementById('menu-count-label');
+    if (count) count.textContent = category.products.length + ' items';
+    App.renderProducts(category.products);
   },
 
   showPlaylistSlide: function (slideshow, slides, index, dotsContainer) {

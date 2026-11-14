@@ -282,7 +282,7 @@
       </div>
     </div>
 
-    <!-- ====    <!-- ====== TAB: PLAYLISTS ====== -->
+    <!-- ====== TAB: PLAYLISTS ====== -->
     <div class="admin-tab-content hidden" id="tab-playlists">
       <div class="admin-card">
         <div class="admin-card-header">
@@ -327,115 +327,6 @@
           </thead>
           <tbody id="playlists-tbody">
             <tr><td colspan="4" class="table-empty">Loading playlists…</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-== TAB: PLAYLISTS ====== -->
-    <div class="admin-tab-content hidden" id="tab-playlists">
-      <div class="admin-card">
-        <div class="admin-card-header">
-          <h3 class="admin-card-title">Playlists (Slideshows)</h3>
-          <button class="btn-primary btn--sm" id="add-playlist-btn">+ Add Playlist</button>
-        </div>
-
-        <div class="admin-form-wrap hidden" id="playlist-form-wrap">
-          <form class="admin-form" id="playlist-form">
-            <input type="hidden" id="playlist-id" value="" />
-            <div class="form-row">
-              <div class="form-group">
-                <label class="form-label" for="playlist-name">Playlist Name *</label>
-                <input class="form-input" id="playlist-name" type="text" placeholder="e.g. Burger Lineup" required />
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="playlist-category">Category (Tab) *</label>
-                <select class="form-input" id="playlist-category" required></select>
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Products in this playlist (they will play as a slideshow)</label>
-              <div class="playlist-product-picker" id="playlist-product-picker">
-                <p class="table-empty">Pick a category first…</p>
-              </div>
-            </div>
-            <div class="form-actions">
-              <button type="submit" class="btn-primary">Save Playlist</button>
-              <button type="button" class="btn-secondary" id="playlist-cancel-btn">Cancel</button>
-            </div>
-          </form>
-        </div>
-
-        <table class="admin-table" id="playlists-table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Category</th>
-              <th>Items</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="playlists-tbody">
-            <tr><td colspan="4" class="table-empty">Loading playlists…</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- ─── TAB: COUPONS ─── -->
-    <div class="admin-tab-content hidden" id="tab-coupons">
-      <div class="admin-card">
-        <div class="admin-card-header">
-          <h3 class="admin-card-title">Coupons</h3>
-          <button class="btn-primary btn--sm" id="add-coupon-btn">+ Add Coupon</button>
-        </div>
-
-        <div class="admin-form-wrap hidden" id="coupon-form-wrap">
-          <form class="admin-form" id="coupon-form">
-            <input type="hidden" id="coupon-id" value="" />
-            <div class="form-row">
-              <div class="form-group">
-                <label class="form-label" for="coupon-code">Coupon Code *</label>
-                <input class="form-input" id="coupon-code" type="text" placeholder="e.g. CRUNCH25" required />
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="coupon-discount">Discount (%) *</label>
-                <input class="form-input" id="coupon-discount" type="number" min="1" max="100" placeholder="e.g. 25" required />
-              </div>
-            </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label class="form-label" for="coupon-expiry">Expiry Date *</label>
-                <input class="form-input" id="coupon-expiry" type="date" required />
-              </div>
-              <div class="form-group form-group--checkbox">
-                <label class="form-label">Active?</label>
-                <label class="checkbox-label">
-                  <input type="checkbox" id="coupon-active" checked />
-                  <span class="checkbox-custom"></span>
-                  <span>Yes, coupon is active</span>
-                </label>
-              </div>
-            </div>
-            <div class="form-actions">
-              <button type="submit" class="btn-primary">Save Coupon</button>
-              <button type="button" class="btn-secondary" id="coupon-cancel-btn">Cancel</button>
-            </div>
-          </form>
-        </div>
-
-        <table class="admin-table" id="coupons-table">
-          <thead>
-            <tr>
-              <th>Code</th>
-              <th>Discount (%)</th>
-              <th>Expires</th>
-              <th>Active</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="coupons-tbody">
-            <tr><td colspan="5" class="table-empty">Loading coupons…</td></tr>
           </tbody>
         </table>
       </div>

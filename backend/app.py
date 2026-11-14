@@ -464,6 +464,12 @@ def get_menu():
     for cat in sorted(db["categories"], key=lambda c: c.sort_order):
         cat_products = products_by_cat.get(cat.id, [])
 
+        # Products assigned to any playlist leave the regular grid; they are
+        # only visible inside their playlist view.
+        playlist_ids = {pid for pl in db["playlists"] for pid in pl.product_ids}
+        if playlist_ids:
+            cat_products = [p for p in cat_products if p["id"] not in playlist_ids]
+
         bestseller_id = None
         if cat_products:
             bestseller_id = sorted(
