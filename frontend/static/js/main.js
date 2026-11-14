@@ -334,15 +334,12 @@ const App = {
   renderPlaylists: function (category) {
     const container = document.getElementById('playlists-container');
     if (!container) return;
+    Object.values(App.playlistTimers).forEach((timer) => clearInterval(timer));
+    App.playlistTimers = {};
     container.replaceChildren();
 
     const playlists = (category.playlists || []).filter((pl) => pl.items && pl.items.length);
     if (!playlists.length) return;
-
-    // Banner shown while a playlist view is open ("Burger Lineup - 3 items")
-    const banner = document.createElement('div');
-    banner.className = 'playlist-banner hidden';
-    banner.id = 'playlist-banner';
 
     const wrap = document.createElement('div');
     wrap.className = 'playlist-subtabs';
@@ -350,51 +347,94 @@ const App = {
     const bar = document.createElement('div');
     bar.className = 'playlist-subtab-bar';
 
-    playlists.forEach((playlist) => {
+    // Horizontal shelf (slideshow) for the active playlist — items stay out of the regular grid
+    const shelf = document.createElement('div');
+    shelf.className = 'playlist-shelf';
+    shelf.innerHTML =
+      '<div class="playlist-shelf-header">' +
+        '<span class="playlist-shelf-title"></span>' +
+        '<div class="playlist-shelf-controls">' +
+          '<span class="playlist-counter"></span>' +
+          '<button type="button" class="playlist-nav-btn" data-dir="-1" aria-label="Previous items">&#8249;</button>' +
+          '<button type="button" class="playlist-nav-btn" data-dir="1" aria-label="Next items">&#8250;</button>' +
+        '</div>' +
+      '</div>' +
+      '<div class="playlist-viewport"><div class="playlist-track"></div></div>';
+
+    const titleEl = shelf.querySelector('.playlist-shelf-title');
+    const counter = shelf.querySelector('.playlist-counter');
+    const track = shelf.querySelector('.playlist-track');
+    const state = { playlistIndex: 0, pos: 0 };
+
+    const cardStep = () => {
+      const card = track.querySelector('.menu-card');
+      const gap = parseFloat(getComputedStyle(track).gap || '0') || 0;
+      return card ? card.getBoundingClientRect().width + gap : 234;
+    };
+
+    const updateScroll = (animate) => {
+      if (animate === undefined) animate = true;
+      track.style.transition = animate ? 'transform 0.45s ease' : 'none';
+      track.style.transform = 'translateX(-' + (state.pos * cardStep()) + 'px)';
+      const total = track.children.length;
+      counter.textContent = total ? (state.pos + 1) + ' / ' + total : '';
+    };
+
+    const advance = (delta) => {
+      const total = track.children.length;
+      if (!total) return;
+      state.pos = (state.pos + delta + total) % total;
+      updateScroll(true);
+    };
+
+    const startAuto = () => {
+      Object.values(App.playlistTimers).forEach((timer) => clearInterval(timer));
+      App.playlistTimers = {};
+      App.playlistTimers[playlists[state.playlistIndex].id] = setInterval(() => advance(1), 4000);
+    };
+
+    const showPlaylist = (playlistIndex) => {
+      state.playlistIndex = playlistIndex;
+      bar.querySelectorAll('.playlist-subtab').forEach((chip, i) => {
+        chip.classList.toggle('active', i === playlistIndex);
+      });
+      const playlist = playlists[playlistIndex];
+      titleEl.textContent = playlist.name;
+
+      track.replaceChildren();
+      playlist.items.forEach((item) => {
+        track.appendChild(App.createProductCard(item));
+      });
+      state.pos = 0;
+      updateScroll(false);
+      startAuto();
+    };
+
+    shelf.querySelectorAll('.playlist-nav-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        advance(Number(btn.dataset.dir));
+        startAuto();
+      });
+    });
+    shelf.addEventListener('mouseenter', () => {
+      Object.values(App.playlistTimers).forEach((timer) => clearInterval(timer));
+    });
+    shelf.addEventListener('mouseleave', startAuto);
+
+    playlists.forEach((playlist, i) => {
       const chip = document.createElement('button');
       chip.type = 'button';
       chip.className = 'playlist-subtab';
       chip.dataset.playlistId = playlist.id;
       chip.innerHTML = '<span class="playlist-subtab-label">' + App.escapeHTML(playlist.name) + '</span>';
-      chip.addEventListener('click', () => App.openPlaylist(category, playlist, bar));
+      chip.addEventListener('click', () => showPlaylist(i));
       bar.appendChild(chip);
     });
 
     wrap.appendChild(bar);
     container.appendChild(wrap);
-    container.appendChild(banner);
-  },
-
-  // Open a playlist as its own menu (its items were removed from the main grid)
-  openPlaylist: function (category, playlist, bar) {
-    bar.querySelectorAll('.playlist-subtab').forEach((chip) => {
-      chip.classList.toggle('active', chip.dataset.playlistId === playlist.id);
-    });
-
-    const banner = document.getElementById('playlist-banner');
-    if (banner) {
-      banner.classList.remove('hidden');
-      banner.innerHTML =
-        '<span class="playlist-banner-title">' + App.escapeHTML(playlist.name) + '</span>' +
-        '<span class="playlist-banner-count">' + playlist.items.length + ' item' + (playlist.items.length === 1 ? '' : 's') + '</span>' +
-        '<button type="button" class="playlist-back-btn">Back to ' + App.escapeHTML(category.name) + '</button>';
-      banner.querySelector('.playlist-back-btn').addEventListener('click', () => App.closePlaylist(category, bar));
-    }
-
-    App.renderProducts(playlist.items);
-    const count = document.getElementById('menu-count-label');
-    if (count) count.textContent = playlist.items.length + ' item' + (playlist.items.length === 1 ? '' : 's');
-    document.getElementById('menu-grid')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  },
-
-  // Leave the playlist view and return to the full category grid
-  closePlaylist: function (category, bar) {
-    bar.querySelectorAll('.playlist-subtab').forEach((chip) => chip.classList.remove('active'));
-    const banner = document.getElementById('playlist-banner');
-    if (banner) banner.classList.add('hidden');
-    const count = document.getElementById('menu-count-label');
-    if (count) count.textContent = category.products.length + ' items';
-    App.renderProducts(category.products);
+    container.appendChild(shelf);
+    showPlaylist(0);
   },
 
   showPlaylistSlide: function (slideshow, slides, index, dotsContainer) {
