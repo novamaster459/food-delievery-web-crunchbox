@@ -341,8 +341,8 @@ const App = {
     const playlists = (category.playlists || []).filter((pl) => pl.items && pl.items.length);
     if (!playlists.length) return;
 
-    // Each playlist is one section: a single product slot that keeps sliding
-    // through its items, with a "See all" button on top of the section.
+    // Each playlist is one section: a single product slot on the left that
+    // keeps auto-sliding (with animation) through its items every 5s.
     const wrap = document.createElement('div');
     wrap.className = 'playlist-subtabs';
 
@@ -364,6 +364,14 @@ const App = {
       const stage = document.createElement('div');
       stage.className = 'playlist-stage';
 
+      // track of all playlist cards; we slide it left one card at a time
+      const track = document.createElement('div');
+      track.className = 'playlist-track';
+      playlist.items.forEach((item) => {
+        track.appendChild(App.createProductCard(item));
+      });
+      stage.appendChild(track);
+
       block.appendChild(header);
       block.appendChild(stage);
       wrap.appendChild(block);
@@ -371,23 +379,18 @@ const App = {
       const counter = header.querySelector('.playlist-counter');
       const state = { pos: 0 };
 
-      const renderCard = () => {
-        stage.replaceChildren();
-        const card = App.createProductCard(playlist.items[state.pos]);
-        card.classList.add('slide-enter');
-        stage.appendChild(card);
-        counter.textContent = (state.pos + 1) + ' / ' + playlist.items.length;
-      };
-
       const goTo = (next) => {
         state.pos = (next + playlist.items.length) % playlist.items.length;
-        renderCard();
+        const card = track.querySelector('.menu-card');
+        const step = card ? card.getBoundingClientRect().width + 14 : 234; // card width + gap
+        track.style.transform = 'translateX(-' + (state.pos * step) + 'px)';
+        counter.textContent = (state.pos + 1) + ' / ' + playlist.items.length;
       };
 
       const startAuto = () => {
         Object.values(App.playlistTimers).forEach((timer) => clearInterval(timer));
         App.playlistTimers = {};
-        App.playlistTimers[playlist.id] = setInterval(() => goTo(state.pos + 1), 4000);
+        App.playlistTimers[playlist.id] = setInterval(() => goTo(state.pos + 1), 5000);
       };
 
       header.querySelector('.playlist-more-btn').addEventListener('click', () => App.openPlaylistModal(playlist));
@@ -397,7 +400,7 @@ const App = {
       });
       block.addEventListener('mouseleave', startAuto);
 
-      renderCard();
+      goTo(0);
       startAuto();
     });
 
