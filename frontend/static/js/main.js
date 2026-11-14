@@ -395,11 +395,7 @@ const App = {
 
       header.querySelector('.playlist-more-btn').addEventListener('click', () => App.openPlaylistModal(playlist));
 
-      block.addEventListener('mouseenter', () => {
-        Object.values(App.playlistTimers).forEach((timer) => clearInterval(timer));
-      });
-      block.addEventListener('mouseleave', startAuto);
-
+      // no hover pause: slideshow keeps running on the page
       goTo(0);
       startAuto();
     });
