@@ -1,4 +1,4 @@
-﻿// Admin dashboard behavior for categories, menu items, promotions and settings.
+// Admin dashboard behavior for categories, menu items, promotions and settings.
 const Admin = {
   categories: [],
   products: [],
@@ -141,8 +141,8 @@ const Admin = {
           <td>${Admin.price(product.price)}</td>
           <td>${Number(product.loyalty_points || 0)}</td>
           <td>${product.is_reward
-            ? `Yes Â· ${Number(product.reward_points || 0).toLocaleString('en-US')} pts`
-            : 'â€”'}</td>
+            ? `Yes · ${Number(product.reward_points || 0).toLocaleString('en-US')} pts`
+            : '—'}</td>
           <td>${product.is_combo ? `Yes (${Number(product.combo_discount_pct)}% off)` : 'No'}</td>
           <td class="actions-cell">
             <button type="button" class="btn-edit" data-edit-product="${Admin.escape(product.id)}">Edit</button>
@@ -249,7 +249,7 @@ const Admin = {
         <tr>
           <td>${Admin.escape(category.icon)}</td>
           <td>${Admin.escape(category.name)}</td>
-          <td>${Admin.products.filter((item) => item.category_id === category.id).length || 'â€”'}</td>
+          <td>${Admin.products.filter((item) => item.category_id === category.id).length || '—'}</td>
           <td class="actions-cell">
             <button type="button" class="btn-edit" data-edit-category="${Admin.escape(category.id)}">Edit</button>
             <button type="button" class="btn-delete" data-delete-category="${Admin.escape(category.id)}">Delete</button>
@@ -378,8 +378,8 @@ const Admin = {
             : '<span aria-label="No branch photo"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 21s-6-5.686-6-11a6 6 0 1112 0c0 5.314-6 11-6 11z"/><circle cx="12" cy="10" r="2.5"/></svg></span>'}</td>
           <td>${Admin.escape(location.name)}</td>
           <td>${Admin.escape(location.branch_no)}</td>
-          <td>${location.address ? Admin.escape(location.address) : 'â€”'}</td>
-          <td>${Admin.escape(location.open_label || location.open_time)} â€“ ${Admin.escape(location.close_label || location.close_time)}</td>
+          <td>${location.address ? Admin.escape(location.address) : '—'}</td>
+          <td>${Admin.escape(location.open_label || location.open_time)} – ${Admin.escape(location.close_label || location.close_time)}</td>
           <td>${location.is_open ? 'Open now' : 'Closed'}</td>
           <td class="actions-cell">
             <button type="button" class="btn-edit" data-edit-location="${Admin.escape(location.id)}">Edit</button>
@@ -507,9 +507,9 @@ const Admin = {
             order.address.township,
             order.address.city,
           ].filter(Boolean).join(', ')
-        : 'â€”';
+        : '—';
       const items = (order.items || []).map((item) => `
-        <li>${Number(item.quantity)} Ã— ${Admin.escape(item.name)}${item.special_request
+        <li>${Number(item.quantity)} × ${Admin.escape(item.name)}${item.special_request
           ? `<span class="order-detail-request">Request: ${Admin.escape(item.special_request)}</span>`
           : ''}</li>`).join('') || '<li>No items recorded</li>';
 
@@ -696,7 +696,7 @@ const Admin = {
   },
 
   date: function (value) {
-    return value ? new Date(value).toLocaleDateString() : 'â€”';
+    return value ? new Date(value).toLocaleDateString() : '—';
   },
 
   toast: function (message, type = 'success') {

@@ -1,5 +1,5 @@
 """
-app.py â€” CrunchBox Backend Entry Point
+app.py — CrunchBox Backend Entry Point
 =======================================
 Bootstraps the Flask application, populates the in-memory data store with
 seed data, registers route blueprints, and exposes a small set of core API
@@ -74,7 +74,7 @@ db: dict = {
         "hero_subtext": "Hot, crunchy & made fresh for you.",
         "hero_image_filename": "",
         "featured_title": "Chef Specials",
-        "featured_text": "Made with love by our chefs â€” unique recipes you won't find anywhere else.",
+        "featured_text": "Made with love by our chefs — unique recipes you won't find anywhere else.",
         "featured_image_filename": "",
         "deal_title": "Weekend Crunch Fest",
         "deal_text": "Up to 25% OFF on selected items. Limited time only!",
@@ -133,17 +133,17 @@ def seed_data() -> None:
     # ------------------------------------------------------------------
     # Categories
     # ------------------------------------------------------------------
-    cat_mains      = Category(name="Mains",             icon="ðŸ—", sort_order=1)
-    cat_vegan      = Category(name="Vegan Main Meal",   icon="ðŸŒ±", sort_order=2)
-    cat_drinks     = Category(name="Drinks",            icon="ðŸ¥¤", sort_order=3)
-    cat_appetizers = Category(name="Appetizers",        icon="ðŸŸ", sort_order=4)
-    cat_desserts   = Category(name="Desserts",          icon="ðŸ°", sort_order=5)
-    cat_combos     = Category(name="Special Combo Sets",icon="ðŸŽ", sort_order=6)
+    cat_mains      = Category(name="Mains",             icon="🍗", sort_order=1)
+    cat_vegan      = Category(name="Vegan Main Meal",   icon="🌱", sort_order=2)
+    cat_drinks     = Category(name="Drinks",            icon="🥤", sort_order=3)
+    cat_appetizers = Category(name="Appetizers",        icon="🍟", sort_order=4)
+    cat_desserts   = Category(name="Desserts",          icon="🍰", sort_order=5)
+    cat_combos     = Category(name="Special Combo Sets",icon="🎁", sort_order=6)
 
     db["categories"].extend([cat_mains, cat_vegan, cat_drinks, cat_appetizers, cat_desserts, cat_combos])
 
     # ------------------------------------------------------------------
-    # Products â€” Mains
+    # Products — Mains
     # ------------------------------------------------------------------
     db["products"].extend([
         Product(
@@ -173,7 +173,7 @@ def seed_data() -> None:
     ])
 
     # ------------------------------------------------------------------
-    # Products â€” Vegan Main Meal
+    # Products — Vegan Main Meal
     # ------------------------------------------------------------------
     db["products"].extend([
         Product(
@@ -197,7 +197,7 @@ def seed_data() -> None:
     ])
 
     # ------------------------------------------------------------------
-    # Products â€” Drinks
+    # Products — Drinks
     # ------------------------------------------------------------------
     db["products"].extend([
         Product(category_id=cat_drinks.id, name="Fresh Lime Soda",  description="Hand-squeezed lime with sparkling water and mint.",          price=3500),
@@ -207,7 +207,7 @@ def seed_data() -> None:
     ])
 
     # ------------------------------------------------------------------
-    # Products â€” Appetizers
+    # Products — Appetizers
     # ------------------------------------------------------------------
     db["products"].extend([
         Product(category_id=cat_appetizers.id, name="Golden Fries",       description="Crispy shoestring fries seasoned with sea salt.",         price=4500),
@@ -217,7 +217,7 @@ def seed_data() -> None:
     ])
 
     # ------------------------------------------------------------------
-    # Products â€” Desserts
+    # Products — Desserts
     # ------------------------------------------------------------------
     db["products"].extend([
         Product(category_id=cat_desserts.id, name="Chocolate Lava Cake", description="Warm chocolate cake with a molten fudge centre.",         price=6000),
@@ -227,7 +227,7 @@ def seed_data() -> None:
     ])
 
     # ------------------------------------------------------------------
-    # Products â€” Special Combo Sets
+    # Products — Special Combo Sets
     # ------------------------------------------------------------------
     db["products"].extend([
         Product(
@@ -281,7 +281,7 @@ def seed_data() -> None:
     ])
 
     # ------------------------------------------------------------------
-    # Playlists (demo) â€” shown as slideshow strips inside their category tab.
+    # Playlists (demo) — shown as slideshow strips inside their category tab.
     # ------------------------------------------------------------------
     mains_top = [p for p in db["products"] if p.category_id == cat_mains.id][:3]
     if mains_top:
@@ -516,7 +516,7 @@ def search_products():
     Search products by name or description.
 
     Query parameter:
-        q â€” search term (case-insensitive substring match)
+        q — search term (case-insensitive substring match)
 
     Returns a list of matching product dicts (regardless of availability).
     """
@@ -577,7 +577,7 @@ def catch_all(path):
     Catch-all route: any non-API URL falls through to the main SPA entry point.
     API routes are handled by their blueprints before this route is reached.
     """
-    # Avoid swallowing actual API misses â€” let Flask's 404 handle those
+    # Avoid swallowing actual API misses — let Flask's 404 handle those
     if path.startswith("api/"):
         return jsonify({"error": "Not found"}), 404
     return send_from_directory(FRONTEND_TEMPLATES, "index.html")
