@@ -1,4 +1,4 @@
-﻿/* Reference-inspired storefront styling; colors and imagery are admin-configurable. */
+/* Reference-inspired storefront styling; colors and imagery are admin-configurable. */
 .hero-section {
   min-height: 390px;
   padding: 48px max(24px, calc((100vw - 1200px) / 2)) 64px;
@@ -387,8 +387,8 @@
   top: 9px;
   padding: 3px 8px;
   border-radius: 99px;
-  background: rgba(15, 15, 15, 0.86);
-  color: #c8ff36;
+  background: var(--orange, #f96d00);
+  color: #ffffff;
   font-size: 10px;
 }
 
