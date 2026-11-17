@@ -10,13 +10,18 @@ const App = {
   storeOpen: true,
   orderHistory: [],
   playlistTimers: {},
+  // Redesigned tab symbols: minimal monoline SVG line icons (inherit currentColor).
   categoryIconMap: {
-    'Mains': '/static/images/icons/icon-main.png',
-    'Vegan Main Meal': '/static/images/icons/icon-vegan.png',
-    'Drinks': '/static/images/icons/icon-drinks.png',
-    'Appetizers': '/static/images/icons/icon-appetizer.png',
-    'Desserts': '/static/images/icons/icon-dessert.png',
-    'Special Combo Sets': '/static/images/icons/icon-combo.png',
+    'Mains': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 10.5a7.5 4 0 0 1 15 0"/><path d="M4 13.6h16"/><path d="M6 16.5h12a2 2 0 0 1-2 2.5H8a2 2 0 0 1-2-2.5z"/></svg>',
+    'Vegan Main Meal': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19c0-8 5-13 14-14-1 9-6 14-14 14z"/><path d="M5 19c3-5 7-9 11-11"/></svg>',
+    'Drinks': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 5h12l-1.4 13.6a2 2 0 0 1-2 1.4H9.4a2 2 0 0 1-2-1.4z"/><path d="M6.8 11h10.4"/><path d="M12.3 5 14.8 2"/></svg>',
+    'Appetizers': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 9h11l-1.2 10a2 2 0 0 1-2 1.8h-4.6a2 2 0 0 1-2-1.8z"/><path d="M9.5 9V4.5"/><path d="M12 9V3.3"/><path d="M14.5 9V4.5"/></svg>',
+    'Desserts': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="7.4" r="4.1"/><path d="M8.6 10.7 12 21l3.4-10.3"/></svg>',
+    'Special Combo Sets': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10.5" width="16" height="9.5" rx="1.5"/><path d="M3.5 7h17v3.5h-17z"/><path d="M12 7v13"/><path d="M12 7c-2.8 0-4.2-1.2-4.2-2.6S10 2.6 12 7z"/><path d="M12 7c2.8 0 4.2-1.2 4.2-2.6S14 2.6 12 7z"/></svg>',
+  },
+  categoryIconFallback: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 8v4.5l2.6 2.6"/></svg>',
+  categoryIcon: function (name) {
+    return App.categoryIconMap[name] || App.categoryIconFallback;
   },
 
   init: async function () {
@@ -79,7 +84,7 @@ const App = {
             <circle cx="12" cy="12" r="10"></circle>
             <polyline points="12 6 12 12 16 14"></polyline>
           </svg>
-          ${App.escapeHTML(location.open_label || location.open_time)} – ${App.escapeHTML(location.close_label || location.close_time)}
+          ${App.escapeHTML(location.open_label || location.open_time)} â€“ ${App.escapeHTML(location.close_label || location.close_time)}
         </p>`;
       grid.appendChild(card);
     });
@@ -124,7 +129,7 @@ const App = {
       App.applyStorefrontSettings(settings);
       const name = document.getElementById('shop-name');
       if (name) name.textContent = settings.shop_name || 'Food Delivery';
-      document.title = `${settings.shop_name || 'Food Delivery'} — Fresh food, delivered`;
+      document.title = `${settings.shop_name || 'Food Delivery'} â€” Fresh food, delivered`;
       const memberNote = document.getElementById('member-discount-note');
       if (memberNote) memberNote.textContent = `${Number(settings.member_discount_pct)}% member discount applied!`;
       const memberLabel = document.querySelector('#member-discount-row span');
@@ -165,8 +170,8 @@ const App = {
     if (hero) {
       const image = settings.hero_image_url;
       hero.style.backgroundImage = image
-        ? `linear-gradient(90deg, rgba(10, 5, 5, .95) 0%, rgba(10, 5, 5, .78) 42%, rgba(10, 5, 5, .18) 100%), url("${image}")`
-        : 'radial-gradient(ellipse at 78% 50%, rgba(255,94,0,.24), transparent 34%), linear-gradient(135deg, #0a0a0a 0%, #1a0505 35%, #2a1000 65%, #0f0f0f 100%)';
+        ? `linear-gradient(90deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.78) 42%, rgba(255, 255, 255, 0.18) 100%), url("${image}")`
+        : 'radial-gradient(ellipse at 78% 50%, rgba(255,159,64,.24), transparent 34%), linear-gradient(135deg, #ffffff 0%, #ffffff 35%, #ffffff 65%, #ffffff 100%)';
       hero.classList.toggle('has-hero-photo', Boolean(image));
     }
 
@@ -249,13 +254,13 @@ const App = {
     tabs.replaceChildren();
 
     App.menuData.forEach((category) => {
-      const icon = App.categoryIconMap[category.name] || category.icon || '/static/images/icons/icon-main.png';
+      const icon = App.categoryIcon(category.name);
       const button = document.createElement('button');
       button.type = 'button';
       button.className = 'tab-btn';
       button.dataset.categoryId = category.id;
       button.innerHTML = `
-        <img src="${App.escapeHTML(icon)}" alt="" class="tab-icon" />
+        <span class="tab-icon">${icon}</span>
         <span class="tab-label">${App.escapeHTML(category.name)}</span>
       `;
       button.addEventListener('click', () => App.onTabClick(category.id));
@@ -319,8 +324,8 @@ const App = {
     if (!category) return;
 
     // Set section title with icon + category name
-    const iconSrc = App.categoryIconMap[category.name] || category.icon || '/static/images/icons/icon-main.png';
-    if (title) title.innerHTML = `<img src="${App.escapeHTML(iconSrc)}" alt="" /> ${App.escapeHTML(category.name)}`;
+    const iconSrc = App.categoryIcon(category.name);
+    if (title) title.innerHTML = `<span class="section-title-icon">${iconSrc}</span> ${App.escapeHTML(category.name)}`;
     if (count) count.textContent = `${category.products.length} items`;
 
     // Render playlists (sub-tab slideshows) above the product grid
@@ -677,7 +682,7 @@ const App = {
     const orderCount = App.orderHistory.length;
     const totalItems = App.orderHistory.reduce((sum, order) => sum + (order.items || []).reduce((s, i) => s + Number(i.quantity || 1), 0), 0);
     const totalSpent = App.orderHistory.reduce((sum, order) => sum + Number(order.total || 0), 0);
-    const joined = user.created_at ? new Date(user.created_at).toLocaleDateString() : '—';
+    const joined = user.created_at ? new Date(user.created_at).toLocaleDateString() : 'â€”';
 
     if (stats) {
       stats.innerHTML = `
@@ -733,7 +738,7 @@ const App = {
     if (nextLabel) nextLabel.textContent = `Next Reward: ${milestone.toLocaleString('en-US')} pts`;
     if (fill) fill.style.width = `${progress}%`;
     if (rewardsLink) {
-      rewardsLink.textContent = App.currentUser ? 'View Rewards →' : 'Sign in to earn →';
+      rewardsLink.textContent = App.currentUser ? 'View Rewards â†’' : 'Sign in to earn â†’';
       rewardsLink.onclick = App.currentUser
         ? (event) => { event.preventDefault(); App.openRewardsModal(); }
         : (event) => { event.preventDefault(); App.openAuthModal('login'); };
@@ -800,7 +805,7 @@ const App = {
     modal?.classList.remove('hidden');
     modal?.classList.add('open');
     if (status) {
-      status.textContent = 'Loading rewards…';
+      status.textContent = 'Loading rewardsâ€¦';
       status.classList.remove('error');
     }
 
@@ -828,7 +833,7 @@ const App = {
     if (!catalog || !activeList) return;
     catalog.replaceChildren();
     activeList.replaceChildren();
-    if (points) points.textContent = `You have ${Number(data.points).toLocaleString('en-US')} points · Earn points with every item.`;
+    if (points) points.textContent = `You have ${Number(data.points).toLocaleString('en-US')} points Â· Earn points with every item.`;
 
     (data.active_rewards || []).forEach((reward) => {
       const card = document.createElement('article');
@@ -865,7 +870,7 @@ const App = {
       const title = document.createElement('h4');
       title.textContent = reward.product.name;
       const description = document.createElement('p');
-      description.textContent = `${Cart.formatPrice(reward.product.price)} · ${Number(reward.points_cost).toLocaleString('en-US')} points`;
+      description.textContent = `${Cart.formatPrice(reward.product.price)} Â· ${Number(reward.points_cost).toLocaleString('en-US')} points`;
       description.className = 'reward-card-cost';
       copy.append(title, description);
       const redeem = document.createElement('button');
@@ -1022,7 +1027,7 @@ const App = {
       receipt.replaceChildren();
       (order?.items || []).forEach((item) => {
         const row = document.createElement('p');
-        row.textContent = `${item.quantity} × ${item.name}`;
+        row.textContent = `${item.quantity} Ã— ${item.name}`;
         receipt.appendChild(row);
         if (item.special_request) {
           const request = document.createElement('small');

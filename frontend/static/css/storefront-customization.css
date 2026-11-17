@@ -2,7 +2,7 @@
 .hero-section {
   min-height: 390px;
   padding: 48px max(24px, calc((100vw - 1200px) / 2)) 64px;
-  background-color: #241005;
+  background-color: #ffffff;
   background-position: center, center 42%;
   background-size: cover;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
@@ -51,8 +51,8 @@
   flex-direction: column;
   justify-content: center;
   gap: 2px;
-  background: #1b1b1b;
-  border-color: #292929;
+  background: #ffffff;
+  border-color: #ffffff;
   color: #c9c9c9;
 }
 
@@ -105,7 +105,7 @@
   overflow: hidden;
   background:
     radial-gradient(circle at 50% 42%, rgba(255, 107, 0, 0.16), transparent 62%),
-    linear-gradient(145deg, #241d18, #17120f);
+    linear-gradient(145deg, #f5f0e8, #e8e0d8);
 }
 
 /* Show the whole dish instead of cropping it to a thin strip. */
@@ -378,7 +378,7 @@
 .menu-card-placeholder {
   background:
     radial-gradient(circle at 50% 40%, rgba(255, 107, 0, 0.24), transparent 58%),
-    linear-gradient(145deg, #332014, #211a16);
+    linear-gradient(145deg, #f0e5dc, #e0d5c8);
 }
 
 .menu-card-combo-label {

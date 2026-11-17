@@ -43,7 +43,7 @@
         `M0,0 L${from.x.toFixed(2)},${from.y.toFixed(2)} A100,100 0 ${largeArc} 1 ${to.x.toFixed(2)},${to.y.toFixed(2)} Z`,
       );
       slice.setAttribute('fill', SEGMENT_COLORS[index % SEGMENT_COLORS.length]);
-      slice.setAttribute('stroke', '#121212');
+      slice.setAttribute('stroke', '#ffffff');
       slice.setAttribute('stroke-width', '1.5');
       wheel.appendChild(slice);
 
