@@ -349,3 +349,70 @@ body {
     animation: none !important;
   }
 }
+
+
+/* ══ PRO LOGO / HERO POLISH ═══════════════════════════════════════ */
+
+/* Header logo: always visible, crisp, professional */
+#shop-logo {
+  width: 34px !important;
+  height: 34px !important;
+  border-radius: 9px !important;
+  object-fit: contain;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Header pill: slightly tighter, deeper glass, premium gradient */
+.shop-logo-area {
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.42) 0%, rgba(0, 0, 0, 0.22) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  padding: 6px 22px !important;
+  gap: 9px !important;
+}
+
+/* "CrunchBox" wordmark: uppercase, wide tracking = premium feel */
+.shop-name-text {
+  letter-spacing: 1.8px !important;
+  font-weight: 800 !important;
+  font-size: 19px !important;
+}
+
+/* Hero logo: big gradient badge with glow + float, no cartoon circle */
+.hero-logo-wrap {
+  position: relative;
+}
+.hero-logo {
+  width: clamp(140px, 24vw, 210px) !important;
+  height: clamp(140px, 24vw, 210px) !important;
+  border-radius: 26px !important;
+  box-shadow:
+    0 26px 54px rgba(91, 33, 182, 0.42),
+    0 8px 22px rgba(236, 72, 153, 0.35),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.35) !important;
+  animation: heroBadgeFloat 3.8s ease-in-out infinite !important;
+}
+@keyframes heroBadgeFloat {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50%      { transform: translateY(-14px) rotate(-1.6deg); }
+}
+
+/* Soft gradient glow behind the badge */
+.hero-glow {
+  display: block !important;
+  position: absolute;
+  width: 240px;
+  height: 240px;
+  border-radius: 50%;
+  background: radial-gradient(circle,
+    rgba(124, 58, 237, 0.4) 0%,
+    rgba(236, 72, 153, 0.32) 45%,
+    transparent 72%) !important;
+  filter: blur(28px);
+  z-index: 0;
+  animation: heroGlowBreath 3.8s ease-in-out infinite;
+}
+@keyframes heroGlowBreath {
+  0%, 100% { transform: scale(1);    opacity: 0.75; }
+  50%      { transform: scale(1.18); opacity: 1; }
+}
+.hero-logo { position: relative; z-index: 1; }
