@@ -3,12 +3,12 @@
 /* */
 :root {
   /* */
-  --red:           #e63946;
-  --blue:          #1d84e6;
-  --orange:        #f96d00;
-  --orange-bright: #ff8a1e;
-  --orange-light:  #ffc09a;
-  --yellow:        #ffc300;
+  --red:           #6d28d9;
+  --blue:          #a855f7;
+  --orange:        #ec4899;
+  --orange-bright: #f472b6;
+  --orange-light:  #f9a8d4;
+  --yellow:        #f0abfc;
   --white:         #ffffff;
 
   --bg:            #ffffff;
@@ -37,7 +37,7 @@
   --shadow-sm:     0 2px 8px rgba(0,0,0,0.04);
   --shadow-md:     0 6px 24px rgba(0,0,0,0.04);
   --shadow-lg:     0 12px 40px rgba(0,0,0,0.04);
-  --shadow-flame:  0 4px 14px rgba(249, 109, 0, 0.20);
+  --shadow-flame:  0 4px 14px rgba(124, 58, 237, 0.25);
 
   --transition:    0.22s cubic-bezier(0.4, 0, 0.2, 1);
   --header-h:      64px;
