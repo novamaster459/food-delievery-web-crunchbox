@@ -170,6 +170,17 @@ body {
 .bottom-nav-item.active .nav-icon { color: rgba(255, 255, 255, 0.75) !important; }
 .nav-label { font-size: 10px !important; font-weight: 800 !important; }
 
+.bottom-nav-fab {
+  background: rgba(255, 255, 255, 0.2) !important;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18) !important;
+}
+.bottom-nav-fab:hover { transform: scale(1.06) !important; box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25) !important; }
+.fab-icon, .fab-icon svg { color: #ffffff !important; stroke: #ffffff !important; }
+
+/* Luck icon: uniform white like the rest */
+.nav-luck .nav-icon, .nav-luck .nav-icon svg { color: #ffffff !important; fill: #ffffff !important; }
+
 /* 40% COLOUR: accent gradients on interactive highlights */
 .badge-combo { background: var(--grad-main) !important; }
 .order-status--preparing { color: var(--purple) !important; border-color: rgba(124, 58, 237, 0.35) !important; }
