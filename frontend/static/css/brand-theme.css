@@ -1,0 +1,169 @@
+/* Radial-inspired brand theme: 60% white, 40% colour
+   Dark red active states, purple → pink gradients, white backgrounds. */
+
+:root {
+  --brand-red:     #8b0000;
+  --brand-red-2:   #b91c1c;
+  --purple:        #7c3aed;
+  --purple-dark:   #5b21b6;
+  --pink:          #ec4899;
+  --pink-light:    #f472b6;
+  --grad-main:     linear-gradient(135deg, var(--purple) 0%, var(--pink) 100%);
+  --grad-red:      linear-gradient(135deg, var(--brand-red) 0%, var(--purple-dark) 55%, var(--pink) 100%);
+  --shadow-brand:  0 6px 18px rgba(124, 58, 237, 0.28);
+  --shadow-red:    0 4px 14px rgba(139, 0, 0, 0.25);
+}
+
+/* 60% WHITE: keep pages bright and airy */
+body {
+  background: #ffffff;
+}
+
+/* Top header: white bar, CrunchBox set white on a colour tab (per request) */
+.app-header {
+  background: #ffffff;
+  border-bottom: 1px solid #f3d9e2;
+  box-shadow: 0 2px 14px rgba(124, 58, 237, 0.06);
+}
+
+.shop-logo-area {
+  background: var(--grad-red);
+  padding: 5px 26px;
+  border-radius: 999px;
+  box-shadow: var(--shadow-brand);
+  gap: 6px;
+}
+
+.shop-name-text {
+  background: none !important;
+  -webkit-text-fill-color: #ffffff !important;
+  background-clip: border-box !important;
+  -webkit-background-clip: border-box !important;
+  color: #ffffff !important;
+  font-size: 20px !important;
+  letter-spacing: 1px;
+  text-transform: none;
+}
+
+#shop-logo { border-radius: 8px; }
+
+/* Cart button: purple → pink */
+.cart-btn {
+  background: var(--grad-main) !important;
+  box-shadow: var(--shadow-brand) !important;
+}
+.cart-badge {
+  color: var(--purple) !important;
+  background: #ffffff !important;
+}
+
+/* Admin shortcut pill: dark red outline */
+.admin-shortcut {
+  border-color: var(--brand-red) !important;
+  color: var(--brand-red) !important;
+}
+
+/* Hero: white base with purple-pink wash */
+.hero-section {
+  background:
+    radial-gradient(ellipse at 85% 15%, rgba(124, 58, 237, 0.12), transparent 45%),
+    radial-gradient(ellipse at 12% 85%, rgba(236, 72, 153, 0.12), transparent 45%),
+    linear-gradient(135deg, #ffffff 0%, #fdf5fa 45%, #f7f0ff 100%) !important;
+}
+.hero-heading { color: #2b1233 !important; }
+.hero-subtext { color: #6b5a78 !important; }
+.hero-cta,
+.btn-order-now {
+  background: var(--grad-main) !important;
+  box-shadow: var(--shadow-brand) !important;
+}
+.hero-cta:hover,
+.btn-order-now:hover {
+  background: linear-gradient(135deg, var(--purple-dark) 0%, var(--pink) 100%) !important;
+}
+
+/* Search pill: purple focus ring, pink filter button */
+.search-pill:focus-within {
+  border-color: var(--purple) !important;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.16) !important;
+}
+.search-filter-btn { background: var(--grad-main) !important; }
+
+/* Category tabs: white cards, purple active */
+.tab-btn:hover {
+  border-color: var(--purple) !important;
+  color: var(--purple) !important;
+}
+.tab-btn.active {
+  background: #f5f0ff !important;
+  border-color: var(--purple) !important;
+  color: var(--purple-dark) !important;
+}
+.tab-btn .tab-icon {
+  background: var(--grad-main) !important;
+  box-shadow: 0 3px 10px rgba(124, 58, 237, 0.35) !important;
+}
+.tab-btn.active .tab-icon {
+  background: linear-gradient(135deg, var(--purple-dark) 0%, var(--pink) 100%) !important;
+}
+
+/* Menu cards & add buttons */
+.add-to-cart-btn { background: var(--grad-main) !important; }
+.menu-card { border: 1px solid #f2e4fb !important; }
+.menu-card-price { color: var(--purple-dark) !important; }
+
+/* Primary buttons: purple → pink everywhere */
+.btn-primary {
+  background: var(--grad-main) !important;
+  box-shadow: var(--shadow-brand) !important;
+}
+.btn-primary:hover { box-shadow: 0 8px 24px rgba(124, 58, 237, 0.35) !important; }
+.btn-secondary:hover { border-color: var(--purple) !important; color: var(--purple) !important; }
+
+/* Rewards / progress: purple → pink */
+.progress-bar-fill {
+  background: var(--grad-main) !important;
+  box-shadow: 0 0 10px rgba(124, 58, 237, 0.35) !important;
+}
+.rewards-star { color: var(--pink) !important; }
+
+/* Promo cards */
+.promo-card--orange {
+  background: linear-gradient(135deg, var(--pink) 0%, var(--purple) 100%) !important;
+}
+.promo-card--dark { background: #2b1233 !important; }
+
+/* Modal tabs & active states */
+.modal-tab.active { color: var(--purple) !important; border-bottom-color: var(--purple) !important; }
+
+/* ══ BOTTOM NAV (photo reference): white bar, dark red active tab ══ */
+.bottom-nav {
+  background: #ffffff !important;
+  border-top: 1px solid #efd2da !important;
+  box-shadow: 0 -4px 18px rgba(139, 0, 0, 0.08) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border-radius: 18px 18px 0 0;
+}
+.bottom-nav-item {
+  color: #8f8288 !important;
+  border-radius: 14px !important;
+  padding: 8px 2px !important;
+  transition: color 0.22s ease, background 0.22s ease, transform 0.22s ease !important;
+}
+.bottom-nav-item:hover {
+  color: var(--brand-red) !important;
+  background: #fdf0f0 !important;
+}
+.bottom-nav-item.active {
+  color: var(--brand-red) !important;
+  background: #fbeaea !important;
+}
+.bottom-nav-item.active .nav-icon { color: var(--brand-red) !important; }
+.nav-label { font-size: 10px !important; font-weight: 800 !important; }
+
+/* 40% COLOUR: accent gradients on interactive highlights */
+.badge-combo { background: var(--grad-main) !important; }
+.order-status--preparing { color: var(--purple) !important; border-color: rgba(124, 58, 237, 0.35) !important; }
+.see-order-btn { border-color: var(--purple) !important; color: var(--purple) !important; }
+.track-order-fab { background: var(--grad-main) !important; }

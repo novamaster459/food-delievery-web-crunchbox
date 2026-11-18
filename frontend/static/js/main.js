@@ -596,20 +596,17 @@ const App = {
       setActiveNav('nav-home');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
-    document.getElementById('nav-menu')?.addEventListener('click', () => {
-      setActiveNav('nav-menu');
+    document.getElementById('nav-search')?.addEventListener('click', () => {
+      setActiveNav('nav-search');
       document.getElementById('menu-section')?.scrollIntoView({ behavior: 'smooth' });
     });
-    document.getElementById('nav-deals')?.addEventListener('click', () => {
-      setActiveNav('nav-deals');
+    document.getElementById('nav-saved')?.addEventListener('click', () => {
+      setActiveNav('nav-saved');
       document.querySelector('.promo-section')?.scrollIntoView({ behavior: 'smooth' });
     });
-    document.getElementById('nav-locations')?.addEventListener('click', () => {
-      setActiveNav('nav-locations');
+    document.getElementById('nav-inbox')?.addEventListener('click', () => {
+      setActiveNav('nav-inbox');
       window.location.href = '/locations';
-    });
-    document.getElementById('nav-luck')?.addEventListener('click', () => {
-      window.location.href = '/luck';
     });
     document.getElementById('nav-profile')?.addEventListener('click', () => {
       setActiveNav('nav-profile');
