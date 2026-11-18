@@ -355,9 +355,9 @@ body {
 
 /* Header logo: always visible, crisp, professional */
 #shop-logo {
-  width: 34px !important;
-  height: 34px !important;
-  border-radius: 9px !important;
+  width: 56px !important;
+  height: 56px !important;
+  border-radius: 12px !important;
   object-fit: contain;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
 }
@@ -374,7 +374,7 @@ body {
 .shop-name-text {
   letter-spacing: 1.8px !important;
   font-weight: 800 !important;
-  font-size: 19px !important;
+  font-size: 24px !important;
 }
 
 /* Hero logo: big gradient badge with glow + float, no cartoon circle */
@@ -382,8 +382,8 @@ body {
   position: relative;
 }
 .hero-logo {
-  width: clamp(140px, 24vw, 210px) !important;
-  height: clamp(140px, 24vw, 210px) !important;
+  width: clamp(210px, 36vw, 320px) !important;
+  height: clamp(210px, 36vw, 320px) !important;
   border-radius: 26px !important;
   box-shadow:
     0 26px 54px rgba(91, 33, 182, 0.42),
@@ -400,8 +400,8 @@ body {
 .hero-glow {
   display: block !important;
   position: absolute;
-  width: 240px;
-  height: 240px;
+  width: 380px;
+  height: 380px;
   border-radius: 50%;
   background: radial-gradient(circle,
     rgba(124, 58, 237, 0.4) 0%,

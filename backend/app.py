@@ -20,7 +20,7 @@ from flask import Flask, jsonify, request, send_from_directory, session
 from flask_cors import CORS
 from werkzeug.security import generate_password_hash
 
-from models import Category, Coupon, Order, Product, User, Playlist
+from models import BranchLocation, Category, Coupon, Order, Product, User, Playlist
 
 # ---------------------------------------------------------------------------
 # Application factory
@@ -72,14 +72,14 @@ db: dict = {
         "background_color": "#ffffff",
         "hero_heading": "Crispy Flavor,\nDelivered Fast.",
         "hero_subtext": "Hot, crunchy & made fresh for you.",
-        "hero_image_filename": "",
+        "hero_image_filename": "chef-special.jpg",
         "featured_title": "Chef Specials",
         "featured_text": "Made with love by our chefs — unique recipes you won't find anywhere else.",
-        "featured_image_filename": "",
+        "featured_image_filename": "chef-special.jpg",
         "deal_title": "Weekend Crunch Fest",
         "deal_text": "Up to 25% OFF on selected items. Limited time only!",
         "deal_button_text": "Order Now",
-        "deal_image_filename": "",
+        "deal_image_filename": "menu-party-pack.jpg",
     },
 }
 
@@ -256,11 +256,59 @@ def seed_data() -> None:
         ),
     ])
 
+    # Attach downloaded stock photos to seeded products (frontend/static/uploads/).
+    _seed_images = {
+        "Crispy Chicken Bucket": "menu-crispy-chicken.jpg",
+        "Spicy Crunch Burger": "menu-burger.jpg",
+        "Korean BBQ Wings": "menu-wings.jpg",
+        "Grilled Chicken Sandwich": "menu-sandwich.jpg",
+        "Plant-Powered Crunch Burger": "menu-vegan-burger.jpg",
+        "Crispy Vegan Nuggets": "menu-nuggets.jpg",
+        "Vegan BBQ Wrap": "menu-wrap.jpg",
+        "Fresh Lime Soda": "menu-lime-soda.jpg",
+        "Iced Cola": "menu-cola.jpg",
+        "Mango Lassi": "menu-mango-lassi.jpg",
+        "Lemon Iced Tea": "menu-iced-tea.jpg",
+        "Golden Fries": "menu-fries.jpg",
+        "Chicken Tenders": "menu-tenders.jpg",
+        "Onion Rings": "menu-onion-rings.jpg",
+        "Mozzarella Sticks": "menu-mozz-sticks.jpg",
+        "Chocolate Lava Cake": "menu-lava-cake.jpg",
+        "Ice Cream Scoops": "menu-ice-cream.jpg",
+        "Cheesecake Slice": "menu-cheesecake.jpg",
+        "Brownie Sundae": "menu-brownie.jpg",
+        "Family Crunch Bundle": "menu-family-bundle.jpg",
+        "Party Pack": "menu-party-pack.jpg",
+        "Date Night Set": "menu-date-night.jpg",
+    }
+    for product in db["products"]:
+        img = _seed_images.get(product.name)
+        if img and not product.image_filename:
+            product.image_filename = img
+
     # Seeded products pre-date the app so they do not all carry the
     # "New on CrunchBox" badge on every fresh start.
     seeded_at = datetime.utcnow() - timedelta(days=30)
     for product in db["products"]:
         product.created_at = seeded_at
+
+    # ------------------------------------------------------------------
+    # Branch locations (seeded so the Locations page has content)
+    # ------------------------------------------------------------------
+    db["locations"].extend([
+        BranchLocation(name="CrunchBox Downtown", branch_no="01",
+                       address="123 Bogyoke Market Road, Yangon",
+                       open_time="09:00", close_time="22:00",
+                       image_filename="store-front.jpg"),
+        BranchLocation(name="CrunchBox Junction City", branch_no="02",
+                       address="Junction City Mall, Mindhamma Road, Yangon",
+                       open_time="10:00", close_time="21:00",
+                       image_filename="store-front.jpg"),
+        BranchLocation(name="CrunchBox Mandalay", branch_no="03",
+                       address="78th Street, Chan Aye Tharzan, Mandalay",
+                       open_time="09:30", close_time="22:30",
+                       image_filename="store-front.jpg"),
+    ])
 
     # ------------------------------------------------------------------
     # Coupons
