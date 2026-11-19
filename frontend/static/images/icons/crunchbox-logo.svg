@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" role="img" aria-label="CrunchBox">
+  <defs>
+    <linearGradient id="badge" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#5b21b6"/>
+      <stop offset="0.45" stop-color="#7c3aed"/>
+      <stop offset="1" stop-color="#ec4899"/>
+    </linearGradient>
+    <linearGradient id="gloss" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.22"/>
+      <stop offset="0.45" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="120" height="120" rx="27" fill="url(#badge)"/>
+  <rect width="120" height="120" rx="27" fill="url(#gloss)"/>
+  <!-- modern open box mark -->
+  <g fill="none" stroke="#ffffff" stroke-width="6.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M60 34 96 52.8V83L60 102 24 83V52.8Z"/>
+    <path d="M24 52.8 60 70l36-17.2"/>
+    <path d="M60 70v32"/>
+  </g>
+  <!-- spark accent -->
+  <circle cx="92" cy="32" r="7.5" fill="#f9a8d4"/>
+  <circle cx="92" cy="32" r="3.2" fill="#ffffff"/>
+</svg>
