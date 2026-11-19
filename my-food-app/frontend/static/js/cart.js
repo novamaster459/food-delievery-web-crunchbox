@@ -199,8 +199,8 @@ const Cart = {
       navBadge.textContent = count;
       navBadge.style.display = 'flex';
 navBadge.style.visibility = 'visible';
-if (count === '0') { navBadge.style.opacity = '0.6'; navBadge.style.background = 'rgba(255,255,255,0.9)'; }
-else { navBadge.style.opacity = '1'; navBadge.style.background = '#ffffff'; }
+navBadge.style.opacity = '1';
+navBadge.style.background = '#ffffff';
     const navOrder = document.getElementById('nav-order');
     if (navOrder) {
       if (count === '0') navOrder.classList.remove('has-items');
