@@ -1,0 +1,798 @@
+/* Radial-inspired brand theme: 60% white, 40% colour
+   Dark red active states, purple → pink gradients, white backgrounds. */
+
+:root {
+  --brand-red:     #8b0000;
+  --brand-red-2:   #b91c1c;
+  --purple:        #7c3aed;
+  --purple-dark:   #5b21b6;
+  --pink:          #ec4899;
+  --pink-light:    #f472b6;
+  --grad-main:     linear-gradient(135deg, var(--purple) 0%, var(--pink) 100%);
+  --grad-red:      linear-gradient(135deg, var(--brand-red) 0%, var(--purple-dark) 55%, var(--pink) 100%);
+  --shadow-brand:  0 6px 18px rgba(124, 58, 237, 0.28);
+  --shadow-red:    0 4px 14px rgba(139, 0, 0, 0.25);
+}
+
+/* 60% WHITE: keep pages bright and airy */
+body {
+  background: #ffffff;
+}
+
+/* Top header: FULL gradient bar, CrunchBox stays white on its own tab */
+.app-header {
+  background: linear-gradient(120deg, #5b21b6 0%, #7c3aed 30%, #c026d3 60%, #ec4899 100%) !important;
+  border-bottom: none !important;
+  box-shadow: 0 2px 18px rgba(124, 58, 237, 0.35) !important;
+}
+
+.shop-logo-area {
+  background: rgba(0, 0, 0, 0.32) !important;
+  padding: 6px 30px;
+  border-radius: 999px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.28) !important;
+  gap: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.shop-name-text {
+  background: none !important;
+  -webkit-text-fill-color: #ffffff !important;
+  background-clip: border-box !important;
+  -webkit-background-clip: border-box !important;
+  color: #ffffff !important;
+  font-size: 20px !important;
+  letter-spacing: 1px;
+  text-transform: none;
+}
+
+#shop-logo { border-radius: 8px; }
+
+/* Cart button: purple → pink */
+.cart-btn {
+  background: rgba(255, 255, 255, 0.2) !important;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18) !important;
+  color: #ffffff !important;
+}
+.cart-badge {
+  color: var(--purple-dark) !important;
+  background: #ffffff !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Admin shortcut pill: dark red outline */
+.admin-shortcut {
+  border-color: rgba(255, 255, 255, 0.6) !important;
+  color: #ffffff !important;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+/* Hero: white base with purple-pink wash */
+.hero-section {
+  background:
+    radial-gradient(ellipse at 85% 15%, rgba(124, 58, 237, 0.12), transparent 45%),
+    radial-gradient(ellipse at 12% 85%, rgba(236, 72, 153, 0.12), transparent 45%),
+    linear-gradient(135deg, #ffffff 0%, #fdf5fa 45%, #f7f0ff 100%) !important;
+}
+.hero-heading { color: #2b1233 !important; }
+.hero-subtext { color: #6b5a78 !important; }
+.hero-cta,
+.btn-order-now {
+  background: var(--grad-main) !important;
+  box-shadow: var(--shadow-brand) !important;
+}
+.hero-cta:hover,
+.btn-order-now:hover {
+  background: linear-gradient(135deg, var(--purple-dark) 0%, var(--pink) 100%) !important;
+}
+
+/* Search pill: purple focus ring, pink filter button */
+.search-pill:focus-within {
+  border-color: var(--purple) !important;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.16) !important;
+}
+.search-filter-btn { background: var(--grad-main) !important; }
+
+/* Category tabs: white cards, purple active */
+.tab-btn:hover {
+  border-color: var(--purple) !important;
+  color: var(--purple) !important;
+}
+.tab-btn.active {
+  background: #f5f0ff !important;
+  border-color: var(--purple) !important;
+  color: var(--purple-dark) !important;
+}
+.tab-btn .tab-icon {
+  background: var(--grad-main) !important;
+  box-shadow: 0 3px 10px rgba(124, 58, 237, 0.35) !important;
+}
+.tab-btn.active .tab-icon {
+  background: linear-gradient(135deg, var(--purple-dark) 0%, var(--pink) 100%) !important;
+}
+
+/* Menu cards & add buttons */
+.add-to-cart-btn { background: var(--grad-main) !important; }
+.menu-card { border: 1px solid #f2e4fb !important; }
+.menu-card-price { color: var(--purple-dark) !important; }
+
+/* Primary buttons: purple → pink everywhere */
+.btn-primary {
+  background: var(--grad-main) !important;
+  box-shadow: var(--shadow-brand) !important;
+}
+.btn-primary:hover { box-shadow: 0 8px 24px rgba(124, 58, 237, 0.35) !important; }
+.btn-secondary:hover { border-color: var(--purple) !important; color: var(--purple) !important; }
+
+/* Rewards / progress: purple → pink */
+.progress-bar-fill {
+  background: var(--grad-main) !important;
+  box-shadow: 0 0 10px rgba(124, 58, 237, 0.35) !important;
+}
+.rewards-star { color: var(--pink) !important; }
+
+/* Promo cards */
+.promo-card--orange {
+  background: linear-gradient(135deg, var(--pink) 0%, var(--purple) 100%) !important;
+}
+.promo-card--dark { background: #2b1233 !important; }
+
+/* Modal tabs & active states */
+.modal-tab.active { color: var(--purple) !important; border-bottom-color: var(--purple) !important; }
+
+/* ══ BOTTOM NAV: full gradient bar matching the header, dark red active tab ══ */
+.bottom-nav {
+  background: linear-gradient(120deg, #5b21b6 0%, #7c3aed 30%, #c026d3 60%, #ec4899 100%) !important;
+  border-top: none !important;
+  box-shadow: 0 -4px 22px rgba(124, 58, 237, 0.35) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border-radius: 18px 18px 0 0;
+}
+.bottom-nav-item {
+  color: rgba(255, 255, 255, 0.75) !important;
+  border-radius: 14px !important;
+  padding: 8px 2px !important;
+  transition: color 0.22s ease, background 0.22s ease, transform 0.22s ease !important;
+}
+.bottom-nav-item:hover {
+  color: #ffffff !important;
+  background: rgba(255, 255, 255, 0.14) !important;
+}
+.bottom-nav-item.active {
+  color: var(--brand-red) !important;
+  background: #ffffff !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.22);
+  border-radius: 12px;
+}
+.bottom-nav-item.active .nav-icon { color: var(--brand-red) !important; }
+.nav-label { font-size: 10px !important; font-weight: 800 !important; }
+
+/* ══ CART NAV VISIBILITY ══
+   Make the cart tab obvious: position the badge correctly,
+   give the cart icon a pill background when items are present,
+   and ensure the badge is always well-placed. ══ */
+.nav-cart-fab-inner {
+  position: relative !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+.cart-badge-nav {
+  position: absolute !important;
+  top: -4px !important;
+  right: -6px !important;
+  min-width: 20px !important;
+  height: 20px !important;
+  font-size: 11px !important;
+  font-weight: 900 !important;
+  background: #ffffff !important;
+  color: var(--brand-red) !important;
+  border: 2px solid !important;
+  border-color: inherit !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 15 !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25) !important;
+  animation: badgeBounce 3s ease-in-out infinite !important;
+  transform-origin: center !important;
+}
+.cart-badge-nav[style*="display: none"] {
+  display: none !important;
+}
+/* When cart has items, give the cart nav item a filled pill background */
+#nav-order.has-items .nav-icon {
+  background: rgba(255, 255, 255, 0.9) !important;
+  color: var(--brand-red) !important;
+  border-radius: 10px !important;
+  padding: 4px !important;
+}
+@keyframes badgeBounce {
+  0%, 78%, 100% { transform: scale(1); }
+  82%           { transform: scale(1.6); }
+  86%           { transform: scale(0.75); }
+  90%           { transform: scale(1.3); }
+  94%           { transform: scale(1); }
+}
+
+
+/* Make cart tab always obvious in bottom nav */
+#nav-order {
+  position: relative !important;
+}
+#nav-order .nav-icon svg {
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)) !important;
+}
+#nav-order.has-items {
+  box-shadow: 0 0 0 3px rgba(255,255,255,0.6) !important;
+}
+.cart-badge-nav {
+  animation: badgeBounce 2s ease-in-out infinite !important;
+  transform-origin: center !important;
+  border-width: 2px !important;
+}
+.cart-badge-nav[style*="opacity: 0.6"] {
+  animation: none !important;
+}
+
+/* Luck icon: uniform white like the rest */
+.nav-luck .nav-icon, .nav-luck .nav-icon svg { color: #ffffff !important; fill: #ffffff !important; }
+
+/* 40% COLOUR: accent gradients on interactive highlights */
+.badge-combo { background: var(--grad-main) !important; }
+.order-status--preparing { color: var(--purple) !important; border-color: rgba(124, 58, 237, 0.35) !important; }
+.see-order-btn { border-color: var(--purple) !important; color: var(--purple) !important; }
+.track-order-fab { background: var(--grad-main) !important; }
+
+
+/* ══ ATTENTION ANIMATIONS ══════════════════════════════════════════ */
+
+/* Hero / home "Order Now": wiggles and shakes to beg for a tap */
+.btn-order-now,
+.hero-cta {
+  animation: ctaWiggle 2.8s ease-in-out infinite, ctaPulse 2.8s ease-in-out infinite;
+  will-change: transform;
+  position: relative;
+  z-index: 1;
+}
+.btn-order-now:hover,
+.hero-cta:hover { animation-play-state: paused; }
+
+@keyframes ctaWiggle {
+  0%, 82%, 100% { transform: translateY(0) rotate(0deg); }
+  84%           { transform: translateY(-2px) rotate(-7deg) scale(1.04); }
+  87%           { transform: translateY(1px)  rotate(6deg); }
+  90%           { transform: translateY(-1px) rotate(-5deg) scale(1.05); }
+  93%           { transform: translateY(0)    rotate(4deg); }
+  96%           { transform: translateY(-1px) rotate(-2deg); }
+}
+
+@keyframes ctaPulse {
+  0%, 100% { box-shadow: 0 6px 18px rgba(124, 58, 237, 0.4), 0 0 0 0 rgba(236, 72, 153, 0.45); }
+  50%      { box-shadow: 0 8px 26px rgba(236, 72, 153, 0.45), 0 0 0 10px rgba(236, 72, 153, 0); }
+}
+
+/* Radar ping behind the CTA to draw the eye */
+.btn-order-now::after,
+.hero-cta::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: inherit;
+  border: 2px solid rgba(236, 72, 153, 0.55);
+  animation: ctaPing 2.8s ease-out infinite;
+  pointer-events: none;
+  z-index: -1;
+}
+@keyframes ctaPing {
+  0%   { transform: scale(1);    opacity: 0.9; }
+  70%  { transform: scale(1.55); opacity: 0; }
+  100% { transform: scale(1.55); opacity: 0; }
+}
+
+/* Promo "Order Now" buttons: gentle heartbeat */
+.promo-btn,
+#deal-promo-button {
+  animation: promoHeartbeat 1.9s ease-in-out infinite;
+  will-change: transform;
+}
+.promo-btn:hover,
+#deal-promo-button:hover { animation-play-state: paused; }
+@keyframes promoHeartbeat {
+  0%, 100% { transform: scale(1); }
+  14%      { transform: scale(1.12); }
+  28%      { transform: scale(1); }
+  42%      { transform: scale(1.18); }
+  60%      { transform: scale(1); }
+}
+
+/* "Add to cart" quick buttons: periodic pop */
+.add-to-cart-btn {
+  animation: addPop 2.4s ease-in-out infinite;
+  will-change: transform;
+}
+.add-to-cart-btn:hover { animation-play-state: paused; }
+@keyframes addPop {
+  0%, 76%, 100% { transform: scale(1); }
+  80%           { transform: scale(1.45); }
+  84%           { transform: scale(0.88); }
+  88%           { transform: scale(1.22); }
+  92%           { transform: scale(1); }
+}
+
+/* Cart badge: periodic bounce to signal "something's in here" */
+.cart-badge {
+  animation: badgeBounce 3s ease-in-out infinite;
+  transform-origin: center;
+}
+@keyframes badgeBounce {
+  0%, 78%, 100% { transform: scale(1); }
+  82%           { transform: scale(1.6); }
+  86%           { transform: scale(0.75); }
+  90%           { transform: scale(1.3); }
+  94%           { transform: scale(1); }
+}
+
+/* Place Order button in the cart: pulsing glow ring */
+.checkout-btn {
+  animation: checkoutGlow 1.8s ease-in-out infinite;
+  will-change: box-shadow;
+}
+@keyframes checkoutGlow {
+  0%, 100% { box-shadow: 0 6px 18px rgba(124, 58, 237, 0.4); }
+  50%      { box-shadow: 0 6px 30px rgba(236, 72, 153, 0.6), 0 0 0 6px rgba(236, 72, 153, 0.18); }
+}
+
+/* Reward progress fill: inviting sweeping shimmer */
+.progress-bar-fill::after {
+  animation: progressSweepFast 1.4s ease-in-out infinite !important;
+}
+@keyframes progressSweepFast {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+
+/* Menu cards: hover lift + gentle shadow pop */
+.menu-card {
+  transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 0.28s ease !important;
+}
+.menu-card:hover {
+  transform: translateY(-6px) scale(1.02) !important;
+  box-shadow: 0 14px 34px rgba(124, 58, 237, 0.22) !important;
+}
+
+/* Reward star: slow sparkle rotation */
+.rewards-star,
+.rewards-star svg {
+  animation: starTwinkle 2.6s ease-in-out infinite;
+  transform-origin: center;
+}
+@keyframes starTwinkle {
+  0%, 100% { transform: scale(1) rotate(0deg); opacity: 1; }
+  30%      { transform: scale(1.25) rotate(12deg); opacity: 0.85; }
+  60%      { transform: scale(0.94) rotate(-8deg); opacity: 1; }
+}
+
+/* Bottom nav: cart tab subtle nudge so users keep tapping it */
+#nav-order .nav-icon {
+  animation: cartNudge 3.4s ease-in-out infinite;
+  transform-origin: center;
+}
+@keyframes cartNudge {
+  0%, 80%, 100% { transform: translateY(0) rotate(0); }
+  84%           { transform: translateY(-4px) rotate(-6deg); }
+  88%           { transform: translateY(1px)  rotate(4deg); }
+  92%           { transform: translateY(0)    rotate(-2deg); }
+}
+
+/* Category tabs: active tab subtle breathing so it feels alive */
+.tab-btn.active {
+  animation: tabBreathe 2.6s ease-in-out infinite;
+}
+@keyframes tabBreathe {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(124, 58, 237, 0.25); }
+  50%      { box-shadow: 0 0 0 5px rgba(124, 58, 237, 0.12); }
+}
+
+/* Respect prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .btn-order-now,
+  .hero-cta,
+  .promo-btn,
+  #deal-promo-button,
+  .add-to-cart-btn,
+  .cart-badge,
+  .checkout-btn,
+  .menu-card,
+  .rewards-star,
+  .rewards-star svg,
+  #nav-order .nav-icon,
+  .tab-btn.active {
+    animation: none !important;
+  }
+}
+
+
+/* ══ PRO LOGO / HERO POLISH ═══════════════════════════════════════ */
+
+/* Header logo: always visible, crisp, professional */
+#shop-logo {
+  width: 56px !important;
+  height: 56px !important;
+  border-radius: 12px !important;
+  object-fit: contain;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Header pill: slightly tighter, deeper glass, premium gradient */
+.shop-logo-area {
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.42) 0%, rgba(0, 0, 0, 0.22) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  padding: 6px 22px !important;
+  gap: 9px !important;
+}
+
+/* "CrunchBox" wordmark: uppercase, wide tracking = premium feel */
+.shop-name-text {
+  letter-spacing: 1.8px !important;
+  font-weight: 800 !important;
+  font-size: 24px !important;
+}
+
+/* Hero logo: big gradient badge with glow + float, no cartoon circle */
+.hero-logo-wrap {
+  position: relative;
+}
+.hero-logo {
+  width: clamp(210px, 36vw, 320px) !important;
+  height: clamp(210px, 36vw, 320px) !important;
+  border-radius: 26px !important;
+  box-shadow:
+    0 26px 54px rgba(91, 33, 182, 0.42),
+    0 8px 22px rgba(236, 72, 153, 0.35),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.35) !important;
+  animation: heroBadgeFloat 3.8s ease-in-out infinite !important;
+}
+@keyframes heroBadgeFloat {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50%      { transform: translateY(-14px) rotate(-1.6deg); }
+}
+
+/* Soft gradient glow behind the badge */
+.hero-glow {
+  display: block !important;
+  position: absolute;
+  width: 380px;
+  height: 380px;
+  border-radius: 50%;
+  background: radial-gradient(circle,
+    rgba(124, 58, 237, 0.4) 0%,
+    rgba(236, 72, 153, 0.32) 45%,
+    transparent 72%) !important;
+  filter: blur(28px);
+  z-index: 0;
+  animation: heroGlowBreath 3.8s ease-in-out infinite;
+}
+@keyframes heroGlowBreath {
+  0%, 100% { transform: scale(1);    opacity: 0.75; }
+  50%      { transform: scale(1.18); opacity: 1; }
+}
+.hero-logo { position: relative; z-index: 1; }
+
+/* =========================================================================
+   MOBILE ENHANCEMENTS  (brand-theme override on top of main.css media queries)
+   Fixes: header logo <-> cart button overlap, bottom nav readability,
+   safe-area padding, compact cart pill on small screens.
+   ========================================================================= */
+
+/* ============================================================
+   MOBILE COMPATIBILITY ENHANCEMENTS (brand-theme.css)
+   Fixes: header logo/cart overlap, bottom nav spacing,
+   safe areas, touch targets, overflow prevention
+   ============================================================ */
+
+/* Very small phones (up to 480px) */
+@media (max-width: 480px) {
+  body {
+    padding-top: 56px !important;
+    padding-bottom: 70px !important;
+    overflow-x: hidden !important;
+  }
+
+  /* Header: prevent logo/cart overlap, use natural flex layout */
+  .app-header {
+    height: 56px !important;
+    padding: 0 10px !important;
+    gap: 8px !important;
+    flex-wrap: nowrap !important;
+    padding-top: max(6px, env(safe-area-inset-top)) !important;
+  }
+
+  .shop-logo-area {
+    position: static !important;
+    transform: none !important;
+    flex: 0 1 auto !important;
+    min-width: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    padding: 0 !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    max-width: none !important;
+  }
+
+  #shop-logo {
+    width: 34px !important;
+    height: 34px !important;
+    flex-shrink: 0 !important;
+  }
+
+  .shop-name-text {
+    font-size: 17px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    max-width: 140px !important;
+  }
+
+  .header-right {
+    flex: 0 0 auto !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    margin-left: auto !important;
+  }
+
+  .cart-btn {
+    padding: 6px 10px !important;
+    font-size: 13px !important;
+    gap: 4px !important;
+    min-width: auto !important;
+    min-height: 44px !important;
+  }
+
+  .cart-btn svg {
+    width: 18px !important;
+    height: 18px !important;
+  }
+
+  .cart-badge {
+    min-width: 16px !important;
+    height: 16px !important;
+    font-size: 10px !important;
+    padding: 0 3px !important;
+  }
+
+  .admin-shortcut {
+    display: none !important;
+  }
+
+  /* Bottom nav: tighter spacing, bigger touch targets, safe area */
+  .bottom-nav {
+    height: 64px !important;
+    padding: 0 6px !important;
+    padding-bottom: max(10px, env(safe-area-inset-bottom)) !important;
+    border-radius: 0 !important;
+  }
+
+  .bottom-nav-item {
+    padding: 6px 2px !important;
+    gap: 3px !important;
+    min-width: 0 !important;
+    border-radius: 10px !important;
+    min-height: 56px !important;
+  }
+
+  .bottom-nav-item .nav-icon {
+    width: 24px !important;
+    height: 24px !important;
+  }
+
+  .bottom-nav-item.active {
+    padding: 6px 4px !important;
+    border-radius: 10px !important;
+  }
+
+  .nav-label {
+    font-size: 9px !important;
+    letter-spacing: 0.2px !important;
+    line-height: 1 !important;
+  }
+
+  .cart-badge-nav {
+    min-width: 18px !important;
+    height: 18px !important;
+    font-size: 10px !important;
+    top: -6px !important;
+    right: -6px !important;
+  }
+
+  .hero-logo-wrap {
+    display: none !important;
+  }
+}
+
+/* Medium phones (481px - 767px) */
+@media (min-width: 481px) and (max-width: 767px) {
+  .app-header {
+    height: 60px !important;
+    padding: 0 14px !important;
+  }
+
+  .shop-logo-area {
+    position: static !important;
+    transform: none !important;
+    padding: 0 !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+
+  #shop-logo {
+    width: 40px !important;
+    height: 40px !important;
+  }
+
+  .shop-name-text {
+    font-size: 19px !important;
+  }
+
+  .header-right {
+    margin-left: auto !important;
+  }
+
+  .cart-btn {
+    padding: 7px 12px !important;
+    font-size: 14px !important;
+  }
+
+  .cart-btn svg {
+    width: 19px !important;
+    height: 19px !important;
+  }
+
+  .bottom-nav {
+    height: 68px !important;
+    padding-bottom: max(10px, env(safe-area-inset-bottom)) !important;
+  }
+
+  .bottom-nav-item {
+    padding: 7px 3px !important;
+  }
+
+  .bottom-nav-item .nav-icon {
+    width: 26px !important;
+    height: 26px !important;
+  }
+
+  .nav-label {
+    font-size: 10px !important;
+  }
+}
+
+/* Shared mobile rules (all phones up to 767px) */
+@media (max-width: 767px) {
+  .luck-page,
+  .locations-page,
+  .hero-section {
+    padding-bottom: calc(var(--bottom-nav-h, 74px) + 20px) !important;
+  }
+
+  .menu-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+  }
+
+  .category-tabs {
+    gap: 8px !important;
+    padding: 4px 12px 12px !important;
+  }
+
+  .tab-btn {
+    min-width: 70px !important;
+    min-height: 66px !important;
+    padding: 8px 6px !important;
+  }
+
+  .search-container {
+    padding: 16px 12px 10px !important;
+  }
+
+  .search-pill {
+    padding: 0 12px !important;
+  }
+
+  .promo-section {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+    padding: 0 12px !important;
+  }
+
+  .rewards-panel {
+    margin: 0 12px 20px !important;
+    padding: 16px !important;
+  }
+
+  .store-locations-section {
+    padding: 0 12px 20px !important;
+  }
+
+  .cart-sidebar {
+    width: 100vw !important;
+  }
+
+  .product-modal-box,
+  .profile-modal-box,
+  .auth-modal-box {
+    width: calc(100vw - 24px) !important;
+    max-width: calc(100vw - 24px) !important;
+    margin: 12px !important;
+  }
+
+  .modal {
+    padding: 12px !important;
+    align-items: flex-end !important;
+    justify-content: center !important;
+  }
+
+  .modal-box {
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0 !important;
+    max-height: 90dvh !important;
+  }
+
+  /* Touch target enhancements */
+  button,
+  [role='button'] {
+    min-height: 44px !important;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    min-height: 44px !important;
+    padding: 12px 20px !important;
+    font-size: 15px !important;
+  }
+
+  .form-input {
+    min-height: 44px !important;
+    font-size: 16px !important;
+  }
+
+  select.form-input {
+    font-size: 16px !important;
+  }
+
+  .menu-card-img-wrap {
+    aspect-ratio: 1.1 !important;
+    max-height: 140px !important;
+  }
+
+  .menu-card-body {
+    padding: 10px !important;
+  }
+
+  .menu-card-name {
+    font-size: 14px !important;
+  }
+
+  .menu-card-price {
+    font-size: 15px !important;
+  }
+
+  .add-to-cart-btn {
+    width: 34px !important;
+    height: 34px !important;
+    font-size: 20px !important;
+  }
+}

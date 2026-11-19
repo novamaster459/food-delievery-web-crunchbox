@@ -1,0 +1,474 @@
+LIVE MENU RECORD  (source: https://food-delievery-web-crunchbox-production.up.railway.app/api/menu)
+categories: 6
+======================================================================
+CATEGORY: Mains
+  sort_order: 1
+  id: b99940d1-d5a4-47e8-8b7e-2c6239c43239
+  bestseller_id: eb10c51c-873d-4119-85b5-18c573987635
+  playlists: 1 -> Rice dishes
+  product count: 6
+  PRODUCT #1
+    name:            Spicy Crunch Burger
+    description:     A crispy fried chicken sandwich on a glossy brioche bun, topped with tangy red barbecue sauce, mayo, and shredded cabbage slaw
+    price:           11500
+    image_filename:  2a644f569fb1428eae1811c50c8228a3_Screenshot_2026-11-08_194808.png
+    image_url:       /static/uploads/2a644f569fb1428eae1811c50c8228a3_Screenshot_2026-11-08_194808.png
+    is_available:    True
+    is_bestseller:   True
+    is_new:          False
+    is_reward:       True
+    is_combo:        False
+    combo_discount_pct: 0.0
+    reward_points:   8000
+    loyalty_points:  115
+    created_at:      2026-11-18T11:15:15.571380
+    id:              eb10c51c-873d-4119-85b5-18c573987635
+  PRODUCT #2
+    name:            Grilled Chicken Sandwich
+    description:     Tender, grill-marked chicken breast served on toasted ciabatta with fresh green lettuce, sliced red tomato, and creamy dipping sauce, accompanied by potato chips.
+    price:           12500
+    image_filename:  5b8a62f72df944ab9c810158391a8449_Screenshot_2026-11-08_195125.png
+    image_url:       /static/uploads/5b8a62f72df944ab9c810158391a8449_Screenshot_2026-11-08_195125.png
+    is_available:    True
+    is_bestseller:   False
+    is_new:          False
+    is_reward:       False
+    is_combo:        False
+    combo_discount_pct: 0.0
+    reward_points:   0
+    loyalty_points:  125
+    created_at:      2026-11-18T11:15:47.021077
+    id:              8968101d-443c-4d04-8b31-97a9bc3d5473
+  PRODUCT #3
+    name:            Sliced Steak Dinner
+    description:     Juicy, medium-rare sliced steak topped with herb butter, plated alongside a loaded baked potato, sautéed green beans, and grilled yellow squash rounds.
+    price:           38000
+    image_filename:  f600202f614d4d068699aaeddd22cdcc_Screenshot_2026-11-12_173600.png
+    image_url:       /static/uploads/f600202f614d4d068699aaeddd22cdcc_Screenshot_2026-11-12_173600.png
+    is_available:    True
+    is_bestseller:   False
+    is_new:          False
+    is_reward:       False
+    is_combo:        False
+    combo_discount_pct: 0.0
+    reward_points:   0
+    loyalty_points:  380
+    created_at:      2026-11-18T11:18:27.713985
+    id:              2080e615-09a0-4de4-b05f-152b5ea2c87a
+  PRODUCT #4
+    name:            Breakfast Skillet
+    description:     Four sunny-side-up eggs cooked with browned pork sausages, roasted baby potatoes, cherry tomatoes, and fresh herbs.
+    price:           15000
+    image_filename:  93c1b371833d44ec88d9211d248e4d9f_Screenshot_2026-11-12_173629.png
+    image_url:       /static/uploads/93c1b371833d44ec88d9211d248e4d9f_Screenshot_2026-11-12_173629.png
+    is_available:    True
+    is_bestseller:   False
+    is_new:          False
+    is_reward:       False
+    is_combo:        False
+    combo_discount_pct: 0.0
+    reward_points:   0
+    loyalty_points:  150
+    created_at:      2026-11-18T11:19:49.669705
+    id:              892f6cc0-a2be-49b3-8700-3ba103ab8f6f
+  PRODUCT #5
+    name:            Chicken Curry & Pulao
+    description:     Rich, red-spiced bone-in chicken curry served alongside fragrant basmati rice studded with roasted cashews and red peppers.
+    price:           14000
+    image_filename:  e9fcc004f4c448f0aa737e3f586aab47_Screenshot_2026-11-12_173756.png
+    image_url:       /static/uploads/e9fcc004f4c448f0aa737e3f586aab47_Screenshot_2026-11-12_173756.png
+    is_available:    True
+    is_bestseller:   False
+    is_new:          False
+    is_reward:       False
+    is_combo:        False
+    combo_discount_pct: 0.0
+    reward_points:   0
+    loyalty_points:  140
+    created_at:      2026-11-18T11:20:48.005509
+    id:              c455f732-92c5-475a-b28f-b588fa31f97f
+  PRODUCT #6
+    name:            Whole Roasted Chicken
+    description:     A seasoned whole roasted chicken served in a cast-iron skillet with fresh rosemary sprigs and roasted lemon wedges.
+    price:           36000
+    image_filename:  048364cf3a9349a991ef2e679123d62a_Screenshot_2026-11-12_175339.png
+    image_url:       /static/uploads/048364cf3a9349a991ef2e679123d62a_Screenshot_2026-11-12_175339.png
+    is_available:    True
+    is_bestseller:   False
+    is_new:          False
+    is_reward:       False
+    is_combo:        False
+    combo_discount_pct: 0.0
+    reward_points:   0
+    loyalty_points:  360
+    created_at:      2026-11-18T11:24:29.633283
+    id:              18ca89e1-03a7-433c-a50b-104edd81634c
+======================================================================
+CATEGORY: Vegan Main Meal
+  sort_order: 2
+  id: bac31d5a-f3b6-48ee-a8b5-d5fc79228272
+  bestseller_id: 4d0f6f3d-1f4e-4f61-bbc1-1c61b49ca70c
+  playlists: 1 -> comfort food
+  product count: 3
+  PRODUCT #1
+    name:            Plant-Powered Crunch Burger
+    description:     Crispy plant-based patty, vegan slaw and pickles on a toasted brioche-style bun.
+    price:           8500
+    image_filename:  menu-vegan-burger.jpg
+    image_url:       /static/uploads/menu-vegan-burger.jpg
+    is_available:    True
+    is_bestseller:   True
+    is_new:          False
+    is_reward:       False
+    is_combo:        False
+    combo_discount_pct: 0.0
+    reward_points:   0
+    loyalty_points:  100
+    created_at:      2026-10-19T10:59:08.195409
+    id:              4d0f6f3d-1f4e-4f61-bbc1-1c61b49ca70c
+  PRODUCT #2
+    name:            Crispy Vegan Nuggets
+    description:     Golden plant-protein nuggets with a crunchy seasoned coating and dipping sauce.
+    price:           7500
+    image_filename:  menu-nuggets.jpg
+    image_url:       /static/uploads/menu-nuggets.jpg
+    is_available:    True
+    is_bestseller:   False
+    is_new:          False
+    is_reward:       False
+    is_combo:        False
+    combo_discount_pct: 0.0
+    reward_points:   0
+    loyalty_points:  100
+    created_at:      2026-10-19T10:59:08.195409
+    id:              61af078f-917b-488c-a5d1-03ec4de68bea
+  PRODUCT #3
+    name:            Vegan BBQ Wrap
+    description:     Smoky BBQ plant strips with fresh salad wrapped in a soft tortilla.
+    price:           8000
+    image_filename:  menu-wrap.jpg
+    image_url:       /static/uploads/menu-wrap.jpg
+    is_available:    True
+    is_bestseller:   False
+    is_new:          False
+    is_reward:       True
+    is_combo:        False
+    combo_discount_pct: 0.0
+    reward_points:   700
+    loyalty_points:  80
+    created_at:      2026-10-19T10:59:08.195409
+    id:              cc28ffd6-0582-49d9-aa25-fa6d4465911f
+======================================================================
+CATEGORY: Drinks
+  sort_order: 3
+  id: f795e034-d268-44d6-a9d4-6f995c69b9fe
+  bestseller_id: e167b2ee-1f1b-4eca-bb49-f0f6504e23e2
+  playlists: 1 -> smootie
+  product count: 3
+  PRODUCT #1
+    name:            Iced Limeade
+    description:     A tall glass filled with cloudy, refreshing limeade over ice and garnished with a fresh lime wheel.
+    price:           4500
+    image_filename:  049bf0c70f2f455ba6f2ea81a271dc0f_Screenshot_2026-11-08_195200.png
+    image_url:       /static/uploads/049bf0c70f2f455ba6f2ea81a271dc0f_Screenshot_2026-11-08_195200.png
+    is_available:    True
+    is_bestseller:   True
+    is_new:          False
+    is_reward:       True
+    is_combo:        False
+    combo_discount_pct: 0.0
+    reward_points:   100
+    loyalty_points:  45
+    created_at:      2026-11-18T11:32:37.436612
+    id:              e167b2ee-1f1b-4eca-bb49-f0f6504e23e2
+  PRODUCT #2
+    name:            Iced Cola
+    description:     A frosty glass filled with dark, fizzy cola over large ice cubes.
+    price:           3000
+    image_filename:  422c631850d5443ca726a4c0f81f9e54_Screenshot_2026-11-08_195237.png
+    image_url:       /static/uploads/422c631850d5443ca726a4c0f81f9e54_Screenshot_2026-11-08_195237.png
+    is_available:    True
+    is_bestseller:   False
+    is_new:          False
+    is_reward:       True
+    is_combo:        False
+    combo_discount_pct: 0.0
+    reward_points:   2000
+    loyalty_points:  30
+    created_at:      2026-11-18T11:33:28.108340
+    id:              562d115f-d2aa-4b76-bb96-54cd4cc56743
+  PRODUCT #3
+    name:            Iced Lemon Mint Tea
+    description:     A clear glass of amber-colored iced tea packed with ice cubes, lemon slices, and fresh mint.
+    price:           4500
+    image_filename:  34f5a18a53ee4a828e01876fa96f4e37_Screenshot_2026-11-08_195254.png
+    image_url:       /static/uploads/34f5a18a53ee4a828e01876fa96f4e37_Screenshot_2026-11-08_195254.png
+    is_available:    True
+    is_bestseller:   False
+    is_new:          False
+    is_reward:       True
+    is_combo:        False
+    combo_discount_pct: 0.0
+    reward_points:   100
+    loyalty_points:  45
+    created_at:      2026-11-18T11:34:56.126665
+    id:              da06a0d8-815e-4d9c-a145-6d1aceef5237
+======================================================================
+CATEGORY: Appetizers
+  sort_order: 4
+  id: de676e6e-988e-40d4-9f21-e6c8ba4a9d9f
+  bestseller_id: ac84b3bf-a118-4b6a-828d-bf107caf468e
+  playlists: 1 -> heavy appetizer
+  product count: 6
+  PRODUCT #1
+    name:            Crispy Onion Rings
+    description:     A stack of golden-brown, breaded onion rings dusted with fine sea salt.
+    price:           6500
+    image_filename:  2339b07c518a4bbbabf1164bd645db9a_Screenshot_2026-11-08_195501.png
+    image_url:       /static/uploads/2339b07c518a4bbbabf1164bd645db9a_Screenshot_2026-11-08_195501.png
+    is_available:    True
+    is_bestseller:   True
+    is_new:          False
+    is_reward:       True
+    is_combo:        False
+    combo_discount_pct: 0.0
+    reward_points:   500
+    loyalty_points:  65
+    created_at:      2026-11-18T11:55:39.459692
+    id:              ac84b3bf-a118-4b6a-828d-bf107caf468e
+  PRODUCT #2
+    name:            Mozzarella Sticks
+    description:     Crispy, golden-fried mozzarella sticks served with warm red marinara sauce, lemon wedges, and fresh parsley.
+    price:           8500
+    image_filename:  eefa27b023d24933a8631dffc9ba8fe4_Screenshot_2026-11-08_195508.png
+    image_url:       /static/uploads/eefa27b023d24933a8631dffc9ba8fe4_Screenshot_2026-11-08_195508.png
+    is_available:    True
+    is_bestseller:   False
+    is_new:          False
+    is_reward:       True
+    is_combo:        False
+    combo_discount_pct: 0.0
+    reward_points:   700
+    loyalty_points:  85
+    created_at:      2026-11-18T11:56:25.483202
+    id:              7ffab032-d05f-4599-a84f-96f97e13dd85
+  PRODUCT #3
+    name:            Caprese Salad
+    description:     Alternating slices of ripe red tomatoes and fresh mozzarella cheese layered with basil leaves and drizzled with balsamic glaze.
+    price:           11000
+    image_filename:  2eddd86c7a0e4179ae256636af5dbff9_Screenshot_2026-11-12_173918.png
+    image_url:       /static/uploads/2eddd86c7a0e4179ae256636af5dbff9_Screenshot_2026-11-12_173918.png
+    is_available:    True
+    is_bestseller:   False
+    is_new:          False
+    is_reward:       False
+    is_combo:        False
+    combo_discount_pct: 0.0
+    reward_points:   0
+    loyalty_points:  110
+    created_at:      2026-11-18T11:57:30.883792
+    id:              6ecc5909-13f0-4b6b-a1d4-fdab7e6514ba
+  PRODUCT #4
+    name:            Seasoned Steak Fries
+    description:     Thick-cut, skin-on golden french fries served with ketchup.
+    price:           5500
+    image_filename:  ba9a22e4d08d4d548928e8d4a3146c48_Screenshot_2026-11-12_174031.png
+    image_url:       /static/uploads/ba9a22e4d08d4d548928e8d4a3146c48_Screenshot_2026-11-12_174031.png
+    is_available:    True
+    is_bestseller:   False
+    is_new:          False
+    is_reward:       True
+    is_combo:        False
+    combo_discount_pct: 0.0
+    reward_points:   500
+    loyalty_points:  55
+    created_at:      2026-11-18T11:58:09.579886
+    id:              66c43874-a82e-4fc3-8810-ee5623a07c81
+  PRODUCT #5
+    name:            Crispy Fried Meatballs / Croquettes
+    description:     Golden-brown, crispy breaded meatballs garnished with finely chopped fresh parsley.
+    price:           9000
+    image_filename:  9e9ed1c5f64e421087ae9005d63941a1_Screenshot_2026-11-12_174218.png
+    image_url:       /static/uploads/9e9ed1c5f64e421087ae9005d63941a1_Screenshot_2026-11-12_174218.png
+    is_available:    True
+    is_bestseller:   False
+    is_new:          False
+    is_reward:       False
+    is_combo:        False
+    combo_discount_pct: 0.0
+    reward_points:   0
+    loyalty_points:  90
+    created_at:      2026-11-18T11:58:51.459847
+    id:              dcf235d9-43fc-4706-9edf-13429ebbea38
+  PRODUCT #6
+    name:            Pan-Fried Dumplings
+    description:     Crispy golden pan-fried dumplings topped with sliced green onions and served with bright red dipping sauce.
+    price:           8500
+    image_filename:  96e3f43f5d7e45aa957eab315f536d34_Screenshot_2026-11-12_175457.png
+    image_url:       /static/uploads/96e3f43f5d7e45aa957eab315f536d34_Screenshot_2026-11-12_175457.png
+    is_available:    True
+    is_bestseller:   False
+    is_new:          False
+    is_reward:       True
+    is_combo:        False
+    combo_discount_pct: 0.0
+    reward_points:   800
+    loyalty_points:  85
+    created_at:      2026-11-18T11:59:38.553518
+    id:              de1f098f-1427-4d93-b128-6a03d52a2cbe
+======================================================================
+CATEGORY: Desserts
+  sort_order: 5
+  id: cac0deef-b317-4c60-80e7-b6d460792e6b
+  bestseller_id: c1447b55-d74b-4fe2-8306-bd5b4dff2ad3
+  playlists: 1 -> Cakes
+  product count: 3
+  PRODUCT #1
+    name:            Three-Scoop Waffle Bowl
+    description:     A crisp waffle cone bowl holding scoops of strawberry, chocolate, and pistachio ice cream, garnished with sliced strawberries and fresh mint.
+    price:           8000
+    image_filename:  d5b423d074814d2092b249661dbd4629_Screenshot_2026-11-08_195544.png
+    image_url:       /static/uploads/d5b423d074814d2092b249661dbd4629_Screenshot_2026-11-08_195544.png
+    is_available:    True
+    is_bestseller:   True
+    is_new:          False
+    is_reward:       True
+    is_combo:        False
+    combo_discount_pct: 0.0
+    reward_points:   1000
+    loyalty_points:  80
+    created_at:      2026-11-18T12:02:32.899831
+    id:              c1447b55-d74b-4fe2-8306-bd5b4dff2ad3
+  PRODUCT #2
+    name:            Caramel Flan
+    description:     Individual round caramel custard flan bathed in glossy amber caramel sauce.
+    price:           6500
+    image_filename:  6f506a3565014b5ba60d2863bf4f0f47_Screenshot_2026-11-12_181819.png
+    image_url:       /static/uploads/6f506a3565014b5ba60d2863bf4f0f47_Screenshot_2026-11-12_181819.png
+    is_available:    True
+    is_bestseller:   False
+    is_new:          False
+    is_reward:       False
+    is_combo:        False
+    combo_discount_pct: 0.0
+    reward_points:   0
+    loyalty_points:  65
+    created_at:      2026-11-18T12:08:43.597495
+    id:              39c513dc-2eb2-4ceb-8a3d-d97367534d40
+  PRODUCT #3
+    name:            Mixed Berry Fruit Pizza
+    description:     A slice of sugar cookie crust spread with white cream frosting and topped with fresh strawberries, blackberries, blueberries, and lemon slices.
+    price:           8500
+    image_filename:  aa40832412de4a5c922852b66b7c98da_Screenshot_2026-11-12_181842.png
+    image_url:       /static/uploads/aa40832412de4a5c922852b66b7c98da_Screenshot_2026-11-12_181842.png
+    is_available:    True
+    is_bestseller:   False
+    is_new:          False
+    is_reward:       False
+    is_combo:        False
+    combo_discount_pct: 0.0
+    reward_points:   0
+    loyalty_points:  85
+    created_at:      2026-11-18T12:09:56.546341
+    id:              6213f465-f160-4a97-87ff-79a04ff9f66b
+======================================================================
+CATEGORY: Special Combo Sets
+  sort_order: 6
+  id: c1b35fd4-a8aa-4cff-90c0-16df569208fd
+  bestseller_id: 84791002-0b15-481e-9f81-525ca35bed78
+  playlists: 1 -> DISCOUNTED COMBO
+  product count: 4
+  PRODUCT #1
+    name:            Crispy Chicken Strips Bucket
+    description:     A plain white paper bucket overflowing with golden-brown, extra-crispy fried chicken tenders.
+    price:           38000
+    image_filename:  115cd5ec77c44d1785c35cfd2c7db59f_Screenshot_2026-11-08_195317.png
+    image_url:       /static/uploads/115cd5ec77c44d1785c35cfd2c7db59f_Screenshot_2026-11-08_195317.png
+    is_available:    True
+    is_bestseller:   True
+    is_new:          False
+    is_reward:       False
+    is_combo:        True
+    combo_discount_pct: 2.0
+    reward_points:   0
+    loyalty_points:  380
+    created_at:      2026-11-18T12:11:30.687332
+    id:              84791002-0b15-481e-9f81-525ca35bed78
+  PRODUCT #2
+    name:            Classic Fried Chicken Bucket
+    description:     A red-and-white striped bucket filled with crispy, golden-brown bone-in fried chicken pieces.
+    price:           48000
+    image_filename:  ca4d88ade2434876871a7943f00d7eb8_Screenshot_2026-11-08_194710.png
+    image_url:       /static/uploads/ca4d88ade2434876871a7943f00d7eb8_Screenshot_2026-11-08_194710.png
+    is_available:    True
+    is_bestseller:   False
+    is_new:          False
+    is_reward:       False
+    is_combo:        True
+    combo_discount_pct: 8.0
+    reward_points:   0
+    loyalty_points:  480
+    created_at:      2026-11-18T12:12:33.910760
+    id:              2ff51151-25b0-47ea-898b-5f98f03ba83c
+  PRODUCT #3
+    name:            Fried Chicken & Fries Platter
+    description:     A sharing tray loaded with crispy chicken tenders, chicken nuggets, popcorn chicken, golden french fries, ketchup, and creamy dipping sauce.
+    price:           26000
+    image_filename:  818c50fb572c449c9c0d7e0356e2ecee_Screenshot_2026-11-08_195300.png
+    image_url:       /static/uploads/818c50fb572c449c9c0d7e0356e2ecee_Screenshot_2026-11-08_195300.png
+    is_available:    True
+    is_bestseller:   False
+    is_new:          False
+    is_reward:       False
+    is_combo:        True
+    combo_discount_pct: 10.0
+    reward_points:   0
+    loyalty_points:  260
+    created_at:      2026-11-18T12:13:21.405094
+    id:              fa103fef-cb0b-4707-97de-14b4c7f1fec3
+  PRODUCT #4
+    name:            Fried Chicken Takeout Box
+    description:     Three crispy fried chicken drumsticks served with golden french fries, shredded coleslaw, and ketchup.
+    price:           13500
+    image_filename:  38e3511e6576447a9330d21106a23630_Screenshot_2026-11-08_201134.png
+    image_url:       /static/uploads/38e3511e6576447a9330d21106a23630_Screenshot_2026-11-08_201134.png
+    is_available:    True
+    is_bestseller:   False
+    is_new:          False
+    is_reward:       False
+    is_combo:        True
+    combo_discount_pct: 15.0
+    reward_points:   0
+    loyalty_points:  135
+    created_at:      2026-11-18T12:13:58.990302
+    id:              1c984fa7-3fdf-42eb-ac24-9bcf2fbe06c8
+======================================================================
+
+LOCATIONS (5)
+  Crunchbox Kyauktada | branch_no 1 | No. 142, Sule Pagoda Road, Kyauktada Township, Yangon 11182, Myanmar. | 06:00-18:00 | open_now=True | image=/static/uploads/36367cad51fe483fa58b28d9a2fec31e_Screenshot_2026-11-10_204239.png
+  Crunchbox Bahan | branch_no 2 | No. 28, Kabar Aye Pagoda Road, Bahan Township, Yangon 11201, Myanmar. | 09:00-21:00 | open_now=True | image=/static/uploads/23493ea359fe4a2fb13a167f92c65e3f_Screenshot_2026-11-11_165945.png
+  Crunchbox Sanchaung | branch_no 3 | No. 19, Baho Road, Sanchaung Township, Yangon 11111, Myanmar. | 08:00-20:00 | open_now=True | image=/static/uploads/92a4a6b480224b3caefe8f300b07671a_Screenshot_2026-11-11_170731.png
+  Crunchbox Yangon | branch_no 0 | No. 142, Kabar Aye Pagoda Road, Bahan Township, Yangon, Yangon Region, 11201, Myanmar | 10:00-22:00 | open_now=True | image=/static/uploads/452fb8af7f424555bc382a7ed16bef01_Screenshot_2026-11-11_171027.png
+  Crunchbox Kamayut | branch_no 4 | No. 71, Pyay Road, Kamayut Township, Yangon, Yangon Region, 11131, Myanmar | 07:00-19:00 | open_now=True | image=/static/uploads/689b9c5e732f48aa99ede179a17c65ee_Screenshot_2026-11-11_173611.png
+
+SETTINGS
+  accent_color = #ff6b00
+  background_color = #ffffff
+  combo_discount_pct = 15.0
+  deal_button_text = Order Now
+  deal_image_url = /static/uploads/b851ae79c0674b22b020bd09b916b016_Screenshot_2026-11-08_190840.png
+  deal_text = Up to 25% OFF on selected items. Limited time only!
+  deal_title = Weekend Crunch Fest
+  featured_image_url = /static/uploads/bfd6c5a0ce4a4152b996e0f31d60a8e5_Screenshot_2026-11-08_190627.png
+  featured_text = Made with love by our chefs — unique recipes you won't find anywhere else.
+  featured_title = Chef Specials
+  hero_heading = Crispy Flavor,
+Delivered Fast.
+  hero_image_url = /static/uploads/chef-special.jpg
+  hero_subtext = Hot, crunchy & made fresh for you.
+  logo_url = 
+  member_discount_pct = 10.0
+  reward_crispy_chicken_bucket_points = 20000
+  reward_iced_cola_points = 2000
+  reward_spicy_crunch_burger_points = 8000
+  shop_name = CrunchBox
