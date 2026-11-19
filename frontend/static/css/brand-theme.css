@@ -416,3 +416,88 @@ body {
   50%      { transform: scale(1.18); opacity: 1; }
 }
 .hero-logo { position: relative; z-index: 1; }
+
+/* =========================================================================
+   MOBILE ENHANCEMENTS  (brand-theme override on top of main.css media queries)
+   Fixes: header logo <-> cart button overlap, bottom nav readability,
+   safe-area padding, compact cart pill on small screens.
+   ========================================================================= */
+
+/* Smaller header on phones so the centered logo and cart pill never collide */
+@media (max-width: 480px) {
+  .app-header {
+    height: 52px !important;
+    padding: 0 10px !important;
+    gap: 6px !important;
+  }
+  .shop-logo-area {
+    max-width: 56% !important;
+    padding: 5px 12px !important;
+    gap: 5px !important;
+  }
+  #shop-logo {
+    width: 44px !important;
+    height: 44px !important;
+  }
+  .shop-name-text {
+    font-size: 17px !important;
+    letter-spacing: 0.4px !important;
+  }
+  .header-right {
+    flex: 0 0 auto !important;
+  }
+  .cart-btn {
+    padding: 6px 9px !important;
+    font-size: 12px !important;
+    gap: 4px !important;
+  }
+  .cart-btn svg { width: 18px !important; height: 18px !important; }
+  .cart-badge { min-width: 16px; height: 16px; font-size: 10px; }
+  .admin-shortcut { display: none !important; }
+}
+
+/* 481-767px: medium phones / big phones */
+@media (min-width: 481px) and (max-width: 767px) {
+  .app-header { height: 56px !important; padding: 0 12px !important; }
+  .shop-logo-area { padding: 5px 14px !important; }
+  #shop-logo { width: 48px !important; height: 48px !important; }
+  .shop-name-text { font-size: 18px !important; }
+  .cart-btn { padding: 7px 10px !important; font-size: 13px !important; }
+  .cart-btn svg { width: 19px !important; height: 19px !important; }
+}
+
+/* Bottom nav: tighter on phones, icons-only feel with readable labels */
+@media (max-width: 480px) {
+  .bottom-nav {
+    height: 60px !important;
+    padding: 0 4px !important;
+    border-radius: 20px 20px 0 0 !important;
+  }
+  .bottom-nav-item {
+    padding: 6px 2px !important;
+    gap: 2px !important;
+    min-width: 0 !important;
+  }
+  .bottom-nav-item .nav-icon {
+    width: 22px !important;
+    height: 22px !important;
+  }
+  .nav-label { font-size: 9px !important; letter-spacing: 0.2px !important; }
+  .bottom-nav-item.active {
+    padding: 6px 4px !important;
+    border-radius: 10px !important;
+  }
+}
+
+/* Safe area so the gradient bar clears the iPhone home indicator */
+.bottom-nav {
+  padding-bottom: max(6px, env(safe-area-inset-bottom)) !important;
+}
+.app-header {
+  padding-top: max(6px, env(safe-area-inset-top)) !important;
+}
+
+/* Hero logo hidden on very small screens (already in main.css) but keep glow gone too */
+@media (max-width: 480px) {
+  .hero-logo-wrap { display: none !important; }
+}

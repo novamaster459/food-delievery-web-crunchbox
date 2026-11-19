@@ -12,6 +12,7 @@ The app listens on http://0.0.0.0:5000 in debug mode.
 """
 
 import os
+import json
 import re
 import sys
 from datetime import datetime, timedelta
@@ -131,214 +132,73 @@ def seed_data() -> None:
     ))
 
     # ------------------------------------------------------------------
-    # Categories
+    # Live production snapshot (captured 2026-11-19 from
+    # food-delievery-web-crunchbox-production.up.railway.app).
+    # Categories, products, playlists and branch locations are rebuilt
+    # exactly as they exist on the live site so a redeploy never wipes the
+    # real menu data. Edit backend/seed_snapshot.json to change it.
     # ------------------------------------------------------------------
-    cat_mains      = Category(name="Mains",             icon="🍗", sort_order=1)
-    cat_vegan      = Category(name="Vegan Main Meal",   icon="🌱", sort_order=2)
-    cat_drinks     = Category(name="Drinks",            icon="🥤", sort_order=3)
-    cat_appetizers = Category(name="Appetizers",        icon="🍟", sort_order=4)
-    cat_desserts   = Category(name="Desserts",          icon="🍰", sort_order=5)
-    cat_combos     = Category(name="Special Combo Sets",icon="🎁", sort_order=6)
+    with open(os.path.join(os.path.dirname(__file__), "seed_snapshot.json"),
+              encoding="utf-8") as _snap_file:
+        _snap = json.load(_snap_file)
 
-    db["categories"].extend([cat_mains, cat_vegan, cat_drinks, cat_appetizers, cat_desserts, cat_combos])
+    for _cat in _snap["menu"]:
+        category = Category(
+            id=_cat["id"],
+            name=_cat["name"],
+            icon=_cat.get("icon", ""),
+            sort_order=int(_cat.get("sort_order", 0)),
+        )
+        db["categories"].append(category)
 
-    # ------------------------------------------------------------------
-    # Products — Mains
-    # ------------------------------------------------------------------
-    db["products"].extend([
-        Product(
-            category_id=cat_mains.id,
-            name="Crispy Chicken Bucket",
-            description="A generous bucket of golden, perfectly seasoned crispy fried chicken pieces.",
-            price=25000,
-        ),
-        Product(
-            category_id=cat_mains.id,
-            name="Spicy Crunch Burger",
-            description="Juicy chicken patty with sriracha slaw and pickles on a toasted brioche bun.",
-            price=9500,
-        ),
-        Product(
-            category_id=cat_mains.id,
-            name="Korean BBQ Wings",
-            description="Sticky Korean-style BBQ glaze on crispy chicken wings, served with ranch dip.",
-            price=12000,
-        ),
-        Product(
-            category_id=cat_mains.id,
-            name="Grilled Chicken Sandwich",
-            description="Tender grilled chicken breast with lettuce, tomato and honey mustard on ciabatta.",
-            price=8500,
-        ),
-    ])
+        for _pl in _cat.get("playlists", []):
+            db["playlists"].append(Playlist(
+                id=_pl["id"],
+                name=_pl["name"],
+                category_id=category.id,
+                product_ids=list(_pl.get("product_ids", [])),
+                sort_order=int(_pl.get("sort_order", 0)),
+            ))
 
-    # ------------------------------------------------------------------
-    # Products — Vegan Main Meal
-    # ------------------------------------------------------------------
-    db["products"].extend([
-        Product(
-            category_id=cat_vegan.id,
-            name="Plant-Powered Crunch Burger",
-            description="Crispy plant-based patty, vegan slaw and pickles on a toasted brioche-style bun.",
-            price=8500,
-        ),
-        Product(
-            category_id=cat_vegan.id,
-            name="Crispy Vegan Nuggets",
-            description="Golden plant-protein nuggets with a crunchy seasoned coating and dipping sauce.",
-            price=7500,
-        ),
-        Product(
-            category_id=cat_vegan.id,
-            name="Vegan BBQ Wrap",
-            description="Smoky BBQ plant strips with fresh salad wrapped in a soft tortilla.",
-            price=8000,
-        ),
-    ])
+        for _prod in _cat.get("products", []):
+            db["products"].append(Product(
+                id=_prod["id"],
+                category_id=category.id,
+                name=_prod["name"],
+                description=_prod.get("description", ""),
+                price=int(_prod.get("price", 0)),
+                image_filename=_prod.get("image_filename", ""),
+                is_available=bool(_prod.get("is_available", True)),
+                is_combo=bool(_prod.get("is_combo", False)),
+                combo_discount_pct=float(_prod.get("combo_discount_pct", 0.0)),
+                loyalty_points=int(_prod.get("loyalty_points", 100)),
+                is_reward=bool(_prod.get("is_reward", False)),
+                reward_points=int(_prod.get("reward_points", 0)),
+                created_at=datetime.fromisoformat(_prod["created_at"]),
+            ))
 
-    # ------------------------------------------------------------------
-    # Products — Drinks
-    # ------------------------------------------------------------------
-    db["products"].extend([
-        Product(category_id=cat_drinks.id, name="Fresh Lime Soda",  description="Hand-squeezed lime with sparkling water and mint.",          price=3500),
-        Product(category_id=cat_drinks.id, name="Iced Cola",        description="Ice-cold cola served over crushed ice.",                     price=2500),
-        Product(category_id=cat_drinks.id, name="Mango Lassi",      description="Creamy blended mango and yoghurt smoothie.",                 price=4000),
-        Product(category_id=cat_drinks.id, name="Lemon Iced Tea",   description="Brewed black tea chilled with fresh lemon slices.",          price=3000),
-    ])
-
-    # ------------------------------------------------------------------
-    # Products — Appetizers
-    # ------------------------------------------------------------------
-    db["products"].extend([
-        Product(category_id=cat_appetizers.id, name="Golden Fries",       description="Crispy shoestring fries seasoned with sea salt.",         price=4500),
-        Product(category_id=cat_appetizers.id, name="Chicken Tenders",    description="Juicy strips of breaded chicken served with dipping sauce.",price=7000),
-        Product(category_id=cat_appetizers.id, name="Onion Rings",        description="Thick-cut onion rings in a light, crispy beer batter.",    price=3500),
-        Product(category_id=cat_appetizers.id, name="Mozzarella Sticks",  description="Stretchy mozzarella encased in crunchy golden breadcrumbs.",price=5500),
-    ])
-
-    # ------------------------------------------------------------------
-    # Products — Desserts
-    # ------------------------------------------------------------------
-    db["products"].extend([
-        Product(category_id=cat_desserts.id, name="Chocolate Lava Cake", description="Warm chocolate cake with a molten fudge centre.",         price=6000),
-        Product(category_id=cat_desserts.id, name="Ice Cream Scoops",    description="Two scoops of your choice: vanilla, chocolate or strawberry.",price=4000),
-        Product(category_id=cat_desserts.id, name="Cheesecake Slice",    description="Classic New York-style cheesecake with berry compote.",     price=5500),
-        Product(category_id=cat_desserts.id, name="Brownie Sundae",      description="Fudgy brownie topped with ice cream and hot fudge sauce.",  price=4500),
-    ])
-
-    # ------------------------------------------------------------------
-    # Products — Special Combo Sets
-    # ------------------------------------------------------------------
-    db["products"].extend([
-        Product(
-            category_id=cat_combos.id,
-            name="Family Crunch Bundle",
-            description="Bucket of 12 crispy pieces, 2 large fries, 4 drinks and dipping sauces. Perfect for the whole family!",
-            price=45000,
-            is_combo=True,
-            combo_discount_pct=15.0,
-        ),
-        Product(
-            category_id=cat_combos.id,
-            name="Party Pack",
-            description="20 wings, 10 tenders, 2 large fries and 6 sodas. The ultimate party spread.",
-            price=38000,
-            is_combo=True,
-            combo_discount_pct=15.0,
-        ),
-        Product(
-            category_id=cat_combos.id,
-            name="Date Night Set",
-            description="2 burgers, 1 large fries, 2 specialty drinks and a dessert to share.",
-            price=22000,
-            is_combo=True,
-            combo_discount_pct=15.0,
-        ),
-    ])
-
-    # Attach downloaded stock photos to seeded products (frontend/static/uploads/).
-    _seed_images = {
-        "Crispy Chicken Bucket": "menu-crispy-chicken.jpg",
-        "Spicy Crunch Burger": "menu-burger.jpg",
-        "Korean BBQ Wings": "menu-wings.jpg",
-        "Grilled Chicken Sandwich": "menu-sandwich.jpg",
-        "Plant-Powered Crunch Burger": "menu-vegan-burger.jpg",
-        "Crispy Vegan Nuggets": "menu-nuggets.jpg",
-        "Vegan BBQ Wrap": "menu-wrap.jpg",
-        "Fresh Lime Soda": "menu-lime-soda.jpg",
-        "Iced Cola": "menu-cola.jpg",
-        "Mango Lassi": "menu-mango-lassi.jpg",
-        "Lemon Iced Tea": "menu-iced-tea.jpg",
-        "Golden Fries": "menu-fries.jpg",
-        "Chicken Tenders": "menu-tenders.jpg",
-        "Onion Rings": "menu-onion-rings.jpg",
-        "Mozzarella Sticks": "menu-mozz-sticks.jpg",
-        "Chocolate Lava Cake": "menu-lava-cake.jpg",
-        "Ice Cream Scoops": "menu-ice-cream.jpg",
-        "Cheesecake Slice": "menu-cheesecake.jpg",
-        "Brownie Sundae": "menu-brownie.jpg",
-        "Family Crunch Bundle": "menu-family-bundle.jpg",
-        "Party Pack": "menu-party-pack.jpg",
-        "Date Night Set": "menu-date-night.jpg",
-    }
-    for product in db["products"]:
-        img = _seed_images.get(product.name)
-        if img and not product.image_filename:
-            product.image_filename = img
-
-    # Seeded products pre-date the app so they do not all carry the
-    # "New on CrunchBox" badge on every fresh start.
-    seeded_at = datetime.utcnow() - timedelta(days=30)
-    for product in db["products"]:
-        product.created_at = seeded_at
-
-    # ------------------------------------------------------------------
-    # Branch locations (seeded so the Locations page has content)
-    # ------------------------------------------------------------------
-    db["locations"].extend([
-        BranchLocation(name="CrunchBox Downtown", branch_no="01",
-                       address="123 Bogyoke Market Road, Yangon",
-                       open_time="09:00", close_time="22:00",
-                       image_filename="store-front.jpg"),
-        BranchLocation(name="CrunchBox Junction City", branch_no="02",
-                       address="Junction City Mall, Mindhamma Road, Yangon",
-                       open_time="10:00", close_time="21:00",
-                       image_filename="store-front.jpg"),
-        BranchLocation(name="CrunchBox Mandalay", branch_no="03",
-                       address="78th Street, Chan Aye Tharzan, Mandalay",
-                       open_time="09:30", close_time="22:30",
-                       image_filename="store-front.jpg"),
-    ])
-
-    # ------------------------------------------------------------------
-    # Coupons
-    # ------------------------------------------------------------------
-    db["coupons"].extend([
-        Coupon(
-            code="WEEKEND20",
-            discount_pct=20.0,
-            expires_at=datetime(2027, 12, 31, 23, 59, 59),
-            is_active=True,
-        ),
-        Coupon(
-            code="SETBONUS",
-            discount_pct=25.0,
-            expires_at=datetime(2027, 6, 30, 23, 59, 59),
-            is_active=True,
-        ),
-    ])
-
-    # ------------------------------------------------------------------
-    # Playlists (demo) — shown as slideshow strips inside their category tab.
-    # ------------------------------------------------------------------
-    mains_top = [p for p in db["products"] if p.category_id == cat_mains.id][:3]
-    if mains_top:
-        db["playlists"].append(Playlist(
-            name="Burger Lineup",
-            category_id=cat_mains.id,
-            product_ids=[p.id for p in mains_top],
-            sort_order=1,
+    for _loc in _snap["locations"]:
+        db["locations"].append(BranchLocation(
+            id=_loc["id"],
+            name=_loc["name"],
+            branch_no=str(_loc.get("branch_no", "")),
+            address=_loc.get("address", ""),
+            open_time=_loc.get("open_time", "09:00"),
+            close_time=_loc.get("close_time", "22:00"),
+            image_filename=_loc.get("image_filename", ""),
         ))
+
+    # Visual settings from the live site (hero / featured / deal photos,
+    # titles, colours) so the storefront matches production.
+    _live_settings = _snap.get("settings", {})
+    for _key, _val in _live_settings.items():
+        if _key.endswith("_url"):
+            _fname_key = _key[:-4] + "_filename"
+            _fname = str(_val).rsplit("/", 1)[-1] if _val else ""
+            if _fname:
+                db["settings"][_fname_key] = _fname
+        elif _key in db["settings"]:
+            db["settings"][_key] = _val
 
     # Mark the built-in reward items so members can redeem them with points.
     sync_reward_product_points()

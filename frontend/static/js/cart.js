@@ -191,8 +191,14 @@ const Cart = {
   },
 
   updateBadge: function () {
+    const count = String(Cart.items.reduce((sum, item) => sum + item.quantity, 0));
     const badge = document.getElementById('cart-count');
-    if (badge) badge.textContent = String(Cart.items.reduce((sum, item) => sum + item.quantity, 0));
+    if (badge) badge.textContent = count;
+    const navBadge = document.getElementById('cart-count-nav');
+    if (navBadge) {
+      navBadge.textContent = count;
+      navBadge.style.display = count === '0' ? 'none' : 'flex';
+    }
   },
 
   open: function () {
