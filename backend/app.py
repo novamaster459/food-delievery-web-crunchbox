@@ -454,6 +454,20 @@ def serve_static(filename):
     return send_from_directory(FRONTEND_STATIC, filename)
 
 
+@app.route("/manifest.json")
+def serve_manifest():
+    """Serve the PWA web app manifest."""
+    return send_from_directory(FRONTEND_STATIC, "manifest.json")
+
+
+@app.route("/sw.js")
+def serve_service_worker():
+    """Serve the PWA service worker."""
+    response = send_from_directory(FRONTEND_STATIC, "sw.js")
+    response.headers["Cache-Control"] = "no-cache"
+    return response
+
+
 @app.route("/admin")
 def serve_admin():
     """Serve the admin dashboard SPA."""

@@ -1,0 +1,8 @@
+[providers.python]
+install_command = "pip install -r backend/requirements.txt"
+start_command = "cd backend && gunicorn app:app --bind 0.0.0.0:$PORT"
+
+[deploy]
+start_command = "cd backend && gunicorn app:app --bind 0.0.0.0:$PORT"
+restart_policy_type = "on-failure"
+restart_policy_max_retries = 10
