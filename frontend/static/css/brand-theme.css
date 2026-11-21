@@ -1,17 +1,10 @@
-/* CrunchBox brand theme: #AE150D, #3D5926, #FC8F00, #FDD365, #FDEDD6 on white */
+/* CrunchBox brand theme: #FDD365, #FDEDD6 on white */
 
 :root {
-  --brand-red:     #AE150D;
-  --brand-red-2:   #AE150D;
-  --purple:        #3D5926;
-  --purple-dark:   #3D5926;
-  --pink:          #FC8F00;
-  --pink-light:    #FDD365;
-  --grad-main:     linear-gradient(135deg, var(--purple) 0%, var(--pink) 100%);
-  --grad-red:      linear-gradient(135deg, var(--brand-red) 0%, var(--purple-dark) 55%, var(--pink) 100%);
-  --shadow-brand:  0 6px 18px rgba(174, 21, 13, 0.28);
-  --shadow-red:    0 4px 14px rgba(174, 21, 13, 0.25);
-  --brand-white:   #FDEDD6;
+  --brand-accent: #FDD365;
+  --brand-cream:  #FDEDD6;
+  --grad-main:    linear-gradient(135deg, var(--brand-accent) 0%, var(--brand-cream) 100%);
+  --shadow-brand: 0 6px 18px rgba(253, 211, 101, 0.28);
 }
 
 /* WHITE background */
@@ -21,18 +14,18 @@ body {
 
 /* Top header: brand gradient bar */
 .app-header {
-  background: linear-gradient(120deg, var(--brand-red) 0%, var(--purple) 30%, var(--pink) 60%, var(--pink-light) 100%) !important;
+  background: linear-gradient(120deg, var(--brand-accent) 0%, var(--brand-cream) 100%) !important;
   border-bottom: none !important;
-  box-shadow: 0 2px 18px rgba(61, 89, 38, 0.35) !important;
+  box-shadow: 0 2px 18px rgba(253, 211, 101, 0.28) !important;
 }
 
 .shop-logo-area {
-  background: rgba(0, 0, 0, 0.32) !important;
+  background: rgba(253, 211, 101, 0.32) !important;
   padding: 6px 30px;
   border-radius: 999px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.28) !important;
+  box-shadow: 0 4px 14px rgba(253, 211, 101, 0.28) !important;
   gap: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(253, 211, 101, 0.25);
 }
 
 .shop-name-text {
@@ -53,32 +46,32 @@ body {
   background: rgba(255, 255, 255, 0.2) !important;
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18) !important;
+  border: 1px solid rgba(253, 211, 101, 0.35);
+  box-shadow: 0 4px 12px rgba(253, 211, 101, 0.18) !important;
   color: #ffffff !important;
 }
 .cart-badge {
-  color: var(--purple-dark) !important;
+  color: var(--brand-accent) !important;
   background: #ffffff !important;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2) !important;
+  box-shadow: 0 1px 4px rgba(253, 211, 101, 0.2) !important;
 }
 
 /* Admin shortcut pill */
 .admin-shortcut {
-  border-color: rgba(255, 255, 255, 0.6) !important;
+  border-color: rgba(253, 211, 101, 0.6) !important;
   color: #ffffff !important;
-  background: rgba(255, 255, 255, 0.14);
+  background: rgba(253, 211, 101, 0.14);
 }
 
 /* Hero: white base with brand color wash */
 .hero-section {
   background:
-    radial-gradient(ellipse at 85% 15%, rgba(61, 89, 38, 0.12), transparent 45%),
-    radial-gradient(ellipse at 12% 85%, rgba(252, 143, 0, 0.12), transparent 45%),
+    radial-gradient(ellipse at 85% 15%, rgba(253, 211, 101, 0.12), transparent 45%),
+    radial-gradient(ellipse at 12% 85%, rgba(253, 211, 101, 0.12), transparent 45%),
     linear-gradient(135deg, #ffffff 0%, #FDEDD6 45%, #ffffff 100%) !important;
 }
 .hero-heading { color: #2b1233 !important; }
-.hero-subtext { color: #3D5926 !important; }
+.hero-subtext { color: #FDD365 !important; }
 .hero-cta,
 .btn-order-now {
   background: var(--grad-main) !important;
@@ -86,68 +79,68 @@ body {
 }
 .hero-cta:hover,
 .btn-order-now:hover {
-  background: linear-gradient(135deg, var(--purple-dark) 0%, var(--pink) 100%) !important;
+  background: linear-gradient(135deg, var(--brand-accent) 0%, var(--brand-cream) 100%) !important;
 }
 
 /* Search pill */
 .search-pill:focus-within {
-  border-color: var(--purple) !important;
-  box-shadow: 0 0 0 3px rgba(61, 89, 38, 0.16) !important;
+  border-color: var(--brand-accent) !important;
+  box-shadow: 0 0 0 3px rgba(253, 211, 101, 0.16) !important;
 }
 .search-filter-btn { background: var(--grad-main) !important; }
 
 /* Category tabs: white cards, brand active */
 .tab-btn:hover {
-  border-color: var(--purple) !important;
-  color: var(--purple) !important;
+  border-color: var(--brand-accent) !important;
+  color: var(--brand-accent) !important;
 }
 .tab-btn.active {
   background: #FDEDD6 !important;
-  border-color: var(--purple) !important;
-  color: var(--purple-dark) !important;
+  border-color: var(--brand-accent) !important;
+  color: var(--brand-accent) !important;
 }
 .tab-btn .tab-icon {
   background: var(--grad-main) !important;
-  box-shadow: 0 3px 10px rgba(61, 89, 38, 0.35) !important;
+  box-shadow: 0 3px 10px rgba(253, 211, 101, 0.35) !important;
 }
 .tab-btn.active .tab-icon {
-  background: linear-gradient(135deg, var(--purple-dark) 0%, var(--pink) 100%) !important;
+  background: linear-gradient(135deg, var(--brand-accent) 0%, var(--brand-cream) 100%) !important;
 }
 
 /* Menu cards & add buttons */
 .add-to-cart-btn { background: var(--grad-main) !important; }
 .menu-card { border: 1px solid #FDEDD6 !important; }
-.menu-card-price { color: var(--purple-dark) !important; }
+.menu-card-price { color: var(--brand-accent) !important; }
 
 /* Primary buttons: brand gradient */
 .btn-primary {
   background: var(--grad-main) !important;
   box-shadow: var(--shadow-brand) !important;
 }
-.btn-primary:hover { box-shadow: 0 8px 24px rgba(61, 89, 38, 0.35) !important; }
-.btn-secondary:hover { border-color: var(--purple) !important; color: var(--purple) !important; }
+.btn-primary:hover { box-shadow: 0 8px 24px rgba(253, 211, 101, 0.35) !important; }
+.btn-secondary:hover { border-color: var(--brand-accent) !important; color: var(--brand-accent) !important; }
 
 /* Rewards / progress: brand gradient */
 .progress-bar-fill {
   background: var(--grad-main) !important;
-  box-shadow: 0 0 10px rgba(61, 89, 38, 0.35) !important;
+  box-shadow: 0 0 10px rgba(253, 211, 101, 0.35) !important;
 }
-.rewards-star { color: var(--pink) !important; }
+.rewards-star { color: var(--brand-accent) !important; }
 
 /* Promo cards */
 .promo-card--orange {
-  background: linear-gradient(135deg, var(--pink) 0%, var(--purple) 100%) !important;
+  background: linear-gradient(135deg, var(--brand-accent) 0%, var(--brand-cream) 100%) !important;
 }
-.promo-card--dark { background: #AE150D !important; }
+.promo-card--dark { background: #FDD365 !important; }
 
 /* Modal tabs & active states */
-.modal-tab.active { color: var(--purple) !important; border-bottom-color: var(--purple) !important; }
+.modal-tab.active { color: var(--brand-accent) !important; border-bottom-color: var(--brand-accent) !important; }
 
 /* BOTTOM NAV: brand gradient bar */
 .bottom-nav {
-  background: linear-gradient(120deg, var(--brand-red) 0%, var(--purple) 30%, var(--pink) 60%, var(--pink-light) 100%) !important;
+  background: linear-gradient(120deg, var(--brand-accent) 0%, var(--brand-cream) 100%) !important;
   border-top: none !important;
-  box-shadow: 0 -4px 22px rgba(61, 89, 38, 0.35) !important;
+  box-shadow: 0 -4px 22px rgba(253, 211, 101, 0.28) !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
   border-radius: 18px 18px 0 0;
@@ -160,15 +153,15 @@ body {
 }
 .bottom-nav-item:hover {
   color: #ffffff !important;
-  background: rgba(255, 255, 255, 0.14) !important;
+  background: rgba(253, 211, 101, 0.14) !important;
 }
 .bottom-nav-item.active {
-  color: var(--brand-red) !important;
+  color: var(--brand-accent) !important;
   background: #ffffff !important;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.22);
+  box-shadow: 0 2px 10px rgba(253, 211, 101, 0.22);
   border-radius: 12px;
 }
-.bottom-nav-item.active .nav-icon { color: var(--brand-red) !important; }
+.bottom-nav-item.active .nav-icon { color: var(--brand-accent) !important; }
 .nav-label { font-size: 10px !important; font-weight: 800 !important; }
 
 /* Luck icon */
@@ -176,8 +169,8 @@ body {
 
 /* ACCENT: brand colors on interactive highlights */
 .badge-combo { background: var(--grad-main) !important; }
-.order-status--preparing { color: var(--purple) !important; border-color: rgba(61, 89, 38, 0.35) !important; }
-.see-order-btn { border-color: var(--purple) !important; color: var(--purple) !important; }
+.order-status--preparing { color: var(--brand-accent) !important; border-color: rgba(253, 211, 101, 0.35) !important; }
+.see-order-btn { border-color: var(--brand-accent) !important; color: var(--brand-accent) !important; }
 .track-order-fab { background: var(--grad-main) !important; }
 
 /* ATTENTION ANIMATIONS */
@@ -201,8 +194,8 @@ body {
 }
 
 @keyframes ctaPulse {
-  0%, 100% { box-shadow: 0 6px 18px rgba(61, 89, 38, 0.4), 0 0 0 0 rgba(252, 143, 0, 0.45); }
-  50%      { box-shadow: 0 8px 26px rgba(252, 143, 0, 0.45), 0 0 0 10px rgba(252, 143, 0, 0); }
+  0%, 100% { box-shadow: 0 6px 18px rgba(253, 211, 101, 0.4), 0 0 0 0 rgba(253, 211, 101, 0.45); }
+  50%      { box-shadow: 0 8px 26px rgba(253, 211, 101, 0.45), 0 0 0 10px rgba(253, 211, 101, 0); }
 }
 
 .btn-order-now::after,
@@ -211,7 +204,7 @@ body {
   position: absolute;
   inset: -4px;
   border-radius: inherit;
-  border: 2px solid rgba(252, 143, 0, 0.55);
+  border: 2px solid rgba(253, 211, 101, 0.55);
   animation: ctaPing 2.8s ease-out infinite;
   pointer-events: none;
   z-index: -1;
@@ -267,8 +260,8 @@ body {
   will-change: box-shadow;
 }
 @keyframes checkoutGlow {
-  0%, 100% { box-shadow: 0 6px 18px rgba(61, 89, 38, 0.4); }
-  50%      { box-shadow: 0 6px 30px rgba(252, 143, 0, 0.6), 0 0 0 6px rgba(252, 143, 0, 0.18); }
+  0%, 100% { box-shadow: 0 6px 18px rgba(253, 211, 101, 0.4); }
+  50%      { box-shadow: 0 6px 30px rgba(253, 211, 101, 0.6), 0 0 0 6px rgba(253, 211, 101, 0.18); }
 }
 
 .progress-bar-fill::after {
@@ -285,7 +278,7 @@ body {
 }
 .menu-card:hover {
   transform: translateY(-6px) scale(1.02) !important;
-  box-shadow: 0 14px 34px rgba(61, 89, 38, 0.22) !important;
+  box-shadow: 0 14px 34px rgba(253, 211, 101, 0.22) !important;
 }
 
 .rewards-star,
@@ -314,8 +307,8 @@ body {
   animation: tabBreathe 2.6s ease-in-out infinite;
 }
 @keyframes tabBreathe {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(61, 89, 38, 0.25); }
-  50%      { box-shadow: 0 0 0 5px rgba(61, 89, 38, 0.12); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(253, 211, 101, 0.25); }
+  50%      { box-shadow: 0 0 0 5px rgba(253, 211, 101, 0.12); }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -345,8 +338,8 @@ body {
 }
 
 .shop-logo-area {
-  background: linear-gradient(135deg, rgba(0, 0, 0, 0.42) 0%, rgba(0, 0, 0, 0.22) 100%) !important;
-  border: 1px solid rgba(255, 255, 255, 0.32);
+  background: linear-gradient(135deg, rgba(253, 211, 101, 0.42) 0%, rgba(253, 211, 101, 0.22) 100%) !important;
+  border: 1px solid rgba(253, 211, 101, 0.32);
   padding: 6px 22px !important;
   gap: 9px !important;
 }
@@ -365,8 +358,8 @@ body {
   height: clamp(210px, 36vw, 320px) !important;
   border-radius: 26px !important;
   box-shadow:
-    0 26px 54px rgba(61, 89, 38, 0.42),
-    0 8px 22px rgba(252, 143, 0, 0.35),
+    0 26px 54px rgba(253, 211, 101, 0.42),
+    0 8px 22px rgba(253, 211, 101, 0.35),
     inset 0 0 0 1px rgba(255, 255, 255, 0.35) !important;
   animation: heroBadgeFloat 3.8s ease-in-out infinite !important;
 }
@@ -382,8 +375,8 @@ body {
   height: 380px;
   border-radius: 50%;
   background: radial-gradient(circle,
-    rgba(61, 89, 38, 0.4) 0%,
-    rgba(252, 143, 0, 0.32) 45%,
+    rgba(253, 211, 101, 0.4) 0%,
+    rgba(253, 211, 101, 0.32) 45%,
     transparent 72%) !important;
   filter: blur(28px);
   z-index: 0;

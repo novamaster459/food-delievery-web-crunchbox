@@ -17,7 +17,7 @@
   <link rel="icon" type="image/svg+xml" href="/static/images/icons/crunchbox-logo.svg" />
   <link rel="apple-touch-icon" href="/static/images/icons/icon-192x192.png" />
 <link rel="manifest" href="/manifest.json" />
-  <meta name="theme-color" content="#AE150D" />
+  <meta name="theme-color" content="#FDD365" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-title" content="CrunchBox" />
@@ -659,7 +659,59 @@
   <script src="/static/js/location.js?v=3"></script>
   <script src="/static/js/tracker.js?v=3"></script>
   <script src="/static/js/main.js?v=3"></script>
+  <!-- Custom PWA Install Button (shows on first visit) -->
+  <style>
+    #install-btn {
+      position: fixed;
+      top: 120px;
+      right: 20px;
+      z-index: 1000;
+      background: #FDD365;
+      color: #000;
+      border: none;
+      border-radius: 30px;
+      padding: 10px 20px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(253, 211, 101, 0.4);
+      display: none;
+      animation: installSlide 0.3s ease-out;
+    }
+    #install-btn.show { display: block; }
+    #install-btn:hover { background: #FDEDD6; }
+    @keyframes installSlide {
+      from { transform: translateX(30px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+  </style>
+  <button id="install-btn">Install CrunchBox</button>
+
   <script>
+    let deferredPrompt;
+    const installBtn = document.getElementById('install-btn');
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      installBtn.classList.add('show');
+    });
+
+    installBtn.addEventListener('click', () => {
+      if (!deferredPrompt) return;
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then((choiceResult) => {
+        if (choiceResult.outcome === 'accepted') {
+          console.log('[PWA] User accepted the install');
+        } else {
+          console.log('[PWA] User dismissed the install');
+        }
+        deferredPrompt = null;
+        installBtn.classList.remove('show');
+      });
+    });
+
+    // PWA Service Worker registration
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('/sw.js')
