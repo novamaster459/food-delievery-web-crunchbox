@@ -1,11 +1,12 @@
 // CrunchBox Service Worker — PWA offline support
-const CACHE_NAME = 'crunchbox-v1';
+const CACHE_NAME = 'crunchbox-v2';
 const STATIC_ASSETS = [
   '/',
+  '/manifest.json',
   '/static/css/main.css?v=6',
   '/static/css/components.css?v=5',
   '/static/css/storefront-customization.css?v=5',
-  '/static/css/brand-theme.css?v=10',
+  '/static/css/brand-theme.css?v=11',
   '/static/js/api.js?v=3',
   '/static/js/cart.js?v=4',
   '/static/js/location.js?v=3',
@@ -13,7 +14,13 @@ const STATIC_ASSETS = [
   '/static/js/main.js?v=3',
   '/static/images/icons/crunchbox-logo.svg',
   '/static/images/spin-hub.png',
-  '/manifest.json',
+  '/static/images/icons/icon-main.png',
+  '/static/images/icons/icon-drinks.png',
+  '/static/images/icons/icon-dessert.png',
+  '/static/images/icons/icon-appetizer.png',
+  '/static/images/icons/icon-combo.png',
+  '/static/images/icons/icon-vegan.png',
+  '/static/images/icons/bestseller-ribbon.png',
 ];
 
 // Install: cache static assets
@@ -48,7 +55,6 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
       fetch(event.request)
         .then((response) => {
-          // Cache successful API responses
           if (response.ok) {
             const cloned = response.clone();
             caches.open(CACHE_NAME).then((cache) => cache.put(event.request, cloned));
@@ -76,5 +82,3 @@ self.addEventListener('fetch', (event) => {
     })
   );
 });
-
-
