@@ -11,5 +11,6 @@ frontend/static/uploads/*
 !frontend/static/uploads/menu-*.jpg
 !frontend/static/uploads/chef-special.jpg
 !frontend/static/uploads/store-front.jpg
+!frontend/static/uploads/*_Screenshot_*.png
 *.log
 .DS_Store
