@@ -1,0 +1,843 @@
+======================================================================
+CRUNCHBOX MENU ITEM DETAILS
+Source: https://food-delievery-web-crunchbox-production.up.railway.app
+Saved at: 2026-11-21T08:47:20.662456+00:00
+======================================================================
+
+----------------------------------------------------------------------
+CATEGORY: Mains
+  ID: b99940d1-d5a4-47e8-8b7e-2c6239c43239
+  Sort order: 1
+  Bestseller ID: eb10c51c-873d-4119-85b5-18c573987635
+  Icon: 🍗
+  Products: 5
+  Playlists: 1
+----------------------------------------------------------------------
+
+  PLAYLIST: Rice dishes
+    ID: f85ea484-9607-414d-8803-570543c717ef
+    Product IDs: c455f732-92c5-475a-b28f-b588fa31f97f, 1ed51d2d-78b1-4f5c-8ee3-1c2644db0b1d, 25998573-6a8f-4556-8fb8-7ad60b555c24, 1f2a82c7-b334-409d-a0bb-65c098d2fe2a, b1a50b67-1621-4539-af85-b9dfbde3a932, 3e743b90-242f-4aa1-a14e-96af93dad3a8
+    Items in playlist: 6
+      - Chicken Curry & Pulao
+        ID: c455f732-92c5-475a-b28f-b588fa31f97f
+        Price: 14000 MMK
+        Description: Rich, red-spiced bone-in chicken curry served alongside fragrant basmati rice studded with roasted cashews and red peppers.
+        Image: d5a14919a8134f6aabf059687315a2b5_Screenshot_2026-11-12_173756.png
+        Available: True
+        Combo: False (discount 0.0%)
+        Reward (redeemable): False
+        Loyalty points earned: 140
+        New: False | Bestseller: False
+        Created: 2026-11-18T11:20:48.005509
+
+      - Hainanese Chicken Rice
+        ID: 1ed51d2d-78b1-4f5c-8ee3-1c2644db0b1d
+        Price: 11000 MMK
+        Description: Sliced poached chicken topped with savory fried garlic, served with seasoned rice, fresh cucumber slices, and red chili dipping sauce.
+        Image: b571472008434896adb424ea81e500f2_Screenshot_2026-11-12_173520.png
+        Available: True
+        Combo: False (discount 0.0%)
+        Reward (redeemable): False
+        Loyalty points earned: 110
+        New: False | Bestseller: False
+        Created: 2026-11-19T15:00:12.493455
+
+      - Roasted Chicken Thighs & Rice
+        ID: 25998573-6a8f-4556-8fb8-7ad60b555c24
+        Price: 14500 MMK
+        Description: Two golden-brown, herb-seasoned roasted chicken thighs served over vegetable rice pilaf with carrots, red onions, and a lemon wedge.
+        Image: 65cce1d14fa34e35b949a09dc306620c_Screenshot_2026-11-12_173535.png
+        Available: True
+        Combo: False (discount 0.0%)
+        Reward (redeemable): False
+        Loyalty points earned: 145
+        New: False | Bestseller: False
+        Created: 2026-11-19T15:00:58.262634
+
+      - Chicken Fried Rice
+        ID: 1f2a82c7-b334-409d-a0bb-65c098d2fe2a
+        Price: 9500 MMK
+        Description: Golden chicken fried rice mixed with green peas, diced carrots, and scrambled egg.
+        Image: 9165654897f7423cb85b69273e4f91b1_Screenshot_2026-11-12_174431.png
+        Available: True
+        Combo: False (discount 0.0%)
+        Reward (redeemable): False
+        Loyalty points earned: 95
+        New: False | Bestseller: False
+        Created: 2026-11-19T15:01:48.963095
+
+      - Glazed Sesame Chicken Bowl
+        ID: b1a50b67-1621-4539-af85-b9dfbde3a932
+        Price: 12000 MMK
+        Description: Crispy bite-sized chicken pieces coated in a glossy red-orange glaze with sesame seeds and green onions over white rice and steamed broccoli.
+        Image: 43856bf089da42ff905804f1efdc9102_Screenshot_2026-11-12_174645.png
+        Available: True
+        Combo: False (discount 0.0%)
+        Reward (redeemable): False
+        Loyalty points earned: 120
+        New: False | Bestseller: False
+        Created: 2026-11-19T15:02:27.941873
+
+      - gravy rice
+        ID: 3e743b90-242f-4aa1-a14e-96af93dad3a8
+        Price: 10500 MMK
+        Description: Cubed tofu, broccoli florets, red onions, slices of chicken, and bell peppers simmered in a savory brown sesame gravy, served with fried rice
+        Image: 036cd60c065f463eaf1d0806cffc8df1_Screenshot_2026-11-12_173739.png
+        Available: True
+        Combo: False (discount 0.0%)
+        Reward (redeemable): False
+        Loyalty points earned: 105
+        New: False | Bestseller: False
+        Created: 2026-11-19T15:03:24.912221
+
+
+  PRODUCT: Spicy Crunch Burger
+    ID: eb10c51c-873d-4119-85b5-18c573987635
+    Category ID: b99940d1-d5a4-47e8-8b7e-2c6239c43239
+    Price: 11500 MMK
+    Description: A crispy fried chicken sandwich on a glossy brioche bun, topped with tangy red barbecue sauce, mayo, and shredded cabbage slaw
+    Image: 5393f3fda4224a39a20f10a6e3cc4532_Screenshot_2026-11-08_194808.png
+    Image URL: /static/uploads/5393f3fda4224a39a20f10a6e3cc4532_Screenshot_2026-11-08_194808.png
+    Available: True
+    Combo: False (discount 0.0%)
+    Reward (redeemable): True
+    Reward points cost: 8000
+    Loyalty points earned: 115
+    New: False | Bestseller: True
+    Created: 2026-11-18T11:15:15.571380
+--------------------------------------------------
+
+  PRODUCT: Grilled Chicken Sandwich
+    ID: 8968101d-443c-4d04-8b31-97a9bc3d5473
+    Category ID: b99940d1-d5a4-47e8-8b7e-2c6239c43239
+    Price: 12500 MMK
+    Description: Tender, grill-marked chicken breast served on toasted ciabatta with fresh green lettuce, sliced red tomato, and creamy dipping sauce, accompanied by potato chips.
+    Image: f257738f490c4f0b91de206df2e7b52a_Screenshot_2026-11-08_195125.png
+    Image URL: /static/uploads/f257738f490c4f0b91de206df2e7b52a_Screenshot_2026-11-08_195125.png
+    Available: True
+    Combo: False (discount 0.0%)
+    Reward (redeemable): False
+    Loyalty points earned: 125
+    New: False | Bestseller: False
+    Created: 2026-11-18T11:15:47.021077
+--------------------------------------------------
+
+  PRODUCT: Sliced Steak Dinner
+    ID: 2080e615-09a0-4de4-b05f-152b5ea2c87a
+    Category ID: b99940d1-d5a4-47e8-8b7e-2c6239c43239
+    Price: 38000 MMK
+    Description: Juicy, medium-rare sliced steak topped with herb butter, plated alongside a loaded baked potato, sautéed green beans, and grilled yellow squash rounds.
+    Image: f54b60e0d1174765b8efc2dde00f8db3_Screenshot_2026-11-12_173600.png
+    Image URL: /static/uploads/f54b60e0d1174765b8efc2dde00f8db3_Screenshot_2026-11-12_173600.png
+    Available: True
+    Combo: False (discount 0.0%)
+    Reward (redeemable): False
+    Loyalty points earned: 380
+    New: False | Bestseller: False
+    Created: 2026-11-18T11:18:27.713985
+--------------------------------------------------
+
+  PRODUCT: Breakfast Skillet
+    ID: 892f6cc0-a2be-49b3-8700-3ba103ab8f6f
+    Category ID: b99940d1-d5a4-47e8-8b7e-2c6239c43239
+    Price: 15000 MMK
+    Description: Four sunny-side-up eggs cooked with browned pork sausages, roasted baby potatoes, cherry tomatoes, and fresh herbs.
+    Image: db78c4339f3b477fb8f28d7e404ff922_Screenshot_2026-11-12_173629.png
+    Image URL: /static/uploads/db78c4339f3b477fb8f28d7e404ff922_Screenshot_2026-11-12_173629.png
+    Available: True
+    Combo: False (discount 0.0%)
+    Reward (redeemable): False
+    Loyalty points earned: 150
+    New: False | Bestseller: False
+    Created: 2026-11-18T11:19:49.669705
+--------------------------------------------------
+
+  PRODUCT: Whole Roasted Chicken
+    ID: 18ca89e1-03a7-433c-a50b-104edd81634c
+    Category ID: b99940d1-d5a4-47e8-8b7e-2c6239c43239
+    Price: 36000 MMK
+    Description: A seasoned whole roasted chicken served in a cast-iron skillet with fresh rosemary sprigs and roasted lemon wedges.
+    Image: 348457b279c14c788c2d8620e31355f8_Screenshot_2026-11-12_175339.png
+    Image URL: /static/uploads/348457b279c14c788c2d8620e31355f8_Screenshot_2026-11-12_175339.png
+    Available: True
+    Combo: False (discount 0.0%)
+    Reward (redeemable): False
+    Loyalty points earned: 360
+    New: False | Bestseller: False
+    Created: 2026-11-18T11:24:29.633283
+--------------------------------------------------
+
+----------------------------------------------------------------------
+CATEGORY: Vegan Main Meal
+  ID: bac31d5a-f3b6-48ee-a8b5-d5fc79228272
+  Sort order: 2
+  Bestseller ID: 4d0f6f3d-1f4e-4f61-bbc1-1c61b49ca70c
+  Icon: 🌱
+  Products: 3
+  Playlists: 1
+----------------------------------------------------------------------
+
+  PLAYLIST: comfort food
+    ID: 4199e6dd-352b-42f9-b7c6-950720a5e4d6
+    Product IDs: 571ebe1a-cfaa-4dc9-9de1-9f0a1646e83e, 15c74b84-c5fc-4f67-950b-9ed91bad4d9d, bb88dda5-03e2-4c9d-bd2c-550fc8a07634, f1bbc530-c56e-470a-b180-e2dc4b950118
+    Items in playlist: 4
+      - Mexican Rice & Black Beans
+        ID: 571ebe1a-cfaa-4dc9-9de1-9f0a1646e83e
+        Price: 9500 MMK
+        Description: Seasoned tomato rice mixed with black beans, diced peppers, cilantro, and fresh lime.
+        Image: 0dd978d82669476f8d6c81eed9b915c3_Screenshot_2026-11-12_173851.png
+        Available: True
+        Combo: False (discount 0.0%)
+        Reward (redeemable): True
+        Reward points cost: 1000
+        Loyalty points earned: 95
+        New: False | Bestseller: False
+        Created: 2026-11-19T15:04:18.808812
+
+      - Stir-Fried Noodles
+        ID: 15c74b84-c5fc-4f67-950b-9ed91bad4d9d
+        Price: 11500 MMK
+        Description: Thick, chewy wheat noodles tossed in a savory red-brown sauce with tomatoes, green bell peppers, and onions.
+        Image: 787ebea7382d466bb128a681f6a06385_Screenshot_2026-11-12_174119.png
+        Available: True
+        Combo: False (discount 0.0%)
+        Reward (redeemable): False
+        Loyalty points earned: 115
+        New: False | Bestseller: False
+        Created: 2026-11-19T15:05:01.991355
+
+      - Sesame Tofu Fried Rice
+        ID: bb88dda5-03e2-4c9d-bd2c-550fc8a07634
+        Price: 10500 MMK
+        Description: Vegetable fried rice topped with sesame-crusted tofu cubes, sliced red chilies, broccolini, baby corn, and a fresh lime wedge.
+        Image: f161f225652a421880a9d4d2408fb9f3_Screenshot_2026-11-12_174605.png
+        Available: True
+        Combo: False (discount 0.0%)
+        Reward (redeemable): False
+        Loyalty points earned: 105
+        New: False | Bestseller: False
+        Created: 2026-11-19T15:05:36.827152
+
+      - Tofu & Broccoli Rice Bowl
+        ID: f1bbc530-c56e-470a-b180-e2dc4b950118
+        Price: 10500 MMK
+        Description: White rice topped with pan-seared tofu cubes, steamed broccoli florets, shredded carrots, green onions, and sesame seeds.
+        Image: 9b8b5c13c75747e39075566cfd897ced_Screenshot_2026-11-12_174630.png
+        Available: True
+        Combo: False (discount 0.0%)
+        Reward (redeemable): False
+        Loyalty points earned: 105
+        New: False | Bestseller: False
+        Created: 2026-11-19T15:06:12.092339
+
+
+  PRODUCT: Plant-Powered Crunch Burger
+    ID: 4d0f6f3d-1f4e-4f61-bbc1-1c61b49ca70c
+    Category ID: bac31d5a-f3b6-48ee-a8b5-d5fc79228272
+    Price: 8500 MMK
+    Description: Crispy plant-based patty, vegan slaw and pickles on a toasted brioche-style bun.
+    Image: menu-vegan-burger.jpg
+    Image URL: /static/uploads/menu-vegan-burger.jpg
+    Available: True
+    Combo: False (discount 0.0%)
+    Reward (redeemable): False
+    Loyalty points earned: 100
+    New: False | Bestseller: True
+    Created: 2026-10-19T10:59:08.195409
+--------------------------------------------------
+
+  PRODUCT: Crispy Vegan Nuggets
+    ID: 61af078f-917b-488c-a5d1-03ec4de68bea
+    Category ID: bac31d5a-f3b6-48ee-a8b5-d5fc79228272
+    Price: 7500 MMK
+    Description: Golden plant-protein nuggets with a crunchy seasoned coating and dipping sauce.
+    Image: menu-nuggets.jpg
+    Image URL: /static/uploads/menu-nuggets.jpg
+    Available: True
+    Combo: False (discount 0.0%)
+    Reward (redeemable): False
+    Loyalty points earned: 100
+    New: False | Bestseller: False
+    Created: 2026-10-19T10:59:08.195409
+--------------------------------------------------
+
+  PRODUCT: Vegan BBQ Wrap
+    ID: cc28ffd6-0582-49d9-aa25-fa6d4465911f
+    Category ID: bac31d5a-f3b6-48ee-a8b5-d5fc79228272
+    Price: 8000 MMK
+    Description: Smoky BBQ plant strips with fresh salad wrapped in a soft tortilla.
+    Image: menu-wrap.jpg
+    Image URL: /static/uploads/menu-wrap.jpg
+    Available: True
+    Combo: False (discount 0.0%)
+    Reward (redeemable): True
+    Reward points cost: 700
+    Loyalty points earned: 80
+    New: False | Bestseller: False
+    Created: 2026-10-19T10:59:08.195409
+--------------------------------------------------
+
+----------------------------------------------------------------------
+CATEGORY: Drinks
+  ID: f795e034-d268-44d6-a9d4-6f995c69b9fe
+  Sort order: 3
+  Bestseller ID: e167b2ee-1f1b-4eca-bb49-f0f6504e23e2
+  Icon: 🥤
+  Products: 3
+  Playlists: 1
+----------------------------------------------------------------------
+
+  PLAYLIST: smootie
+    ID: e929abcd-b601-4efd-8471-67cfc699448a
+    Product IDs: 014ad491-5803-4ff9-a59a-ca6913c839d8, fb0e85a3-001c-44d0-a2a3-5105372208d1, f72e5c39-2cec-4052-840b-d2b825454723
+    Items in playlist: 3
+      - Mango Lassi / Smoothie
+        ID: 014ad491-5803-4ff9-a59a-ca6913c839d8
+        Price: 6000 MMK
+        Description: A glass of creamy yellow mango smoothie topped with chopped pistachios and a spiced rim.
+        Image: a6b941fab0644e7ba37b10b56431fcfe_Screenshot_2026-11-08_195247.png
+        Available: True
+        Combo: False (discount 0.0%)
+        Reward (redeemable): False
+        Loyalty points earned: 60
+        New: False | Bestseller: False
+        Created: 2026-11-19T15:10:06.406920
+
+      - Red Citrus Mint Cooler
+        ID: fb0e85a3-001c-44d0-a2a3-5105372208d1
+        Price: 5000 MMK
+        Description: A frosted glass filled with vibrant red fruit juice over ice, garnished with a fresh lemon wheel and green mint.
+        Image: e38d5385100a44d68185e94bafd1a240_Screenshot_2026-11-12_181926.png
+        Available: True
+        Combo: False (discount 0.0%)
+        Reward (redeemable): False
+        Loyalty points earned: 50
+        New: False | Bestseller: False
+        Created: 2026-11-19T15:11:54.547076
+
+      - Strawberry Mint Lemonade
+        ID: f72e5c39-2cec-4052-840b-d2b825454723
+        Price: 5500 MMK
+        Description: A tall glass of bright pink strawberry lemonade over ice, garnished with fresh strawberry slices and mint leaves.
+        Image: 2de02eb263604e1cb58f3473e32b8af9_Screenshot_2026-11-12_181940.png
+        Available: True
+        Combo: False (discount 0.0%)
+        Reward (redeemable): True
+        Reward points cost: 100
+        Loyalty points earned: 55
+        New: False | Bestseller: False
+        Created: 2026-11-19T15:12:34.205169
+
+
+  PRODUCT: Iced Limeade
+    ID: e167b2ee-1f1b-4eca-bb49-f0f6504e23e2
+    Category ID: f795e034-d268-44d6-a9d4-6f995c69b9fe
+    Price: 4500 MMK
+    Description: A tall glass filled with cloudy, refreshing limeade over ice and garnished with a fresh lime wheel.
+    Image: 124356ead7d441dba076714347a3bcc6_Screenshot_2026-11-08_195200.png
+    Image URL: /static/uploads/124356ead7d441dba076714347a3bcc6_Screenshot_2026-11-08_195200.png
+    Available: True
+    Combo: False (discount 0.0%)
+    Reward (redeemable): True
+    Reward points cost: 100
+    Loyalty points earned: 45
+    New: False | Bestseller: True
+    Created: 2026-11-18T11:32:37.436612
+--------------------------------------------------
+
+  PRODUCT: Iced Cola
+    ID: 562d115f-d2aa-4b76-bb96-54cd4cc56743
+    Category ID: f795e034-d268-44d6-a9d4-6f995c69b9fe
+    Price: 3000 MMK
+    Description: A frosty glass filled with dark, fizzy cola over large ice cubes.
+    Image: 393027eff4b546208fcaf76bae65b75a_Screenshot_2026-11-08_195237.png
+    Image URL: /static/uploads/393027eff4b546208fcaf76bae65b75a_Screenshot_2026-11-08_195237.png
+    Available: True
+    Combo: False (discount 0.0%)
+    Reward (redeemable): True
+    Reward points cost: 100
+    Loyalty points earned: 30
+    New: False | Bestseller: False
+    Created: 2026-11-18T11:33:28.108340
+--------------------------------------------------
+
+  PRODUCT: Iced Lemon Mint Tea
+    ID: da06a0d8-815e-4d9c-a145-6d1aceef5237
+    Category ID: f795e034-d268-44d6-a9d4-6f995c69b9fe
+    Price: 4500 MMK
+    Description: A clear glass of amber-colored iced tea packed with ice cubes, lemon slices, and fresh mint.
+    Image: b3cc5b14372d426185a9c4bd500075c3_Screenshot_2026-11-08_195254.png
+    Image URL: /static/uploads/b3cc5b14372d426185a9c4bd500075c3_Screenshot_2026-11-08_195254.png
+    Available: True
+    Combo: False (discount 0.0%)
+    Reward (redeemable): True
+    Reward points cost: 100
+    Loyalty points earned: 45
+    New: False | Bestseller: False
+    Created: 2026-11-18T11:34:56.126665
+--------------------------------------------------
+
+----------------------------------------------------------------------
+CATEGORY: Appetizers
+  ID: de676e6e-988e-40d4-9f21-e6c8ba4a9d9f
+  Sort order: 4
+  Bestseller ID: ac84b3bf-a118-4b6a-828d-bf107caf468e
+  Icon: 🍟
+  Products: 6
+  Playlists: 1
+----------------------------------------------------------------------
+
+  PLAYLIST: heavy appetizer
+    ID: 5af52fc5-525c-46d1-a749-cef0c6f637f6
+    Product IDs: 767c1c58-962c-4455-8ff7-ec2a98fb4620, afd2c228-10c9-4502-ad8f-80cfa12a3182, 45cadcbb-aa87-4c39-8b15-d7c4e9cc2f29
+    Items in playlist: 3
+      - Club Sandwich & Fries
+        ID: 767c1c58-962c-4455-8ff7-ec2a98fb4620
+        Price: 12500 MMK
+        Description: Toasted, triple-decker club sandwich halves accompanied by golden french fries and ketchup.
+        Image: 1670972463344afdb9fe162aeeb51a7b_Screenshot_2026-11-12_174058.png
+        Available: True
+        Combo: False (discount 0.0%)
+        Reward (redeemable): False
+        Loyalty points earned: 125
+        New: False | Bestseller: False
+        Created: 2026-11-19T15:07:09.593545
+
+      - Shredded Chicken Tacos
+        ID: afd2c228-10c9-4502-ad8f-80cfa12a3182
+        Price: 13500 MMK
+        Description: Four soft corn tortillas stuffed with seasoned shredded chicken, diced avocado, chopped tomatoes, lettuce, and cilantro, served with lime wedges.
+        Image: d530411090bf4b87acffe8e66de6b02a_Screenshot_2026-11-12_174146.png
+        Available: True
+        Combo: False (discount 0.0%)
+        Reward (redeemable): False
+        Loyalty points earned: 135
+        New: False | Bestseller: False
+        Created: 2026-11-19T15:07:55.228466
+
+      - Glazed Sesame Chicken Wings
+        ID: 45cadcbb-aa87-4c39-8b15-d7c4e9cc2f29
+        Price: 13500 MMK
+        Description: Sticky, dark-red glazed chicken wings sprinkled with white sesame seeds, served with extra dipping sauce.
+        Image: ccaa00d4da1b44c29410b3eaf300caab_Screenshot_2026-11-08_194932.png
+        Available: True
+        Combo: False (discount 0.0%)
+        Reward (redeemable): False
+        Loyalty points earned: 135
+        New: False | Bestseller: False
+        Created: 2026-11-19T15:09:07.593206
+
+
+  PRODUCT: Crispy Onion Rings
+    ID: ac84b3bf-a118-4b6a-828d-bf107caf468e
+    Category ID: de676e6e-988e-40d4-9f21-e6c8ba4a9d9f
+    Price: 6500 MMK
+    Description: A stack of golden-brown, breaded onion rings dusted with fine sea salt.
+    Image: 7e72c2b007e3444595bfe874ccf5b5d6_Screenshot_2026-11-08_195501.png
+    Image URL: /static/uploads/7e72c2b007e3444595bfe874ccf5b5d6_Screenshot_2026-11-08_195501.png
+    Available: True
+    Combo: False (discount 0.0%)
+    Reward (redeemable): True
+    Reward points cost: 500
+    Loyalty points earned: 65
+    New: False | Bestseller: True
+    Created: 2026-11-18T11:55:39.459692
+--------------------------------------------------
+
+  PRODUCT: Mozzarella Sticks
+    ID: 7ffab032-d05f-4599-a84f-96f97e13dd85
+    Category ID: de676e6e-988e-40d4-9f21-e6c8ba4a9d9f
+    Price: 8500 MMK
+    Description: Crispy, golden-fried mozzarella sticks served with warm red marinara sauce, lemon wedges, and fresh parsley.
+    Image: 3fbe119fe15942bd91fc7241a9deecac_Screenshot_2026-11-08_195508.png
+    Image URL: /static/uploads/3fbe119fe15942bd91fc7241a9deecac_Screenshot_2026-11-08_195508.png
+    Available: True
+    Combo: False (discount 0.0%)
+    Reward (redeemable): True
+    Reward points cost: 700
+    Loyalty points earned: 85
+    New: False | Bestseller: False
+    Created: 2026-11-18T11:56:25.483202
+--------------------------------------------------
+
+  PRODUCT: Caprese Salad
+    ID: 6ecc5909-13f0-4b6b-a1d4-fdab7e6514ba
+    Category ID: de676e6e-988e-40d4-9f21-e6c8ba4a9d9f
+    Price: 11000 MMK
+    Description: Alternating slices of ripe red tomatoes and fresh mozzarella cheese layered with basil leaves and drizzled with balsamic glaze.
+    Image: 2466d2be858f4a27b95f1ec8d8a04ea2_Screenshot_2026-11-12_173918.png
+    Image URL: /static/uploads/2466d2be858f4a27b95f1ec8d8a04ea2_Screenshot_2026-11-12_173918.png
+    Available: True
+    Combo: False (discount 0.0%)
+    Reward (redeemable): False
+    Loyalty points earned: 110
+    New: False | Bestseller: False
+    Created: 2026-11-18T11:57:30.883792
+--------------------------------------------------
+
+  PRODUCT: Seasoned Steak Fries
+    ID: 66c43874-a82e-4fc3-8810-ee5623a07c81
+    Category ID: de676e6e-988e-40d4-9f21-e6c8ba4a9d9f
+    Price: 5500 MMK
+    Description: Thick-cut, skin-on golden french fries served with ketchup.
+    Image: 084781e5f73442e3be5a44b3b75e9458_Screenshot_2026-11-12_174031.png
+    Image URL: /static/uploads/084781e5f73442e3be5a44b3b75e9458_Screenshot_2026-11-12_174031.png
+    Available: True
+    Combo: False (discount 0.0%)
+    Reward (redeemable): True
+    Reward points cost: 500
+    Loyalty points earned: 55
+    New: False | Bestseller: False
+    Created: 2026-11-18T11:58:09.579886
+--------------------------------------------------
+
+  PRODUCT: Crispy Fried Meatballs / Croquettes
+    ID: dcf235d9-43fc-4706-9edf-13429ebbea38
+    Category ID: de676e6e-988e-40d4-9f21-e6c8ba4a9d9f
+    Price: 9000 MMK
+    Description: Golden-brown, crispy breaded meatballs garnished with finely chopped fresh parsley.
+    Image: 03027448551f4e2099cd269bab73ec43_Screenshot_2026-11-12_174218.png
+    Image URL: /static/uploads/03027448551f4e2099cd269bab73ec43_Screenshot_2026-11-12_174218.png
+    Available: True
+    Combo: False (discount 0.0%)
+    Reward (redeemable): False
+    Loyalty points earned: 90
+    New: False | Bestseller: False
+    Created: 2026-11-18T11:58:51.459847
+--------------------------------------------------
+
+  PRODUCT: Pan-Fried Dumplings
+    ID: de1f098f-1427-4d93-b128-6a03d52a2cbe
+    Category ID: de676e6e-988e-40d4-9f21-e6c8ba4a9d9f
+    Price: 8500 MMK
+    Description: Crispy golden pan-fried dumplings topped with sliced green onions and served with bright red dipping sauce.
+    Image: 08cbdf3c21b141228eb31c20fdf742ef_Screenshot_2026-11-12_175457.png
+    Image URL: /static/uploads/08cbdf3c21b141228eb31c20fdf742ef_Screenshot_2026-11-12_175457.png
+    Available: True
+    Combo: False (discount 0.0%)
+    Reward (redeemable): True
+    Reward points cost: 800
+    Loyalty points earned: 85
+    New: False | Bestseller: False
+    Created: 2026-11-18T11:59:38.553518
+--------------------------------------------------
+
+----------------------------------------------------------------------
+CATEGORY: Desserts
+  ID: cac0deef-b317-4c60-80e7-b6d460792e6b
+  Sort order: 5
+  Bestseller ID: c1447b55-d74b-4fe2-8306-bd5b4dff2ad3
+  Icon: 🍰
+  Products: 3
+  Playlists: 1
+----------------------------------------------------------------------
+
+  PLAYLIST: Cakes
+    ID: f1ee333b-a8f5-428a-ba66-5f09a263fb3b
+    Product IDs: 2874fb96-5747-4cf5-80c7-f105db32c85a, 1561ca55-819a-4289-a7ce-b137dcc7413c, 3c58f080-1256-42d8-891b-3f2ba5ebb337, 3b3a9ce4-93b6-45fa-8ca3-64a28d0f2670, 8af0ecd9-189f-4435-a875-bfab54780b49, 9e702a6b-eb75-4883-b33d-5eee8fa39c06, b1f21d8d-1220-44d1-9c74-f3585753cb33
+    Items in playlist: 7
+      - Chocolate Lava Cake
+        ID: 2874fb96-5747-4cf5-80c7-f105db32c85a
+        Price: 9500 MMK
+        Description: A warm chocolate cake with a molten chocolate center, garnished with fresh sliced strawberries and a scoop of vanilla ice cream.
+        Image: a9e849d1ba214c339b03990a511be5e8_Screenshot_2026-11-08_195516.png
+        Available: True
+        Combo: False (discount 0.0%)
+        Reward (redeemable): False
+        Loyalty points earned: 95
+        New: False | Bestseller: False
+        Created: 2026-11-19T15:14:30.231331
+
+      - Strawberry Cheesecake
+        ID: 1561ca55-819a-4289-a7ce-b137dcc7413c
+        Price: 8500 MMK
+        Description: A thick slice of golden-baked cheesecake topped with glazed fresh strawberry halves and bright red berry sauce.
+        Image: 1a55f3372bfb44a490afadcea6584df5_Screenshot_2026-11-08_195600.png
+        Available: True
+        Combo: False (discount 0.0%)
+        Reward (redeemable): False
+        Loyalty points earned: 85
+        New: False | Bestseller: False
+        Created: 2026-11-19T15:15:07.476476
+
+      - Brownie Sundae
+        ID: 3c58f080-1256-42d8-891b-3f2ba5ebb337
+        Price: 9000 MMK
+        Description: A rich chocolate brownie topped with a tall swirl of whipped cream, dark chocolate fudge drizzle, and chopped nuts.
+        Image: 31b612e2c8e04298b4959242d477f1d6_Screenshot_2026-11-08_195614.png
+        Available: True
+        Combo: False (discount 0.0%)
+        Reward (redeemable): False
+        Loyalty points earned: 90
+        New: False | Bestseller: False
+        Created: 2026-11-19T15:15:36.791461
+
+      - Chocolate Eclair Cake
+        ID: 3b3a9ce4-93b6-45fa-8ca3-64a28d0f2670
+        Price: 8000 MMK
+        Description: A square slice of layered chocolate graham cracker cake filled with vanilla pastry cream and topped with glossy dark chocolate frosting.
+        Image: 07a10b5623174f51996002460aa81cc5_Screenshot_2026-11-12_181717.png
+        Available: True
+        Combo: False (discount 0.0%)
+        Reward (redeemable): False
+        Loyalty points earned: 80
+        New: False | Bestseller: False
+        Created: 2026-11-19T15:16:10.595541
+
+      - Cherry Cheesecake Bar
+        ID: 8af0ecd9-189f-4435-a875-bfab54780b49
+        Price: 8000 MMK
+        Description: A rectangular slice of creamy cheesecake on a graham cracker crust, topped with glossy red cherries.
+        Image: 4f9abc1e08a1415bb39c3565bcc2b814_Screenshot_2026-11-12_181733.png
+        Available: True
+        Combo: False (discount 0.0%)
+        Reward (redeemable): False
+        Loyalty points earned: 80
+        New: False | Bestseller: False
+        Created: 2026-11-19T15:17:02.356000
+
+      - Mini Oreo Cheesecakes
+        ID: 9e702a6b-eb75-4883-b33d-5eee8fa39c06
+        Price: 6500 MMK
+        Description: Bite-sized cookies-and-cream cheesecakes topped with whipped cream, cookie crumbs, and a whole chocolate sandwich cookie.
+        Image: e8c8477e7bf847f883c2b0f0999056eb_Screenshot_2026-11-12_181829.png
+        Available: True
+        Combo: False (discount 0.0%)
+        Reward (redeemable): False
+        Loyalty points earned: 65
+        New: False | Bestseller: False
+        Created: 2026-11-19T15:18:03.435416
+
+      - Cherry Cheesecake Bar
+        ID: b1f21d8d-1220-44d1-9c74-f3585753cb33
+        Price: 8000 MMK
+        Description: A rectangular slice of creamy cheesecake on a graham cracker crust, topped with glossy red cherries.
+        Image: b5a95863a7694a31bbd510911d21083b_Screenshot_2026-11-12_181806.png
+        Available: True
+        Combo: False (discount 0.0%)
+        Reward (redeemable): False
+        Loyalty points earned: 80
+        New: False | Bestseller: False
+        Created: 2026-11-19T15:18:37.087983
+
+
+  PRODUCT: Three-Scoop Waffle Bowl
+    ID: c1447b55-d74b-4fe2-8306-bd5b4dff2ad3
+    Category ID: cac0deef-b317-4c60-80e7-b6d460792e6b
+    Price: 8000 MMK
+    Description: A crisp waffle cone bowl holding scoops of strawberry, chocolate, and pistachio ice cream, garnished with sliced strawberries and fresh mint.
+    Image: a6135e86025140e2ae162fd256699bbb_Screenshot_2026-11-08_195544.png
+    Image URL: /static/uploads/a6135e86025140e2ae162fd256699bbb_Screenshot_2026-11-08_195544.png
+    Available: True
+    Combo: False (discount 0.0%)
+    Reward (redeemable): True
+    Reward points cost: 1000
+    Loyalty points earned: 80
+    New: False | Bestseller: True
+    Created: 2026-11-18T12:02:32.899831
+--------------------------------------------------
+
+  PRODUCT: Caramel Flan
+    ID: 39c513dc-2eb2-4ceb-8a3d-d97367534d40
+    Category ID: cac0deef-b317-4c60-80e7-b6d460792e6b
+    Price: 6500 MMK
+    Description: Individual round caramel custard flan bathed in glossy amber caramel sauce.
+    Image: d8221247b93a4445b43d2f8a95d4be02_Screenshot_2026-11-12_181819.png
+    Image URL: /static/uploads/d8221247b93a4445b43d2f8a95d4be02_Screenshot_2026-11-12_181819.png
+    Available: True
+    Combo: False (discount 0.0%)
+    Reward (redeemable): False
+    Loyalty points earned: 65
+    New: False | Bestseller: False
+    Created: 2026-11-18T12:08:43.597495
+--------------------------------------------------
+
+  PRODUCT: Mixed Berry Fruit Pizza
+    ID: 6213f465-f160-4a97-87ff-79a04ff9f66b
+    Category ID: cac0deef-b317-4c60-80e7-b6d460792e6b
+    Price: 8500 MMK
+    Description: A slice of sugar cookie crust spread with white cream frosting and topped with fresh strawberries, blackberries, blueberries, and lemon slices.
+    Image: a940d53531c045e198a19cbc9934bcb1_Screenshot_2026-11-12_181842.png
+    Image URL: /static/uploads/a940d53531c045e198a19cbc9934bcb1_Screenshot_2026-11-12_181842.png
+    Available: True
+    Combo: False (discount 0.0%)
+    Reward (redeemable): False
+    Loyalty points earned: 85
+    New: False | Bestseller: False
+    Created: 2026-11-18T12:09:56.546341
+--------------------------------------------------
+
+----------------------------------------------------------------------
+CATEGORY: Special Combo Sets
+  ID: c1b35fd4-a8aa-4cff-90c0-16df569208fd
+  Sort order: 6
+  Bestseller ID: 84791002-0b15-481e-9f81-525ca35bed78
+  Icon: 🎁
+  Products: 4
+  Playlists: 1
+----------------------------------------------------------------------
+
+  PLAYLIST: DISCOUNTED COMBO
+    ID: ea0696de-52d8-4305-a025-36ff73dbfa53
+    Product IDs: 6f31ed3d-4768-483f-a1d4-3cc1f96dd760, b8c65225-17a9-4c0a-825d-a6828340eaf3, f0c4049c-0659-49e0-b7a9-d95dff6bf897
+    Items in playlist: 3
+      - Dessert Grazing Box (The Sweets Box)
+        ID: 6f31ed3d-4768-483f-a1d4-3cc1f96dd760
+        Price: 65000 MMK
+        Description: A large wooden tray filled with assorted sweets, including mini apple crumb pies, berry crisps, colorful macarons, rolled wafer cookies in a waffle cone, funnel cakes, and fresh strawberries alongside small tubs of ice cream and whipped cream.
+        Image: 41657b55d9be4626bff0f1d168674d2d_Screenshot_2026-11-12_181754.png
+        Available: True
+        Combo: True (discount 5.0%)
+        Reward (redeemable): False
+        Loyalty points earned: 650
+        New: False | Bestseller: False
+        Created: 2026-11-19T15:20:44.811481
+
+      - Family Catering Spread (The Most Expensive Item)
+        ID: b8c65225-17a9-4c0a-825d-a6828340eaf3
+        Price: 145000 MMK
+        Description: A large table spread of foil catering trays holding fried chicken pieces, chicken tenders, glazed wings, mashed potatoes, fresh garden salad, coleslaw, dinner rolls, and small cups of dipping sauce.
+        Image: 840762f86cf6467482ebe09a4b4f7d6e_Screenshot_2026-11-08_201255.png
+        Available: True
+        Combo: True (discount 30.0%)
+        Reward (redeemable): False
+        Loyalty points earned: 1450
+        New: False | Bestseller: False
+        Created: 2026-11-19T15:21:40.722254
+
+      - Chicken & Fries Board
+        ID: f0c4049c-0659-49e0-b7a9-d95dff6bf897
+        Price: 35000 MMK
+        Description: A wooden serving board loaded with crispy fried chicken pieces, chicken tenders, a metal bucket of thick-cut fries, bowls of coleslaw and baked beans, dipping sauces, and three canned drinks
+        Image: c0d61bcbe4144b34baaf1d1f8d1e8300_Screenshot_2026-11-08_201410.png
+        Available: True
+        Combo: True (discount 10.0%)
+        Reward (redeemable): False
+        Loyalty points earned: 350
+        New: True | Bestseller: False
+        Created: 2026-11-19T15:22:45.668229
+
+
+  PRODUCT: Crispy Chicken Strips Bucket
+    ID: 84791002-0b15-481e-9f81-525ca35bed78
+    Category ID: c1b35fd4-a8aa-4cff-90c0-16df569208fd
+    Price: 38000 MMK
+    Description: A plain white paper bucket overflowing with golden-brown, extra-crispy fried chicken tenders.
+    Image: 126bf4dcca364e3c8c2f002d13917d49_Screenshot_2026-11-08_195317.png
+    Image URL: /static/uploads/126bf4dcca364e3c8c2f002d13917d49_Screenshot_2026-11-08_195317.png
+    Available: True
+    Combo: True (discount 2.0%)
+    Reward (redeemable): False
+    Loyalty points earned: 380
+    New: False | Bestseller: True
+    Created: 2026-11-18T12:11:30.687332
+--------------------------------------------------
+
+  PRODUCT: Classic Fried Chicken Bucket
+    ID: 2ff51151-25b0-47ea-898b-5f98f03ba83c
+    Category ID: c1b35fd4-a8aa-4cff-90c0-16df569208fd
+    Price: 48000 MMK
+    Description: A red-and-white striped bucket filled with crispy, golden-brown bone-in fried chicken pieces.
+    Image: 205ab42cba0f426f8a59d1354b334b5e_Screenshot_2026-11-08_194710.png
+    Image URL: /static/uploads/205ab42cba0f426f8a59d1354b334b5e_Screenshot_2026-11-08_194710.png
+    Available: True
+    Combo: True (discount 8.0%)
+    Reward (redeemable): False
+    Loyalty points earned: 480
+    New: False | Bestseller: False
+    Created: 2026-11-18T12:12:33.910760
+--------------------------------------------------
+
+  PRODUCT: Fried Chicken & Fries Platter
+    ID: fa103fef-cb0b-4707-97de-14b4c7f1fec3
+    Category ID: c1b35fd4-a8aa-4cff-90c0-16df569208fd
+    Price: 26000 MMK
+    Description: A sharing tray loaded with crispy chicken tenders, chicken nuggets, popcorn chicken, golden french fries, ketchup, and creamy dipping sauce.
+    Image: 08161b64d64e48389749753dc55ce850_Screenshot_2026-11-08_195300.png
+    Image URL: /static/uploads/08161b64d64e48389749753dc55ce850_Screenshot_2026-11-08_195300.png
+    Available: True
+    Combo: True (discount 10.0%)
+    Reward (redeemable): False
+    Loyalty points earned: 260
+    New: False | Bestseller: False
+    Created: 2026-11-18T12:13:21.405094
+--------------------------------------------------
+
+  PRODUCT: Fried Chicken Takeout Box
+    ID: 1c984fa7-3fdf-42eb-ac24-9bcf2fbe06c8
+    Category ID: c1b35fd4-a8aa-4cff-90c0-16df569208fd
+    Price: 13500 MMK
+    Description: Three crispy fried chicken drumsticks served with golden french fries, shredded coleslaw, and ketchup.
+    Image: 738d85f5f7cd4e359249869a38456d75_Screenshot_2026-11-08_201134.png
+    Image URL: /static/uploads/738d85f5f7cd4e359249869a38456d75_Screenshot_2026-11-08_201134.png
+    Available: True
+    Combo: True (discount 15.0%)
+    Reward (redeemable): False
+    Loyalty points earned: 135
+    New: False | Bestseller: False
+    Created: 2026-11-18T12:13:58.990302
+--------------------------------------------------
+
+======================================================================
+LOCATIONS
+======================================================================
+
+  Crunchbox Kyauktada | Branch #1
+    Address: No. 142, Sule Pagoda Road, Kyauktada Township, Yangon 11182, Myanmar.
+    Hours: 06:00 - 18:00
+    Open now: True
+    Image: 59d32c10871a4d808f7ad8f20ba17f9a_Screenshot_2026-11-10_204239.png
+    Image URL: /static/uploads/59d32c10871a4d808f7ad8f20ba17f9a_Screenshot_2026-11-10_204239.png
+
+  Crunchbox Bahan | Branch #2
+    Address: No. 28, Kabar Aye Pagoda Road, Bahan Township, Yangon 11201, Myanmar.
+    Hours: 09:00 - 21:00
+    Open now: True
+    Image: 350a63d3d7ff41919b4fb2dbbe58cb68_Screenshot_2026-11-11_165945.png
+    Image URL: /static/uploads/350a63d3d7ff41919b4fb2dbbe58cb68_Screenshot_2026-11-11_165945.png
+
+  Crunchbox Sanchaung | Branch #3
+    Address: No. 19, Baho Road, Sanchaung Township, Yangon 11111, Myanmar.
+    Hours: 08:00 - 20:00
+    Open now: True
+    Image: 6a34a9e6091d4e92be540fc1d9fd19d2_Screenshot_2026-11-11_170731.png
+    Image URL: /static/uploads/6a34a9e6091d4e92be540fc1d9fd19d2_Screenshot_2026-11-11_170731.png
+
+  Crunchbox Yangon | Branch #0
+    Address: No. 142, Kabar Aye Pagoda Road, Bahan Township, Yangon, Yangon Region, 11201, Myanmar
+    Hours: 10:00 - 22:00
+    Open now: True
+    Image: a528ef7effd84d019039425076976349_Screenshot_2026-11-11_171027.png
+    Image URL: /static/uploads/a528ef7effd84d019039425076976349_Screenshot_2026-11-11_171027.png
+
+  Crunchbox Kamayut | Branch #4
+    Address: No. 71, Pyay Road, Kamayut Township, Yangon, Yangon Region, 11131, Myanmar
+    Hours: 07:00 - 19:00
+    Open now: True
+    Image: 673292011e4c45109793040f28a6ccd7_Screenshot_2026-11-11_173611.png
+    Image URL: /static/uploads/673292011e4c45109793040f28a6ccd7_Screenshot_2026-11-11_173611.png
+
+======================================================================
+SETTINGS
+======================================================================
+
+  accent_color: #ff6b00
+  background_color: #ffffff
+  combo_discount_pct: 15.0
+  deal_button_text: Order Now
+  deal_image_url: /static/uploads/b851ae79c0674b22b020bd09b916b016_Screenshot_2026-11-08_190840.png
+  deal_text: Up to 25% OFF on selected items. Limited time only!
+  deal_title: Weekend Crunch Fest
+  featured_image_url: /static/uploads/bfd6c5a0ce4a4152b996e0f31d60a8e5_Screenshot_2026-11-08_190627.png
+  featured_text: Made with love by our chefs — unique recipes you won't find anywhere else.
+  featured_title: Chef Specials
+  hero_heading: Crispy Flavor,
+Delivered Fast.
+  hero_image_url: /static/uploads/chef-special.jpg
+  hero_subtext: Hot, crunchy & made fresh for you.
+  logo_url: 
+  member_discount_pct: 10.0
+  reward_crispy_chicken_bucket_points: 20000
+  reward_iced_cola_points: 2000
+  reward_spicy_crunch_burger_points: 8000
+  shop_name: CrunchBox
