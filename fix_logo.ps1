@@ -1,6 +1,7 @@
-$path = "C:\Users\HP\Desktop\crunchbox\frontend\static\css\main.css"
+$path = 'C:\Users\HP\Desktop\crunchbox\my-food-app\frontend\static\css\main.css'
 $content = Get-Content $path -Raw
 
+# Replace desktop shop-logo-area centering with static positioning (logo to the left)
 $old = @'
 .shop-logo-area {
   display: flex;
@@ -18,23 +19,18 @@ $new = @'
   align-items: center;
   gap: 8px;
   position: static;
+  left: auto;
   transform: none;
-  flex: 0 1 auto;
-  min-width: 0;
-  margin-left: 0;
 }
 '@
 
 if ($content.Contains($old)) {
     $content = $content.Replace($old, $new)
     Set-Content $path $content
-    Write-Host "Replaced shop-logo-area successfully"
+    'Logo position fixed: shop-logo-area changed to position: static'
 } else {
-    Write-Host "Could not find exact match"
+    'Exact match not found for desktop shop-logo-area'
+    # Show what's actually there
     $lines = Get-Content $path
-    for ($i = 0; $i -lt $lines.Count; $i++) {
-        if ($lines[$i] -match '\.shop-logo-area\s*\{') {
-            Write-Host ("Found at line {0}: {1}" -f $i, $lines[$i])
-        }
-    }
+    $lines | Select-String -Pattern 'shop-logo-area|position: absolute|left: 50%' -Context 0,3
 }

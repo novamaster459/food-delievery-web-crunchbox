@@ -98,10 +98,7 @@ ul, ol { list-style: none; }
   display: flex;
   align-items: center;
   gap: 8px;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-}
+  position: static; left: auto; transform: none;}
 
 /* On small screens, switch from centered logo to a natural flex layout
    so the logo sits on the left and the cart sits on the right with no overlap. */
@@ -2599,3 +2596,4 @@ body.track-page { padding-top: 0; padding-bottom: 0; }
     font-size: 20px !important;
   }
 }
+
