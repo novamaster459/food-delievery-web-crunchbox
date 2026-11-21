@@ -12,6 +12,8 @@ const STATIC_ASSETS = [
   '/static/js/location.js?v=3',
   '/static/js/tracker.js?v=3',
   '/static/js/main.js?v=3',
+  '/static/images/icons/icon-192x192.png',
+  '/static/images/icons/icon-512x512.png',
   '/static/images/icons/crunchbox-logo.svg',
   '/static/images/spin-hub.png',
   '/static/images/icons/icon-main.png',
