@@ -2,15 +2,15 @@
 const CACHE_NAME = 'crunchbox-v1';
 const STATIC_ASSETS = [
   '/',
-  '/static/css/main.css?v=5',
-  '/static/css/components.css?v=4',
-  '/static/css/storefront-customization.css?v=4',
-  '/static/css/brand-theme.css?v=9',
-  '/static/js/api.js?v=2',
-  '/static/js/cart.js?v=3',
-  '/static/js/location.js?v=2',
-  '/static/js/tracker.js?v=2',
-  '/static/js/main.js?v=2',
+  '/static/css/main.css?v=6',
+  '/static/css/components.css?v=5',
+  '/static/css/storefront-customization.css?v=5',
+  '/static/css/brand-theme.css?v=10',
+  '/static/js/api.js?v=3',
+  '/static/js/cart.js?v=4',
+  '/static/js/location.js?v=3',
+  '/static/js/tracker.js?v=3',
+  '/static/js/main.js?v=3',
   '/static/images/icons/crunchbox-logo.svg',
   '/static/images/spin-hub.png',
   '/manifest.json',
@@ -76,3 +76,5 @@ self.addEventListener('fetch', (event) => {
     })
   );
 });
+
+

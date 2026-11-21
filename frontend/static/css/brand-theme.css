@@ -2,16 +2,17 @@
    Dark red active states, purple → pink gradients, white backgrounds. */
 
 :root {
-  --brand-red:     #8b0000;
-  --brand-red-2:   #b91c1c;
-  --purple:        #7c3aed;
-  --purple-dark:   #5b21b6;
-  --pink:          #ec4899;
-  --pink-light:    #f472b6;
+  --brand-red:     #AE150D;
+  --brand-red-2:   #AE150D;
+  --purple:        #3D5926;
+  --purple-dark:   #3D5926;
+  --pink:          #FC8F00;
+  --pink-light:    #FDD365;
   --grad-main:     linear-gradient(135deg, var(--purple) 0%, var(--pink) 100%);
   --grad-red:      linear-gradient(135deg, var(--brand-red) 0%, var(--purple-dark) 55%, var(--pink) 100%);
-  --shadow-brand:  0 6px 18px rgba(124, 58, 237, 0.28);
-  --shadow-red:    0 4px 14px rgba(139, 0, 0, 0.25);
+  --shadow-brand:  0 6px 18px rgba(174, 21, 13, 0.28);
+  --shadow-red:    0 4px 14px rgba(174, 21, 13, 0.25);
+  --brand-white:   #FDEDD6;
 }
 
 /* 60% WHITE: keep pages bright and airy */
@@ -730,3 +731,4 @@ body {
     font-size: 20px !important;
   }
 }
+

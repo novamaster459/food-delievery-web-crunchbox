@@ -69,7 +69,7 @@ db: dict = {
         "reward_iced_cola_points": 2000,
         "reward_spicy_crunch_burger_points": 8000,
         "reward_crispy_chicken_bucket_points": 20000,
-        "accent_color": "#ff6b00",
+        "accent_color": "#AE150D",
         "background_color": "#ffffff",
         "hero_heading": "Crispy Flavor,\nDelivered Fast.",
         "hero_subtext": "Hot, crunchy & made fresh for you.",
