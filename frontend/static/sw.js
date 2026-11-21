@@ -1,14 +1,14 @@
 // CrunchBox Service Worker — PWA offline support
-const CACHE_NAME = 'crunchbox-v3';
+const CACHE_NAME = 'crunchbox-v4';
 const STATIC_ASSETS = [
   '/',
   '/manifest.json',
-  '/static/css/main.css?v=10',
-  '/static/css/components.css?v=5',
-  '/static/css/storefront-customization.css?v=5',
-  '/static/css/brand-theme.css?v=10',
+  '/static/css/main.css?v=11',
+  '/static/css/components.css?v=6',
+  '/static/css/storefront-customization.css?v=6',
+  '/static/css/brand-theme.css?v=11',
   '/static/js/api.js?v=4',
-  '/static/js/cart.js?v=5',
+  '/static/js/cart.js?v=6',
   '/static/js/location.js?v=4',
   '/static/js/tracker.js?v=4',
   '/static/js/main.js?v=4',

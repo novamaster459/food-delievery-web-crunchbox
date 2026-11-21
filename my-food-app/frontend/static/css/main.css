@@ -3,12 +3,12 @@
 /* */
 :root {
   /* */
-  --red:           #FDD365;
-  --blue:          #FDEDD6;
-  --orange:        #FDD365;
-  --orange-bright: #FDEDD6;
-  --orange-light:  #FDEDD6;
-  --yellow:        #FDD365;
+  --red:           #FF8C00;
+  --blue:          #FFAC1C;
+  --orange:        #FF8C00;
+  --orange-bright: #FFAC1C;
+  --orange-light:  #FFAC1C;
+  --yellow:        #FF8C00;
   --white:         #ffffff;
 
   --bg:            #ffffff;
@@ -37,7 +37,7 @@
   --shadow-sm:     0 2px 8px rgba(0,0,0,0.04);
   --shadow-md:     0 6px 24px rgba(0,0,0,0.04);
   --shadow-lg:     0 12px 40px rgba(0,0,0,0.04);
-  --shadow-flame:  0 4px 14px rgba(253, 211, 101, 0.25);
+  --shadow-flame:  0 4px 14px rgba(255, 140, 0, 0.25);
 
   --transition:    0.22s cubic-bezier(0.4, 0, 0.2, 1);
   --header-h:      64px;
