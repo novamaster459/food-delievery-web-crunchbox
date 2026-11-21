@@ -1,0 +1,84 @@
+// CrunchBox Service Worker — PWA offline support
+const CACHE_NAME = 'crunchbox-v2';
+const STATIC_ASSETS = [
+  '/',
+  '/manifest.json',
+  '/static/css/main.css?v=6',
+  '/static/css/components.css?v=5',
+  '/static/css/storefront-customization.css?v=5',
+  '/static/css/brand-theme.css?v=11',
+  '/static/js/api.js?v=3',
+  '/static/js/cart.js?v=4',
+  '/static/js/location.js?v=3',
+  '/static/js/tracker.js?v=3',
+  '/static/js/main.js?v=3',
+  '/static/images/icons/crunchbox-logo.svg',
+  '/static/images/spin-hub.png',
+  '/static/images/icons/icon-main.png',
+  '/static/images/icons/icon-drinks.png',
+  '/static/images/icons/icon-dessert.png',
+  '/static/images/icons/icon-appetizer.png',
+  '/static/images/icons/icon-combo.png',
+  '/static/images/icons/icon-vegan.png',
+  '/static/images/icons/bestseller-ribbon.png',
+];
+
+// Install: cache static assets
+self.addEventListener('install', (event) => {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => {
+      return cache.addAll(STATIC_ASSETS.filter((url) => url));
+    }).then(() => self.skipWaiting())
+  );
+});
+
+// Activate: clean up old caches
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    caches.keys().then((keys) => {
+      return Promise.all(
+        keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key))
+      );
+    }).then(() => self.clients.claim())
+  );
+});
+
+// Fetch: cache-first for static assets, network-first for API calls
+self.addEventListener('fetch', (event) => {
+  const url = new URL(event.request.url);
+
+  // Skip non-GET requests
+  if (event.request.method !== 'GET') return;
+
+  // API routes: network-first with cache fallback
+  if (url.pathname.startsWith('/api/')) {
+    event.respondWith(
+      fetch(event.request)
+        .then((response) => {
+          if (response.ok) {
+            const cloned = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, cloned));
+          }
+          return response;
+        })
+        .catch(() => {
+          return caches.match(event.request);
+        })
+    );
+    return;
+  }
+
+  // Static assets: cache-first
+  event.respondWith(
+    caches.match(event.request).then((cached) => {
+      if (cached) return cached;
+      return fetch(event.request).then((response) => {
+        if (response.ok && url.origin === self.location.origin) {
+          const cloned = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, cloned));
+        }
+        return response;
+      });
+    })
+  );
+});

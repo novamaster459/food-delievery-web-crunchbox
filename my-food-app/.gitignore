@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+venv/
+env/
+.venv/
+frontend/static/uploads/*
+!frontend/static/uploads/.gitkeep
+!frontend/static/uploads/menu-*.jpg
+!frontend/static/uploads/chef-special.jpg
+!frontend/static/uploads/store-front.jpg
+*.log
+.DS_Store
