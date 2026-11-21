@@ -197,7 +197,9 @@ const Cart = {
     const navBadge = document.getElementById('cart-count-nav');
     if (navBadge) {
       navBadge.textContent = count;
-      navBadge.style.display = count === '0' ? 'none' : 'flex';
+        navBadge.style.display = 'flex';
+        navBadge.style.visibility = 'visible';
+        navBadge.style.opacity = '1';
     }
   },
 

@@ -551,6 +551,8 @@ body {
   .hero-logo-wrap {
     display: none !important;
   }
+    opacity: 1 !important;
+    visibility: visible !important;
 }
 
 /* Medium phones (481px - 767px) */
