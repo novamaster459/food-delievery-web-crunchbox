@@ -682,3 +682,125 @@ body {
     font-size: 20px !important;
   }
 }
+
+
+/* ═══════════════════════════════════════════════════════════
+   RESPONSIVE HEADER / NAV — distinct desktop vs mobile logo
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Desktop / Tablet (default, ≥768px) ── */
+.app-header {
+  height: 68px !important;
+  padding: 0 24px !important;
+  gap: 14px !important;
+}
+.shop-logo-area {
+  gap: 12px !important;
+  padding: 7px 20px !important;
+  background: linear-gradient(135deg, rgba(255, 140, 0, 0.42) 0%, rgba(255, 140, 0, 0.22) 100%) !important;
+  border: 1px solid rgba(255, 172, 28, 0.45) !important;
+  border-radius: 999px !important;
+  box-shadow: 0 4px 14px rgba(255, 140, 0, 0.22) !important;
+}
+#shop-logo {
+  width: 48px !important;
+  height: 48px !important;
+}
+.shop-name-text {
+  font-size: 24px !important;
+  font-weight: 900 !important;
+  letter-spacing: 1.5px !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+/* ── Mobile (phones, <768px) — different compact layout ── */
+@media (max-width: 767px) {
+  .app-header {
+    height: 58px !important;
+    padding: 0 14px !important;
+    gap: 8px !important;
+    padding-top: max(4px, env(safe-area-inset-top)) !important;
+  }
+
+  .shop-logo-area {
+    gap: 8px !important;
+    padding: 5px 14px !important;
+    background: linear-gradient(135deg, rgba(255, 140, 0, 0.40) 0%, rgba(255, 172, 28, 0.20) 100%) !important;
+    border: 1px solid rgba(255, 172, 28, 0.40) !important;
+    border-radius: 999px !important;
+    box-shadow: 0 3px 10px rgba(255, 140, 0, 0.20) !important;
+  }
+
+  #shop-logo {
+    width: 36px !important;
+    height: 36px !important;
+    flex-shrink: 0 !important;
+  }
+
+  .shop-name-text {
+    font-size: 18px !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.8px !important;
+    max-width: 150px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+  }
+
+  .header-right {
+    gap: 6px !important;
+    margin-left: auto !important;
+    flex-shrink: 0 !important;
+  }
+
+  .cart-btn {
+    padding: 7px 12px !important;
+    min-height: 42px !important;
+  }
+  .cart-btn svg { width: 20px !important; height: 20px !important; }
+
+  /* Bottom nav: tighter, bigger tap targets */
+  .bottom-nav {
+    height: 64px !important;
+    padding-bottom: max(8px, env(safe-area-inset-bottom)) !important;
+    border-radius: 16px 16px 0 0 !important;
+  }
+  .bottom-nav-item {
+    padding: 7px 2px !important;
+    gap: 2px !important;
+    border-radius: 10px !important;
+  }
+  .bottom-nav-item .nav-icon { width: 23px !important; height: 23px !important; }
+  .nav-label { font-size: 9px !important; }
+
+  /* Menu grid stays 2-up on phones */
+  .menu-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+  }
+}
+
+/* ── Very small phones (<400px) — icon-only logo to save space ── */
+@media (max-width: 399px) {
+  .app-header { padding: 0 10px !important; }
+  .shop-logo-area {
+    padding: 5px 10px !important;
+    gap: 6px !important;
+  }
+  #shop-logo { width: 32px !important; height: 32px !important; }
+  .shop-name-text {
+    font-size: 16px !important;
+    max-width: 110px !important;
+  }
+}
+
+/* ── Hero logo scales down on mobile ── */
+@media (max-width: 767px) {
+  .hero-logo {
+    width: clamp(160px, 42vw, 240px) !important;
+    height: clamp(160px, 42vw, 240px) !important;
+  }
+}
