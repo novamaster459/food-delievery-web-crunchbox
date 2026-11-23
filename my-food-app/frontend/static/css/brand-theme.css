@@ -881,3 +881,6 @@ body {
     filter: drop-shadow(0 2px 4px rgba(255, 140, 0, 0.45)) !important;
   }
 }
+
+/* ensure nav svgs fill their icon box */
+.bottom-nav-item .nav-icon svg { width: 100% !important; height: 100% !important; display: block !important; }

@@ -1,12 +1,12 @@
 // CrunchBox Service Worker — PWA offline support
-const CACHE_NAME = 'crunchbox-v13';
+const CACHE_NAME = 'crunchbox-v14';
 const STATIC_ASSETS = [
   '/',
   '/manifest.json',
-  '/static/css/main.css?v=20',
+  '/static/css/main.css?v=21',
   '/static/css/components.css?v=7',
   '/static/css/storefront-customization.css?v=7',
-  '/static/css/brand-theme.css?v=20',
+  '/static/css/brand-theme.css?v=21',
   '/static/js/api.js?v=5',
   '/static/js/cart.js?v=7',
   '/static/js/location.js?v=5',
@@ -66,6 +66,23 @@ self.addEventListener('fetch', (event) => {
         .catch(() => {
           return caches.match(event.request);
         })
+    );
+    return;
+  }
+
+  // Navigations: network-first so the HTML (with its cache-busted asset URLs)
+  // is always fresh. Falls back to cache when offline.
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request)
+        .then((response) => {
+          if (response.ok) {
+            const cloned = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, cloned));
+          }
+          return response;
+        })
+        .catch(() => caches.match(event.request).then((r) => r || caches.match('/')))
     );
     return;
   }
