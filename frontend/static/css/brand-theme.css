@@ -804,3 +804,24 @@ body {
     height: clamp(160px, 42vw, 240px) !important;
   }
 }
+
+/* ════════════════════════════════════════════════════════
+   REDESIGNED MOBILE NAV ICONS — filled/rounded, distinct from the
+   thin-line desktop style. Deals is now a true discount tag.
+   ═══════════════════════════════════════════════════════ */
+.nav-icon-fill svg {
+  width: 100% !important;
+  height: 100% !important;
+  display: block !important;
+}
+.bottom-nav-item .nav-icon-fill {
+  transition: transform var(--transition), filter var(--transition) !important;
+}
+.bottom-nav-item.active .nav-icon-fill {
+  transform: translateY(-1px) scale(1.08) !important;
+  filter: drop-shadow(0 2px 4px rgba(255, 140, 0, 0.45)) !important;
+}
+@media (max-width: 767px) {
+  #nav-deals .nav-icon-fill { color: #FF8C00 !important; }
+  .bottom-nav-item.active #nav-deals .nav-icon-fill { color: #FF8C00 !important; }
+}
