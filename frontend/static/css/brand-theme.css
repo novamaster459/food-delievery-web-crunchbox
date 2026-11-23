@@ -825,3 +825,9 @@ body {
   #nav-deals .nav-icon-fill { color: #FF8C00 !important; }
   .bottom-nav-item.active #nav-deals .nav-icon-fill { color: #FF8C00 !important; }
 }
+
+/* Cart icon sits in the raised center FAB — keep it a bit smaller */
+#nav-order .nav-icon.nav-icon-fill {
+  width: 21px !important;
+  height: 21px !important;
+}
