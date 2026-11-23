@@ -826,8 +826,33 @@ body {
   .bottom-nav-item.active #nav-deals .nav-icon-fill { color: #FF8C00 !important; }
 }
 
-/* Cart icon sits in the raised center FAB — keep it a bit smaller */
-#nav-order .nav-icon.nav-icon-fill {
-  width: 21px !important;
-  height: 21px !important;
+/* Cart = raised center FAB with a properly contained icon */
+#nav-order.nav-cart-center {
+  flex: 0 0 auto !important;
+  min-width: 54px !important;
+}
+#nav-order .nav-cart-fab-inner {
+  position: relative !important;
+  width: 50px !important;
+  height: 50px !important;
+  margin-top: -18px !important;
+  border-radius: 50% !important;
+  background: linear-gradient(135deg, #FF8C00 0%, #FFAC1C 100%) !important;
+  box-shadow: 0 6px 16px rgba(255, 140, 0, 0.42) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #ffffff !important;
+}
+#nav-order .nav-cart-fab-inner .nav-icon.nav-icon-fill {
+  width: 24px !important;
+  height: 24px !important;
+  color: #ffffff !important;
+}
+#nav-order.nav-cart-center .nav-label {
+  margin-top: 2px !important;
+}
+#nav-order.nav-cart-center.active .nav-cart-fab-inner {
+  transform: translateY(-1px) scale(1.04) !important;
+  filter: drop-shadow(0 3px 8px rgba(255, 140, 0, 0.5)) !important;
 }
