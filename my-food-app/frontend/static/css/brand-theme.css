@@ -845,3 +845,22 @@ body {
   height: 24px !important;
   color: inherit !important;
 }
+
+/* HARD RESET: ensure no circle/shadow/bg ever shows on the mobile cart tab */
+#nav-order.nav-cart-center,
+#nav-order.nav-cart-center .nav-cart-fab-inner,
+#nav-order.nav-cart-center .nav-cart-fab-inner::before,
+#nav-order.nav-cart-center .nav-cart-fab-inner::after {
+  background: none !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  border: none !important;
+  outline: none !important;
+  border-radius: 0 !important;
+  margin: 0 !important;
+  width: auto !important;
+  height: auto !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
